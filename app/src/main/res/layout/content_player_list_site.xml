@@ -3,24 +3,25 @@
     android:layout_width="match_parent" android:layout_height="match_parent">
 
     <LinearLayout
+        android:background="@drawable/list_outline"
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/list_outline">
+        android:layout_height="match_parent">
 
         <ListView
+            android:id="@+id/playerInRoom"
+            android:background="@drawable/list"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:id="@+id/playerInRoom"
             android:layout_gravity="center_vertical"
             android:layout_weight="1.15"
-            android:background="@drawable/list"
             android:layout_marginLeft="10sp"
             android:layout_marginTop="10sp"
             android:layout_marginBottom="10sp"
             android:choiceMode="singleChoice" />
 
         <LinearLayout
+            android:background="@drawable/list"
             android:orientation="vertical"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
@@ -28,8 +29,7 @@
             android:layout_weight="1"
             android:layout_marginTop="10sp"
             android:layout_marginRight="10sp"
-            android:layout_marginBottom="10sp"
-            android:background="@drawable/list">
+            android:layout_marginBottom="10sp">
 
             <LinearLayout
                 android:orientation="horizontal"
@@ -40,20 +40,19 @@
                 android:layout_marginBottom="5sp">
 
                 <Button
+                    android:id="@+id/R"
+                    android:background="@drawable/button_red_join"
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
                     android:text="join"
-                    android:id="@+id/R"
                     android:layout_weight="1"
                     android:textSize="30sp"
-                    android:textColor="#b13535"
-                    android:background="@drawable/button_red_join" />
-
+                    android:textColor="#b13535" />
                 <Button
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
                     android:id="@+id/jr"
                     android:background="@drawable/button_red_robot"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
                     android:layout_weight="4"
                     android:textColor="#b13535"
                     android:textSize="30sp"
@@ -71,24 +70,23 @@
                 android:layout_marginBottom="5sp">
 
                 <Button
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    android:text="join"
                     android:id="@+id/G"
-                    android:textSize="30sp"
-                    android:layout_weight="1"
-                    android:textColor="#0f804f"
-                    android:background="@drawable/button_green_join" />
-
-                <Button
+                    android:background="@drawable/button_green_join"
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
+                    android:text="join"
+                    android:textSize="30sp"
+                    android:layout_weight="1"
+                    android:textColor="#0f804f" />
+                <Button
                     android:id="@+id/jg"
+                    android:background="@drawable/button_green_robot"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
                     android:layout_weight="4"
                     android:textSize="30sp"
                     android:layout_marginLeft="3sp"
                     android:textAlignment="center"
-                    android:background="@drawable/button_green_robot"
                     android:textColor="#0f804f"
                     android:text="+" />
             </LinearLayout>
@@ -102,24 +100,25 @@
                 android:layout_marginBottom="5sp">
 
                 <Button
+                    android:id="@+id/B"
+                    android:background="@drawable/button_blue_join"
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
                     android:text="join"
-                    android:id="@+id/B"
+
                     android:textSize="30sp"
                     android:layout_weight="1"
-                    android:textColor="#253e84"
-                    android:background="@drawable/button_blue_join" />
+                    android:textColor="#253e84" />
 
                 <Button
+                    android:id="@+id/jb"
+                    android:background="@drawable/button_blue_robot"
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
-                    android:id="@+id/jb"
                     android:layout_weight="4"
                     android:textSize="30sp"
                     android:layout_marginLeft="3sp"
                     android:textAlignment="center"
-                    android:background="@drawable/button_blue_robot"
                     android:textColor="#253e84"
                     android:text="+" />
             </LinearLayout>
@@ -133,24 +132,23 @@
                 android:layout_marginBottom="5sp">
 
                 <Button
+                    android:id="@+id/Y"
+                    android:background="@drawable/button_yellow_join"
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
                     android:text="join"
-                    android:id="@+id/Y"
                     android:textSize="30sp"
                     android:layout_weight="1"
-                    android:textColor="#9c9332"
-                    android:background="@drawable/button_yellow_join" />
-
+                    android:textColor="#9c9332" />
                 <Button
+                    android:id="@+id/jy"
+                    android:background="@drawable/button_yellow_robot"
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
-                    android:id="@+id/jy"
                     android:layout_weight="4"
                     android:textSize="30sp"
                     android:layout_marginLeft="3sp"
                     android:textAlignment="center"
-                    android:background="@drawable/button_yellow_robot"
                     android:textColor="#9c9332"
                     android:text="+" />
             </LinearLayout>

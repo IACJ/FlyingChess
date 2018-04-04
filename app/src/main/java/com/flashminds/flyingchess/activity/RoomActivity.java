@@ -24,7 +24,11 @@ import com.flashminds.flyingchess.dataPack.Target;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
-
+/**
+ * Edited by IACJ on 2018/4/4.
+ *
+ * 开始游戏前的房间设定
+ */
 public class RoomActivity extends AppCompatActivity implements Target {
     Button startButton, backButton, site[], addRobotButton[];
     int[] siteState;// -1 none   0 robot    1 people
@@ -387,20 +391,20 @@ public class RoomActivity extends AppCompatActivity implements Target {
                 siteState[color] = 1;
             }
         } else {
-            Toast.makeText(getApplicationContext(), "select position failed!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "座位已被占!", Toast.LENGTH_SHORT).show();
         }
     }
 
     private void addRobot(int color) {
         if (Game.dataManager.getHostId().compareTo(Game.dataManager.getMyId()) == 0) {
             if (siteState[color] == 1) {
-                Toast.makeText(getApplicationContext(), "add robot failed!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "添加AI失败!", Toast.LENGTH_SHORT).show();
             } else {
                 if (Game.dataManager.getGameMode() != DataManager.GM_LOCAL) {
                     LinkedList<String> msgs = new LinkedList<>();
                     msgs.addLast(String.format("%d", -color - 1));
                     msgs.addLast(Game.dataManager.getRoomId());
-                    msgs.addLast("ROBOT");
+                    msgs.addLast("AI");
                     msgs.addLast("0");
                     if (siteState[color] == -1) {
                         msgs.addLast(String.format("%d", color));
@@ -410,10 +414,10 @@ public class RoomActivity extends AppCompatActivity implements Target {
                     Game.socketManager.send(new DataPack(DataPack.R_ROOM_POSITION_SELECT, msgs));
                 } else if (Game.dataManager.getGameMode() == DataManager.GM_LOCAL) {
                     if (siteState[color] == -1) {
-                        site[color].setText("ROBOT");
+                        site[color].setText("AI");
                         siteState[color] = 0;
                         addRobotButton[color].setText("-");
-                        Game.playersData.put(String.format("%d", -color - 1), new Role(String.format("%d", -color - 1), "robot", "0", color, Role.ROBOT, false));
+                        Game.playersData.put(String.format("%d", -color - 1), new Role(String.format("%d", -color - 1), "AI", "0", color, Role.ROBOT, false));
                     } else {
                         site[color].setText("JOIN");
                         siteState[color] = -1;
@@ -423,7 +427,7 @@ public class RoomActivity extends AppCompatActivity implements Target {
                 }
             }
         } else {
-            Toast.makeText(getApplicationContext(), "only host can add robot", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "只有房主可以增删AI", Toast.LENGTH_SHORT).show();
         }
     }
 

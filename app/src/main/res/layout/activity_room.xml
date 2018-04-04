@@ -26,21 +26,21 @@
             android:layout_marginLeft="10sp">
 
             <Button
+                android:id="@+id/back"
+                android:background="@drawable/button_back"
                 android:layout_width="30sp"
                 android:layout_height="30sp"
-                android:id="@+id/back"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentStart="true"
-                android:background="@drawable/button_back"
                 android:layout_marginLeft="5sp"
                 android:layout_marginTop="2sp" />
 
             <TextView
+                android:id="@+id/title"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:text="Room"
-                android:id="@+id/title"
                 android:layout_marginTop="5sp"
                 android:layout_marginRight="80sp"
                 android:textColor="#6b7d64"
@@ -71,11 +71,11 @@
                 android:layout_weight="1" />
 
             <Button
+                android:id="@+id/start"
+                android:background="@drawable/button_normal"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:text="Start"
-                android:id="@+id/start"
-                android:background="@drawable/button_normal"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentEnd="true"
                 android:layout_marginRight="15dp"

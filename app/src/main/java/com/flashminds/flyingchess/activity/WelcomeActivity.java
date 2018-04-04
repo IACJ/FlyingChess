@@ -16,6 +16,11 @@ import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 
+/**
+ * Edited by IACJ on 2018/4/4.
+ *
+ * 播放欢迎动画，然后跳转到ChooseModeActivity。
+ */
 public class WelcomeActivity extends AppCompatActivity {
     SurfaceView sv;
     MediaPlayer mediaPlayer;
@@ -69,7 +74,6 @@ public class WelcomeActivity extends AppCompatActivity {
                 startActivity(intent);//switch activity
                 mediaPlayer = null;
                 sv = null;
-
             }
         }, 4500);
 
