@@ -14,9 +14,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.flashminds.flyingchess.entity.Global;
 import com.flashminds.flyingchess.manager.DataManager;
 import com.flashminds.flyingchess.dataPack.DataPack;
-import com.flashminds.flyingchess.entity.Game;
 import com.flashminds.flyingchess.R;
 import com.flashminds.flyingchess.manager.SoundManager;
 
@@ -43,8 +43,8 @@ public class ChessBoardActivity extends AppCompatActivity {
         setContentView(R.layout.activity_chess_board);
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);//Activity切换动画
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        Game.activityManager.add(this);
-        Game.soundManager.playMusic(SoundManager.GAME);
+        Global.activityManager.add(this);
+        Global.soundManager.playMusic(SoundManager.GAME);
         //init
         pauseButton = (Button) findViewById(R.id.pause);
         throwDiceButton = (Button) findViewById(R.id.dice);
@@ -94,7 +94,7 @@ public class ChessBoardActivity extends AppCompatActivity {
         boardWidth = dm.heightPixels;
         n = 19;
         dx = boardWidth / n + 0.8f;
-        map.setImageBitmap(Game.getBitmap(R.raw.map_min));
+        map.setImageBitmap(Global.getBitmap(R.raw.map_min));
         //trigger
         pauseButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -105,7 +105,7 @@ public class ChessBoardActivity extends AppCompatActivity {
         throwDiceButton.setOnClickListener(new View.OnClickListener() {//throw dice
             @Override
             public void onClick(View v) {
-                Game.playersData.get(Game.dataManager.getMyId()).setDiceValid(0);
+                Global.playersData.get(Global.dataManager.getMyId()).setDiceValid(0);
             }
         });
         /////////////////
@@ -153,45 +153,45 @@ public class ChessBoardActivity extends AppCompatActivity {
         plane[3][3].setVisibility(View.INVISIBLE);
 
 
-        Game.replayManager.savePlayerNum(Game.playersData.size());
-        for (String key : Game.playersData.keySet()) {
-            Game.replayManager.saveRoleKey(key);
-            Game.replayManager.saveRoleInfo(Game.playersData.get(key));
-            plane[Game.playersData.get(key).color][0].setVisibility(View.VISIBLE);
-            plane[Game.playersData.get(key).color][1].setVisibility(View.VISIBLE);
-            plane[Game.playersData.get(key).color][2].setVisibility(View.VISIBLE);
-            plane[Game.playersData.get(key).color][3].setVisibility(View.VISIBLE);
-            xt[Game.playersData.get(key).color].setText("");
-            xname[Game.playersData.get(key).color].setText(Game.playersData.get(key).name);
-            xscore[Game.playersData.get(key).color].setText(Game.playersData.get(key).score);
+        Global.replayManager.savePlayerNum(Global.playersData.size());
+        for (String key : Global.playersData.keySet()) {
+            Global.replayManager.saveRoleKey(key);
+            Global.replayManager.saveRoleInfo(Global.playersData.get(key));
+            plane[Global.playersData.get(key).color][0].setVisibility(View.VISIBLE);
+            plane[Global.playersData.get(key).color][1].setVisibility(View.VISIBLE);
+            plane[Global.playersData.get(key).color][2].setVisibility(View.VISIBLE);
+            plane[Global.playersData.get(key).color][3].setVisibility(View.VISIBLE);
+            xt[Global.playersData.get(key).color].setText("");
+            xname[Global.playersData.get(key).color].setText(Global.playersData.get(key).name);
+            xscore[Global.playersData.get(key).color].setText(Global.playersData.get(key).score);
         }
-        Game.gameManager.newTurn(this);
+        Global.gameManager.newTurn(this);
 
         for (int i = 0; i < 4; i++) {
-            xname[i].setTypeface(Game.getFont());
-            xscore[i].setTypeface(Game.getFont());
+            xname[i].setTypeface(Global.getFont());
+            xscore[i].setTypeface(Global.getFont());
         }
-        throwDiceButton.setBackground(Game.d[0]);
+        throwDiceButton.setBackground(Global.d[0]);
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        Game.soundManager.resumeMusic(SoundManager.GAME);
+        Global.soundManager.resumeMusic(SoundManager.GAME);
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        Game.soundManager.pauseMusic();
+        Global.soundManager.pauseMusic();
     }
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
         if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {//返回按钮
             if (event.getAction() == KeyEvent.ACTION_DOWN && event.getRepeatCount() == 0) {
-                if (Game.replayManager.isReplay == false)
-                    Game.replayManager.clearRecord();
+                if (Global.replayManager.isReplay == false)
+                    Global.replayManager.clearRecord();
                 exit();
             }
             return true;
@@ -200,20 +200,20 @@ public class ChessBoardActivity extends AppCompatActivity {
     }
 
     public void exit() {
-        if (Game.dataManager.getGameMode() == DataManager.GM_WLAN) {
-            Game.socketManager.send(DataPack.R_GAME_EXIT, Game.dataManager.getMyId(), Game.dataManager.getRoomId());
+        if (Global.dataManager.getGameMode() == DataManager.GM_WLAN) {
+            Global.socketManager.send(DataPack.R_GAME_EXIT, Global.dataManager.getMyId(), Global.dataManager.getRoomId());
         }
-        Game.gameManager.gameOver();
-        if (Game.dataManager.getGameMode() != DataManager.GM_LOCAL) {
+        Global.gameManager.gameOver();
+        if (Global.dataManager.getGameMode() != DataManager.GM_LOCAL) {
             startActivity(new Intent(getApplicationContext(), GameInfoActivity.class));
-            if (Game.dataManager.getGameMode() == DataManager.GM_LAN) {
-                Game.localServer.stopHost();
+            if (Global.dataManager.getGameMode() == DataManager.GM_LAN) {
+                Global.localServer.stopHost();
             }
         } else {
             startActivity(new Intent(getApplicationContext(), ChooseModeActivity.class));
         }
-        Game.dataManager.giveUp(false);
-        Game.soundManager.playMusic(SoundManager.BACKGROUND);
+        Global.dataManager.giveUp(false);
+        Global.soundManager.playMusic(SoundManager.BACKGROUND);
     }
 
     public void moveTo(Button plane, int x, int y) {
@@ -244,12 +244,12 @@ class MyHandler extends Handler {
                 int color = msg.getData().getInt("color");
                 int whichPlane = msg.getData().getInt("whichPlane");
                 int pos = msg.getData().getInt("pos");
-                parent.animMoveTo(parent.plane[color][whichPlane], Game.chessBoard.map[color][pos][0], Game.chessBoard.map[color][pos][1]);
+                parent.animMoveTo(parent.plane[color][whichPlane], Global.chessBoard.map[color][pos][0], Global.chessBoard.map[color][pos][1]);
             }
             break;
             case 2://骰子
                 System.out.println(msg.getData().getInt("dice"));
-                parent.throwDiceButton.setBackground(Game.d[msg.getData().getInt("dice") - 1]);
+                parent.throwDiceButton.setBackground(Global.d[msg.getData().getInt("dice") - 1]);
                 break;
             case 3://显示消息
                 Toast.makeText(parent.getApplicationContext(), msg.getData().getString("msg"), Toast.LENGTH_SHORT).show();
@@ -258,53 +258,53 @@ class MyHandler extends Handler {
             {
                 int color = msg.getData().getInt("color");
                 int whichPlane = msg.getData().getInt("whichPlane");
-                parent.animMoveTo(parent.plane[color][whichPlane], Game.chessBoard.mapStart[color][whichPlane][0], Game.chessBoard.mapStart[color][whichPlane][1]);
+                parent.animMoveTo(parent.plane[color][whichPlane], Global.chessBoard.mapStart[color][whichPlane][0], Global.chessBoard.mapStart[color][whichPlane][1]);
             }
             break;
             case 5://finished
             {
-                if (Game.replayManager.isReplay == false) {
+                if (Global.replayManager.isReplay == false) {
                     Intent intent = new Intent(parent.getApplicationContext(), RoomActivity.class);
                     ArrayList<String> msgs = new ArrayList<>();
-                    if (Game.dataManager.getGameMode() == DataManager.GM_LOCAL) {
-                        if (Game.dataManager.getLastWinner().compareTo(Game.dataManager.getMyId()) == 0) {//更新分数
-                            Game.dataManager.setScore(Game.dataManager.getScore() + 10);
-                            Game.soundManager.playSound(SoundManager.WIN);
+                    if (Global.dataManager.getGameMode() == DataManager.GM_LOCAL) {
+                        if (Global.dataManager.getLastWinner().compareTo(Global.dataManager.getMyId()) == 0) {//更新分数
+                            Global.dataManager.setScore(Global.dataManager.getScore() + 10);
+                            Global.soundManager.playSound(SoundManager.WIN);
                         } else {
-                            Game.dataManager.setScore(Game.dataManager.getScore() - 5);
-                            //Game.soundManager.playSound(SoundManager.LOSE);
+                            Global.dataManager.setScore(Global.dataManager.getScore() - 5);
+                            //Global.soundManager.playSound(SoundManager.LOSE);
                         }
 
-                        Game.dataManager.saveData();
-                        msgs.add(Game.dataManager.getMyId());
-                        msgs.add(Game.playersData.get(Game.dataManager.getMyId()).name);
-                        msgs.add(String.valueOf(Game.dataManager.getScore()));
+                        Global.dataManager.saveData();
+                        msgs.add(Global.dataManager.getMyId());
+                        msgs.add(Global.playersData.get(Global.dataManager.getMyId()).name);
+                        msgs.add(String.valueOf(Global.dataManager.getScore()));
                         msgs.add("-1");
-                    } else if (Game.dataManager.getGameMode() == DataManager.GM_WLAN) {
-                        for (String key : Game.playersData.keySet()) {//更新玩家的分数
-                            if (Game.playersData.get(key).offline == false) {
-                                if (Game.playersData.get(key).id.compareTo(Game.dataManager.getLastWinner()) == 0) {
-                                    Game.playersData.get(key).score = String.valueOf(Integer.valueOf(Game.playersData.get(key).score) + 10);
-                                    Game.soundManager.playSound(SoundManager.WIN);
+                    } else if (Global.dataManager.getGameMode() == DataManager.GM_WLAN) {
+                        for (String key : Global.playersData.keySet()) {//更新玩家的分数
+                            if (Global.playersData.get(key).offline == false) {
+                                if (Global.playersData.get(key).id.compareTo(Global.dataManager.getLastWinner()) == 0) {
+                                    Global.playersData.get(key).score = String.valueOf(Integer.valueOf(Global.playersData.get(key).score) + 10);
+                                    Global.soundManager.playSound(SoundManager.WIN);
                                 } else {
-                                    Game.playersData.get(key).score = String.valueOf(Integer.valueOf(Game.playersData.get(key).score) - 5);
-                                    //Game.soundManager.playSound(SoundManager.LOSE);
+                                    Global.playersData.get(key).score = String.valueOf(Integer.valueOf(Global.playersData.get(key).score) - 5);
+                                    //Global.soundManager.playSound(SoundManager.LOSE);
                                 }
                             }
                         }
 
-                        Game.dataManager.setOnlineScore(Game.playersData.get(Game.dataManager.getMyId()).score);
+                        Global.dataManager.setOnlineScore(Global.playersData.get(Global.dataManager.getMyId()).score);
 
-                        msgs.add(Game.playersData.get(Game.dataManager.getHostId()).id);
-                        msgs.add(Game.playersData.get(Game.dataManager.getHostId()).name);
-                        msgs.add(Game.playersData.get(Game.dataManager.getHostId()).score);
+                        msgs.add(Global.playersData.get(Global.dataManager.getHostId()).id);
+                        msgs.add(Global.playersData.get(Global.dataManager.getHostId()).name);
+                        msgs.add(Global.playersData.get(Global.dataManager.getHostId()).score);
                         msgs.add("-1");
-                        for (String key : Game.playersData.keySet()) {
-                            Game.playersData.get(key).color = -1;
-                            if (Game.dataManager.getHostId().compareTo(Game.playersData.get(key).id) != 0 && Integer.valueOf(Game.playersData.get(key).id) >= 0 && Game.playersData.get(key).offline == false) {
-                                msgs.add(Game.playersData.get(key).id);
-                                msgs.add(Game.playersData.get(key).name);
-                                msgs.add(Game.playersData.get(key).score);
+                        for (String key : Global.playersData.keySet()) {
+                            Global.playersData.get(key).color = -1;
+                            if (Global.dataManager.getHostId().compareTo(Global.playersData.get(key).id) != 0 && Integer.valueOf(Global.playersData.get(key).id) >= 0 && Global.playersData.get(key).offline == false) {
+                                msgs.add(Global.playersData.get(key).id);
+                                msgs.add(Global.playersData.get(key).name);
+                                msgs.add(Global.playersData.get(key).score);
                                 msgs.add("-1");
                             }
                         }
@@ -314,11 +314,11 @@ class MyHandler extends Handler {
                     Intent intent2 = new Intent(parent.getApplicationContext(), GameEndActivity.class);
                     intent2.putStringArrayListExtra("msgs", msgs);
                     parent.startActivity(intent2);
-                    Game.dataManager.giveUp(false);
-                    Game.gameManager.gameOver();
-                    Game.soundManager.playMusic(SoundManager.BACKGROUND);
-                    Game.replayManager.closeRecord();
-                    Game.replayManager.stopReplay();
+                    Global.dataManager.giveUp(false);
+                    Global.gameManager.gameOver();
+                    Global.soundManager.playMusic(SoundManager.BACKGROUND);
+                    Global.replayManager.closeRecord();
+                    Global.replayManager.stopReplay();
                 } else {
                     Toast.makeText(parent, "Replay finished!", Toast.LENGTH_SHORT).show();
                     parent.startActivity(new Intent(parent.getApplicationContext(), ChooseModeActivity.class));
@@ -349,7 +349,7 @@ class myOnClickListener implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        if (Game.playersData.get(Game.dataManager.getMyId()).color == color)
-            Game.playersData.get(Game.dataManager.getMyId()).setPlaneValid(which);
+        if (Global.playersData.get(Global.dataManager.getMyId()).color == color)
+            Global.playersData.get(Global.dataManager.getMyId()).setPlaneValid(which);
     }
 }

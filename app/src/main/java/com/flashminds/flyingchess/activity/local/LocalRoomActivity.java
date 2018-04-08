@@ -1,9 +1,8 @@
-package com.flashminds.flyingchess.activity;
+package com.flashminds.flyingchess.activity.local;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -13,15 +12,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.flashminds.flyingchess.R;
-import com.flashminds.flyingchess.dataPack.DataPack;
-import com.flashminds.flyingchess.dataPack.Target;
+import com.flashminds.flyingchess.activity.ChooseModeActivity;
+import com.flashminds.flyingchess.activity.local.LocalGamingActivity;
 import com.flashminds.flyingchess.entity.ChessBoard;
-import com.flashminds.flyingchess.entity.Game;
+import com.flashminds.flyingchess.entity.Global;
 import com.flashminds.flyingchess.entity.Role;
 import com.flashminds.flyingchess.manager.DataManager;
 import com.flashminds.flyingchess.manager.SoundManager;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -48,8 +46,8 @@ public class LocalRoomActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         // 全局管理
-        Game.activityManager.add(this);
-        Game.soundManager.playMusic(SoundManager.BACKGROUND);
+        Global.activityManager.add(this);
+        Global.soundManager.playMusic(SoundManager.BACKGROUND);
 
         // 绑定view
         startButton = (Button) findViewById(R.id.start);
@@ -69,20 +67,20 @@ public class LocalRoomActivity extends AppCompatActivity {
         title = (TextView) findViewById(R.id.title);
 
         // 字体设置
-        title.setTypeface(Game.getFont());
+        title.setTypeface(Global.getFont());
         for (int i = 0; i < 4; i++) {
-            site[i].setTypeface(Game.getFont());
-            addRobotButton[i].setTypeface(Game.getFont());
+            site[i].setTypeface(Global.getFont());
+            addRobotButton[i].setTypeface(Global.getFont());
         }
-        startButton.setTypeface(Game.getFont());
+        startButton.setTypeface(Global.getFont());
 
         // 按钮事件
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Game.soundManager.playSound(SoundManager.BUTTON);
+                Global.soundManager.playSound(SoundManager.BUTTON);
                 if (idlePlayerListData.size() == 1){
-                    Game.replayManager.startRecord();
+                    Global.replayManager.startRecord();
                     Intent intent = new Intent(getApplicationContext(), LocalGamingActivity.class);
                     startActivity(intent);
                 } else {
@@ -93,7 +91,7 @@ public class LocalRoomActivity extends AppCompatActivity {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Game.soundManager.playSound(SoundManager.BUTTON);
+                Global.soundManager.playSound(SoundManager.BUTTON);
                 startActivity(new Intent(getApplicationContext(), ChooseModeActivity.class));
             }
         });
@@ -102,7 +100,7 @@ public class LocalRoomActivity extends AppCompatActivity {
         site[0].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Game.soundManager.playSound(SoundManager.BUTTON);
+                Global.soundManager.playSound(SoundManager.BUTTON);
                 chooseSite(0);
             }
         });
@@ -110,7 +108,7 @@ public class LocalRoomActivity extends AppCompatActivity {
         site[1].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Game.soundManager.playSound(SoundManager.BUTTON);
+                Global.soundManager.playSound(SoundManager.BUTTON);
                 chooseSite(1);
             }
         });
@@ -118,7 +116,7 @@ public class LocalRoomActivity extends AppCompatActivity {
         site[2].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Game.soundManager.playSound(SoundManager.BUTTON);
+                Global.soundManager.playSound(SoundManager.BUTTON);
                 chooseSite(2);
             }
         });
@@ -126,7 +124,7 @@ public class LocalRoomActivity extends AppCompatActivity {
         site[3].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Game.soundManager.playSound(SoundManager.BUTTON);
+                Global.soundManager.playSound(SoundManager.BUTTON);
                 chooseSite(3);
             }
         });
@@ -171,29 +169,29 @@ public class LocalRoomActivity extends AppCompatActivity {
         idlePlayerListData.addLast(map);
         HashMap<String, String> map2 = new HashMap<>();
         map2.put("name", "Me");
-        map2.put("score", String.valueOf(Game.dataManager.getScore()));
+        map2.put("score", String.valueOf(Global.dataManager.getScore()));
         idlePlayerListData.addLast(map2);
         idlePlayerListAdapter.notifyDataSetChanged();
 
         //添加玩家数据
-        Game.dataManager.setGameMode(DataManager.GM_LOCAL);//set game mode
-        Game.dataManager.setMyId("0");
-        Game.dataManager.setHostId("0");
-        Game.playersData.clear();
-        Game.playersData.put("0", new Role("0", "ME", String.valueOf(Game.dataManager.getScore()) ,-1, Role.PLAYER, true));
-        Game.playersData.get(Game.dataManager.getMyId()).type = Role.ME;
+        Global.dataManager.setGameMode(DataManager.GM_LOCAL);//set game mode
+        Global.dataManager.setMyId("0");
+        Global.dataManager.setHostId("0");
+        Global.playersData.clear();
+        Global.playersData.put("0", new Role("0", "ME", String.valueOf(Global.dataManager.getScore()) ,-1, Role.PLAYER, true));
+        Global.playersData.get(Global.dataManager.getMyId()).type = Role.ME;
     }
 
     private void chooseSite(int color) {
         if (siteState[color] == -1) {
-            if (Game.playersData.get(Game.dataManager.getMyId()).color == ChessBoard.COLOR_Z) {
+            if (Global.playersData.get(Global.dataManager.getMyId()).color == ChessBoard.COLOR_Z) {
                 idlePlayerListData.removeLast();
                 idlePlayerListAdapter.notifyDataSetChanged();
             } else {
-                site[Game.playersData.get(Game.dataManager.getMyId()).color].setText("JOIN");
-                siteState[Game.playersData.get(Game.dataManager.getMyId()).color] = -1;
+                site[Global.playersData.get(Global.dataManager.getMyId()).color].setText("JOIN");
+                siteState[Global.playersData.get(Global.dataManager.getMyId()).color] = -1;
             }
-            Game.playersData.get(Game.dataManager.getMyId()).color = color;
+            Global.playersData.get(Global.dataManager.getMyId()).color = color;
             site[color].setText("ME");
             siteState[color] = 1;
         } else {
@@ -208,23 +206,23 @@ public class LocalRoomActivity extends AppCompatActivity {
             site[color].setText("AI");
             siteState[color] = 0;
             addRobotButton[color].setText("-");
-            Game.playersData.put(String.format("%d", -color - 1), new Role(String.format("%d", -color - 1), "AI", "0", color, Role.ROBOT, false));
+            Global.playersData.put(String.format("%d", -color - 1), new Role(String.format("%d", -color - 1), "AI", "0", color, Role.ROBOT, false));
         } else if (siteState[color] == -0) {
             site[color].setText("JOIN");
             siteState[color] = -1;
             addRobotButton[color].setText("+");
-            Game.playersData.remove(String.format("%d", -color - 1));
+            Global.playersData.remove(String.format("%d", -color - 1));
         }
     }
     ///////////////////////// 常规操作 /////////////////////////
     @Override
     public void onStart() {
         super.onStart();
-        Game.soundManager.resumeMusic(SoundManager.BACKGROUND);
+        Global.soundManager.resumeMusic(SoundManager.BACKGROUND);
     }
     @Override
     public void onStop() {
         super.onStop();
-        Game.soundManager.pauseMusic();
+        Global.soundManager.pauseMusic();
     }
 }

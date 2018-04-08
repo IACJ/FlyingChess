@@ -13,7 +13,7 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.flashminds.flyingchess.entity.Game;
+import com.flashminds.flyingchess.entity.Global;
 import com.flashminds.flyingchess.R;
 import com.flashminds.flyingchess.manager.SoundManager;
 
@@ -31,8 +31,8 @@ public class RecordsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_records);
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        //Game.activityManager.add(this);
-        Game.soundManager.playMusic(SoundManager.BACKGROUND);
+        //Global.activityManager.add(this);
+        Global.soundManager.playMusic(SoundManager.BACKGROUND);
         //////////////
         setupViewComponent();
     }
@@ -40,18 +40,18 @@ public class RecordsActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-        Game.soundManager.resumeMusic(SoundManager.BACKGROUND);
+        Global.soundManager.resumeMusic(SoundManager.BACKGROUND);
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        Game.soundManager.pauseMusic();
+        Global.soundManager.pauseMusic();
     }
 
     private void setupViewComponent() {
         recordList = (ListView) findViewById(R.id.recordList);
-        records = searchRecords(Game.replayManager.PATH);
+        records = searchRecords(Global.replayManager.PATH);
         recordsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, records);
         if (records.isEmpty())
             Toast.makeText(getApplicationContext(), "No Records!", Toast.LENGTH_SHORT).show();
@@ -65,12 +65,12 @@ public class RecordsActivity extends AppCompatActivity {
     AdapterView.OnItemClickListener onItemClickLis = new AdapterView.OnItemClickListener() {
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             String fileName = ((TextView) view).getText().toString();
-            Game.replayManager.openFile(Game.replayManager.PATH + fileName);
-            Game.replayManager.startReplay();
-            Game.playersData.clear();
-            int playNum = Game.replayManager.getPlayerNum();
+            Global.replayManager.openFile(Global.replayManager.PATH + fileName);
+            Global.replayManager.startReplay();
+            Global.playersData.clear();
+            int playNum = Global.replayManager.getPlayerNum();
             for (int i = 0; i < playNum; i++) {
-                Game.playersData.put(Game.replayManager.getSavedKey(), Game.replayManager.getSavedRole());
+                Global.playersData.put(Global.replayManager.getSavedKey(), Global.replayManager.getSavedRole());
             }
             startActivity(new Intent(getApplicationContext(), ChessBoardActivity.class));
         }
@@ -105,7 +105,7 @@ public class RecordsActivity extends AppCompatActivity {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 final String fileName = ((TextView) view).getText().toString();
-                File file = new File(Game.replayManager.PATH + fileName);
+                File file = new File(Global.replayManager.PATH + fileName);
                 file.delete();
                 records.remove(pos);
                 recordsAdapter.notifyDataSetChanged();

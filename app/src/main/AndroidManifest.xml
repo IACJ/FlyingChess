@@ -33,13 +33,13 @@
             android:screenOrientation="landscape" />
 
         <activity
-            android:name=".activity.LocalRoomActivity"
+            android:name=".activity.local.LocalRoomActivity"
             android:screenOrientation="landscape" />
         <activity
-            android:name=".activity.LocalGamingActivity"
+            android:name=".activity.local.LocalGamingActivity"
             android:screenOrientation="landscape" />
         <activity
-            android:name=".activity.LocalPauseActivity"
+            android:name=".activity.local.LocalPauseActivity"
             android:screenOrientation="landscape"
             android:theme="@style/Theme.AppCompat.Light.Dialog.Alert"/>
 

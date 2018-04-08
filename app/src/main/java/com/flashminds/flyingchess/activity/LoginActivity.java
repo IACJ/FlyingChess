@@ -14,7 +14,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.flashminds.flyingchess.dataPack.DataPack;
-import com.flashminds.flyingchess.entity.Game;
+import com.flashminds.flyingchess.entity.Global;
 import com.flashminds.flyingchess.R;
 import com.flashminds.flyingchess.manager.SoundManager;
 import com.flashminds.flyingchess.dataPack.Target;
@@ -36,8 +36,8 @@ public class LoginActivity extends AppCompatActivity implements Target {
         setContentView(R.layout.activity_login);
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);//Activity切换动画
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        Game.activityManager.add(this);
-        Game.soundManager.playMusic(SoundManager.BACKGROUND);
+        Global.activityManager.add(this);
+        Global.soundManager.playMusic(SoundManager.BACKGROUND);
         //init
         login = (Button) findViewById(R.id.loginButton);
         myName = (TextInputLayout) findViewById(R.id.myName);
@@ -56,7 +56,7 @@ public class LoginActivity extends AppCompatActivity implements Target {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Game.soundManager.playSound(SoundManager.BUTTON);
+                Global.soundManager.playSound(SoundManager.BUTTON);
                 if (_myName.getText().length() == 0) {
                     _myName.setError("Please input you name");
                     _myName.requestFocus();
@@ -79,24 +79,24 @@ public class LoginActivity extends AppCompatActivity implements Target {
                         return;
                     }
                     //sign in
-                    Game.socketManager.send(DataPack.R_REGISTER, _myName.getText().toString(), _pw.getText().toString());
+                    Global.socketManager.send(DataPack.R_REGISTER, _myName.getText().toString(), _pw.getText().toString());
                     waitBackground.setVisibility(View.VISIBLE);
                     waitView.setVisibility(View.VISIBLE);
-                    Game.startWaitAnimation(waitView);
+                    Global.startWaitAnimation(waitView);
                 } else {// login
-                    Game.socketManager.send(DataPack.R_LOGIN, _myName.getText().toString(), _pw.getText().toString());
+                    Global.socketManager.send(DataPack.R_LOGIN, _myName.getText().toString(), _pw.getText().toString());
                     waitBackground.setVisibility(View.VISIBLE);
                     waitView.setVisibility(View.VISIBLE);
-                    Game.startWaitAnimation(waitView);
-                    Game.dataManager.setMyName(_myName.getText().toString());
-                    Game.dataManager.setPassword(_pw.getText().toString());
+                    Global.startWaitAnimation(waitView);
+                    Global.dataManager.setMyName(_myName.getText().toString());
+                    Global.dataManager.setPassword(_pw.getText().toString());
                 }
             }
         });
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Game.soundManager.playSound(SoundManager.BUTTON);
+                Global.soundManager.playSound(SoundManager.BUTTON);
                 if (bRegister) {
                     login.setText("Login");
                     register.setText("Register");
@@ -118,19 +118,19 @@ public class LoginActivity extends AppCompatActivity implements Target {
         home.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Game.soundManager.playSound(SoundManager.BUTTON);
+                Global.soundManager.playSound(SoundManager.BUTTON);
                 startActivity(new Intent(getApplicationContext(), ChooseModeActivity.class));
             }
         });
-        Game.socketManager.registerActivity(DataPack.A_LOGIN, this);
-        Game.socketManager.registerActivity(DataPack.A_REGISTER, this);
+        Global.socketManager.registerActivity(DataPack.A_LOGIN, this);
+        Global.socketManager.registerActivity(DataPack.A_REGISTER, this);
         //setting
         pw2.setVisibility(View.GONE);
-        if (Game.dataManager.autoLogin()) {
-            _myName.setText(Game.dataManager.getMyName());
-            _pw.setText(Game.dataManager.getPassword());
+        if (Global.dataManager.autoLogin()) {
+            _myName.setText(Global.dataManager.getMyName());
+            _pw.setText(Global.dataManager.getPassword());
         }
-        imageView.setImageBitmap(Game.getBitmap(R.raw.cloud));
+        imageView.setImageBitmap(Global.getBitmap(R.raw.cloud));
         waitView.setVisibility(View.INVISIBLE);
         waitBackground.setVisibility(View.INVISIBLE);
         login.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/comici.ttf"));
@@ -146,23 +146,23 @@ public class LoginActivity extends AppCompatActivity implements Target {
     @Override
     public void onStart() {
         super.onStart();
-        Game.soundManager.resumeMusic(SoundManager.BACKGROUND);
+        Global.soundManager.resumeMusic(SoundManager.BACKGROUND);
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        Game.soundManager.pauseMusic();
+        Global.soundManager.pauseMusic();
     }
 
     @Override
     public void processDataPack(DataPack dataPack) {
         if (dataPack.getCommand() == DataPack.A_LOGIN) {
             if (dataPack.isSuccessful()) {
-                Game.dataManager.setMyId(dataPack.getMessage(0));
-                Game.dataManager.setOnlineScore(dataPack.getMessage(1));
+                Global.dataManager.setMyId(dataPack.getMessage(0));
+                Global.dataManager.setOnlineScore(dataPack.getMessage(1));
                 startActivity(new Intent(getApplicationContext(), GameInfoActivity.class));
-                Game.dataManager.setAutoLogin(true);
+                Global.dataManager.setAutoLogin(true);
             } else {
                 myName.post(new Runnable() {
                     @Override
@@ -173,7 +173,7 @@ public class LoginActivity extends AppCompatActivity implements Target {
                     }
                 });
             }
-            Game.stopWaitAnimation();
+            Global.stopWaitAnimation();
         } else if (dataPack.getCommand() == DataPack.A_REGISTER) {
             if (dataPack.isSuccessful()) {
                 myName.post(new Runnable() {
@@ -199,7 +199,7 @@ public class LoginActivity extends AppCompatActivity implements Target {
                     }
                 });
             }
-            Game.stopWaitAnimation();
+            Global.stopWaitAnimation();
         }
     }
 

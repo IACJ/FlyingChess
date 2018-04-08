@@ -5,7 +5,7 @@ import android.content.res.AssetManager;
 import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 
-import com.flashminds.flyingchess.entity.Game;
+import com.flashminds.flyingchess.entity.Global;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -118,7 +118,7 @@ public class SoundManager {
     }
 
     public void pauseMusic() {
-        if (Game.activityManager.isSuspend()) {
+        if (Global.activityManager.isSuspend()) {
             if (bk.isPlaying())
                 bk.pause();
             if (game.isPlaying())

@@ -8,7 +8,7 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
-import com.flashminds.flyingchess.entity.Game;
+import com.flashminds.flyingchess.entity.Global;
 import com.flashminds.flyingchess.R;
 import com.flashminds.flyingchess.manager.SoundManager;
 
@@ -41,13 +41,13 @@ public class GameEndActivity extends Activity {
             }
         });
         //settings
-        if (Integer.valueOf(Game.dataManager.getLastWinner()) < 0)
+        if (Integer.valueOf(Global.dataManager.getLastWinner()) < 0)
             winner.setText("Robot win the game~");
         ArrayList<String> msgs = getIntent().getExtras().getStringArrayList("msgs");
         for (int i = 0; i < msgs.size(); i += 4) {
             HashMap<String, String> map = new HashMap<>();
             map.put("name", msgs.get(i + 1));
-            if (Game.dataManager.getLastWinner().compareTo(msgs.get(i)) == 0) {
+            if (Global.dataManager.getLastWinner().compareTo(msgs.get(i)) == 0) {
                 map.put("state", "Win");
                 map.put("action", "+10");
                 winner.setText(msgs.get(i + 1) + " win the game~");
@@ -55,7 +55,7 @@ public class GameEndActivity extends Activity {
                 map.put("state", "Lose");
                 map.put("action", "-5");
             }
-            if (Game.playersData.get(msgs.get(i)).offline) {
+            if (Global.playersData.get(msgs.get(i)).offline) {
                 map.put("state", "offline");
                 map.put("action", "0");
             }
@@ -68,6 +68,6 @@ public class GameEndActivity extends Activity {
     @Override
     public void onStart() {
         super.onStart();
-        Game.soundManager.resumeMusic(SoundManager.BACKGROUND);
+        Global.soundManager.resumeMusic(SoundManager.BACKGROUND);
     }
 }

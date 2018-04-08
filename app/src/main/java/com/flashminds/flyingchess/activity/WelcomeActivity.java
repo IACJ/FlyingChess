@@ -9,7 +9,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.WindowManager;
 
-import com.flashminds.flyingchess.entity.Game;
+import com.flashminds.flyingchess.entity.Global;
 import com.flashminds.flyingchess.R;
 
 import java.io.IOException;
@@ -35,7 +35,7 @@ public class WelcomeActivity extends AppCompatActivity {
         //initialization
         sv = (SurfaceView) findViewById(R.id.surfaceView);
         ///////////
-        Game.init(this);
+        Global.init(this);
         sv.getHolder().addCallback(new SurfaceHolder.Callback() {
             @Override
             public void surfaceCreated(SurfaceHolder holder) {
@@ -77,7 +77,7 @@ public class WelcomeActivity extends AppCompatActivity {
             }
         }, 4500);
 
-        Game.activityManager.add(this);
+        Global.activityManager.add(this);
         //next activity is choose mode activity
     }
 }

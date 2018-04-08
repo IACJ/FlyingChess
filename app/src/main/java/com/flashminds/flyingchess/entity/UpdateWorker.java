@@ -25,8 +25,10 @@ import java.net.InetAddress;
 import java.net.Socket;
 
 /**
- * Created by IACJ on 2018/4/1.
+ * Deprecated by IACJ on 2018/4/9.
  */
+
+@Deprecated
 public class UpdateWorker implements Runnable {
     private AppCompatActivity activity;
     private boolean waitForResult;
@@ -79,7 +81,7 @@ public class UpdateWorker implements Runnable {
             update = false;
             waitForResult = true;
             while (waitForResult) {//等待确认
-                Game.delay(600);
+                Global.delay(600);
             }
             if (update) {//确认升级
                 dos.writeInt(1);

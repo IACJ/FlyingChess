@@ -26,11 +26,11 @@ public class SocketReader implements Runnable {
         connected = true;
         while (true) {
             try {
-                Game.socketManager.processDataPack(receive());
+                Global.socketManager.processDataPack(receive());
             } catch (Exception e) {
                 e.printStackTrace();
                 connected = false;
-                Game.offlineTip();
+                Global.offlineTip();
                 break;
             }
         }

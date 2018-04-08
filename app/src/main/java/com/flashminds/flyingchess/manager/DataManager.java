@@ -185,21 +185,21 @@ public class DataManager {//数据存储类
             }
         }
     }
-}
+    class Data {
+        String ip;
+        String myName;
+        String password;
+        int musicVolume, effectVolume;//0~255 音量
+        int score;
 
-class Data {
-    String ip;
-    String myName;
-    String password;
-    int musicVolume, effectVolume;//0~255 音量
-    int score;
-
-    public Data() {
-        ip = new String();
-        myName = new String();
-        password = new String();
-        musicVolume = 0;
-        effectVolume = 0;
-        score = 0;
+        public Data() {
+            ip = new String();
+            myName = new String();
+            password = new String();
+            musicVolume = 0;
+            effectVolume = 0;
+            score = 0;
+        }
     }
 }
+

@@ -29,7 +29,7 @@ import java.util.HashMap;
 /**
  * Created by karthur on 2016/4/16.
  */
-public class Game {
+public class Global {
     public static LocalGameManager localGameManager;
     public static GameManager gameManager;
     public static DataManager dataManager;
@@ -52,7 +52,7 @@ public class Game {
 
 
     public static void init(AppCompatActivity activity) {
-        Game.activity = activity;
+        Global.activity = activity;
         dataManager = new DataManager();
         socketManager = new SocketManager(activity);
         gameManager = new GameManager();
@@ -83,9 +83,9 @@ public class Game {
     }
 
     public static void initBitmap() {
-        bitmaps.put(R.raw.choosemodebk, Game.loadBitmap(R.raw.choosemodebk));
-        bitmaps.put(R.raw.cloud, Game.loadBitmap(R.raw.cloud));
-        bitmaps.put(R.raw.map_min, Game.loadRectBitMap(R.raw.map_min));
+        bitmaps.put(R.raw.choosemodebk, Global.loadBitmap(R.raw.choosemodebk));
+        bitmaps.put(R.raw.cloud, Global.loadBitmap(R.raw.cloud));
+        bitmaps.put(R.raw.map_min, Global.loadRectBitMap(R.raw.map_min));
         d = new Drawable[6];
         d[0] = activity.getResources().getDrawable(R.drawable.dices, null);
         d[1] = activity.getResources().getDrawable(R.drawable.dices2, null);
@@ -167,7 +167,7 @@ public class Game {
         public void run() {
             run = true;
             while (run) {
-                Game.delay(80);
+                Global.delay(80);
                 view.post(new Runnable() {
                     @Override
                     public void run() {

@@ -11,9 +11,10 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.flashminds.flyingchess.activity.local.LocalRoomActivity;
+import com.flashminds.flyingchess.entity.Global;
 import com.flashminds.flyingchess.manager.DataManager;
 import com.flashminds.flyingchess.dataPack.DataPack;
-import com.flashminds.flyingchess.entity.Game;
 import com.flashminds.flyingchess.R;
 import com.flashminds.flyingchess.manager.SoundManager;
 import com.flashminds.flyingchess.dataPack.Target;
@@ -43,7 +44,7 @@ public class ChooseModeActivity extends AppCompatActivity implements Target {
         setContentView(R.layout.activity_choose_mode);
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);//Activity切换动画
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        Game.soundManager.playMusic(SoundManager.BACKGROUND);
+        Global.soundManager.playMusic(SoundManager.BACKGROUND);
         //init
         btnLocal = (Button) findViewById(R.id.btn_local);
         local = (Button) findViewById(R.id.button2);
@@ -61,7 +62,7 @@ public class ChooseModeActivity extends AppCompatActivity implements Target {
         btnLocal.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                Game.soundManager.playSound(SoundManager.BUTTON);
+                Global.soundManager.playSound(SoundManager.BUTTON);
                 Intent intent = new Intent(ChooseModeActivity.this,LocalRoomActivity.class);
                 startActivity(intent);
             }
@@ -70,15 +71,15 @@ public class ChooseModeActivity extends AppCompatActivity implements Target {
         local.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {//choose local game
-                Game.soundManager.playSound(SoundManager.BUTTON);
-                Game.dataManager.setGameMode(DataManager.GM_LOCAL);//set game mode
+                Global.soundManager.playSound(SoundManager.BUTTON);
+                Global.dataManager.setGameMode(DataManager.GM_LOCAL);//set game mode
 
                 Intent intent = new Intent(getApplicationContext(), RoomActivity.class);
                 ArrayList<String> msgs = new ArrayList<>();
-                Game.dataManager.setMyId("0");
+                Global.dataManager.setMyId("0");
                 msgs.add("0");
                 msgs.add("ME");
-                msgs.add(String.valueOf(Game.dataManager.getScore()));
+                msgs.add(String.valueOf(Global.dataManager.getScore()));
                 msgs.add("-1");
                 intent.putStringArrayListExtra("msgs", msgs);
                 startActivity(intent);//switch wo chess board activity
@@ -88,27 +89,27 @@ public class ChooseModeActivity extends AppCompatActivity implements Target {
         lan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Game.soundManager.playSound(SoundManager.BUTTON);
-                Game.dataManager.setGameMode(DataManager.GM_LAN);
+                Global.soundManager.playSound(SoundManager.BUTTON);
+                Global.dataManager.setGameMode(DataManager.GM_LAN);
                 Intent intent = new Intent(getApplicationContext(), GameInfoActivity.class);
                 startActivity(intent);
-                Game.dataManager.setMyName(new Build().MODEL);
-                Game.localServer.startListen();
+                Global.dataManager.setMyName(new Build().MODEL);
+                Global.localServer.startListen();
                 clean();
             }
         });
         wlan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Game.soundManager.playSound(SoundManager.BUTTON);
-                Game.socketManager.connectToRemoteServer();
+                Global.soundManager.playSound(SoundManager.BUTTON);
+                Global.socketManager.connectToRemoteServer();
                 local.setVisibility(View.INVISIBLE);
                 lan.setVisibility(View.INVISIBLE);
                 wlan.setVisibility(View.INVISIBLE);
                 records.setVisibility(View.INVISIBLE);
                 waitImage.setVisibility(View.VISIBLE);
                 waitBackground.setVisibility(View.VISIBLE);
-                Game.startWaitAnimation(waitImage);
+                Global.startWaitAnimation(waitImage);
                 clean();
             }
         });
@@ -119,30 +120,30 @@ public class ChooseModeActivity extends AppCompatActivity implements Target {
             }
         });
         //internet init
-        Game.socketManager.registerActivity(DataPack.CONNECTED, this);
+        Global.socketManager.registerActivity(DataPack.CONNECTED, this);
         //setting
-        Game.activityManager.add(this);
-        Game.updateManager.checkUpdate();
+        Global.activityManager.add(this);
+        Global.updateManager.checkUpdate();
         waitImage.setVisibility(View.INVISIBLE);
         waitBackground.setVisibility(View.INVISIBLE);
         //background img
-        bk.setImageBitmap(Game.getBitmap(R.raw.choosemodebk));
-        bk2.setImageBitmap(Game.getBitmap(R.raw.cloud));
-        lan.setTypeface(Game.getFont());
-        wlan.setTypeface(Game.getFont());
-        local.setTypeface(Game.getFont());
+        bk.setImageBitmap(Global.getBitmap(R.raw.choosemodebk));
+        bk2.setImageBitmap(Global.getBitmap(R.raw.cloud));
+        lan.setTypeface(Global.getFont());
+        wlan.setTypeface(Global.getFont());
+        local.setTypeface(Global.getFont());
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        Game.soundManager.resumeMusic(SoundManager.BACKGROUND);
+        Global.soundManager.resumeMusic(SoundManager.BACKGROUND);
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        Game.soundManager.pauseMusic();
+        Global.soundManager.pauseMusic();
     }
 
     public void clean() {
@@ -153,7 +154,7 @@ public class ChooseModeActivity extends AppCompatActivity implements Target {
         if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {//返回按钮
             if (event.getAction() == KeyEvent.ACTION_DOWN && event.getRepeatCount() == 0) {
                 if (exit) {
-                    Game.activityManager.closeAll();
+                    Global.activityManager.closeAll();
                     System.exit(0);
                 } else {
                     exit = true;
@@ -175,7 +176,7 @@ public class ChooseModeActivity extends AppCompatActivity implements Target {
     public void processDataPack(DataPack dataPack) {
         if (dataPack.getCommand() == DataPack.CONNECTED) {
             if (dataPack.isSuccessful()) {
-                Game.dataManager.setGameMode(DataManager.GM_WLAN);
+                Global.dataManager.setGameMode(DataManager.GM_WLAN);
                 Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                 startActivity(intent);
             } else {
@@ -192,7 +193,7 @@ public class ChooseModeActivity extends AppCompatActivity implements Target {
                     }
                 });
             }
-            Game.stopWaitAnimation();
+            Global.stopWaitAnimation();
         }
     }
 }

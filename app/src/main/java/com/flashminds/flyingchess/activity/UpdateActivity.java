@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-import com.flashminds.flyingchess.entity.Game;
+import com.flashminds.flyingchess.entity.Global;
 import com.flashminds.flyingchess.R;
 
 /**
@@ -48,9 +48,9 @@ public class UpdateActivity extends Activity {
     public void onStop() {
         super.onStop();
         if (update) {
-            Game.updateManager.uw.confirmUpdate();
+            Global.updateManager.uw.confirmUpdate();
         } else {
-            Game.updateManager.uw.cancleUpdate();
+            Global.updateManager.uw.cancleUpdate();
         }
     }
 }

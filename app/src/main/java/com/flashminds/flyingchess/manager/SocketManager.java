@@ -3,7 +3,7 @@ package com.flashminds.flyingchess.manager;
 import android.support.v7.app.AppCompatActivity;
 
 import com.flashminds.flyingchess.dataPack.DataPack;
-import com.flashminds.flyingchess.entity.Game;
+import com.flashminds.flyingchess.entity.Global;
 import com.flashminds.flyingchess.entity.MsgHandler;
 import com.flashminds.flyingchess.R;
 import com.flashminds.flyingchess.entity.SocketReader;
@@ -92,7 +92,7 @@ public class SocketManager extends MsgHandler {
                     trustKeyStore.load(activity.getBaseContext().getResources().openRawResource(R.raw.flyingchess), "hustcs1307".toCharArray());
                     trustManagerFactory.init(trustKeyStore);
                     sslContext.init(null, trustManagerFactory.getTrustManagers(), null);
-                    sock = (SSLSocket) sslContext.getSocketFactory().createSocket(Game.dataManager.data.ip, 6666);
+                    sock = (SSLSocket) sslContext.getSocketFactory().createSocket(Global.dataManager.data.ip, 6666);
                     sock.setSoTimeout(2000);
                     sock.setTcpNoDelay(true);
                     sw = new SocketWriter(sock.getOutputStream());

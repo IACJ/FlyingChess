@@ -7,9 +7,9 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 
+import com.flashminds.flyingchess.entity.Global;
 import com.flashminds.flyingchess.manager.DataManager;
 import com.flashminds.flyingchess.dataPack.DataPack;
-import com.flashminds.flyingchess.entity.Game;
 import com.flashminds.flyingchess.R;
 
 public class PauseActivity extends Activity {
@@ -37,12 +37,12 @@ public class PauseActivity extends Activity {
         robot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!Game.dataManager.isGiveUp()) {
+                if (!Global.dataManager.isGiveUp()) {
                     robot.setText("Cancel auto");
-                    Game.dataManager.giveUp(true);
+                    Global.dataManager.giveUp(true);
                 } else {
                     robot.setText("Auto");
-                    Game.dataManager.giveUp(false);
+                    Global.dataManager.giveUp(false);
                 }
             }
         });
@@ -50,32 +50,32 @@ public class PauseActivity extends Activity {
         exit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (Game.dataManager.getGameMode() == DataManager.GM_WLAN) {
-                    Game.socketManager.send(DataPack.R_GAME_EXIT, Game.dataManager.getMyId(), Game.dataManager.getRoomId());
+                if (Global.dataManager.getGameMode() == DataManager.GM_WLAN) {
+                    Global.socketManager.send(DataPack.R_GAME_EXIT, Global.dataManager.getMyId(), Global.dataManager.getRoomId());
                 }
-                if (Game.replayManager.isReplay == false) {
-                    Game.replayManager.closeRecord();
-                    Game.replayManager.clearRecord();
+                if (Global.replayManager.isReplay == false) {
+                    Global.replayManager.closeRecord();
+                    Global.replayManager.clearRecord();
                 }
-                Game.gameManager.gameOver();
-                Game.replayManager.stopReplay();
-                if (Game.dataManager.getGameMode() != DataManager.GM_LOCAL) {
+                Global.gameManager.gameOver();
+                Global.replayManager.stopReplay();
+                if (Global.dataManager.getGameMode() != DataManager.GM_LOCAL) {
                     startActivity(new Intent(getApplicationContext(), GameInfoActivity.class));
-                    if (Game.dataManager.getGameMode() == DataManager.GM_LAN) {
-                        Game.localServer.stopHost();
+                    if (Global.dataManager.getGameMode() == DataManager.GM_LAN) {
+                        Global.localServer.stopHost();
                     }
                 } else {
                     startActivity(new Intent(getApplicationContext(), ChooseModeActivity.class));
                 }
-                Game.dataManager.giveUp(false);
+                Global.dataManager.giveUp(false);
             }
         });
-        if (Game.dataManager.isGiveUp()) {
+        if (Global.dataManager.isGiveUp()) {
             robot.setText("Cancel auto");
         }
-        resume.setTypeface(Game.getFont());
-        robot.setTypeface(Game.getFont());
-        exit.setTypeface(Game.getFont());
+        resume.setTypeface(Global.getFont());
+        robot.setTypeface(Global.getFont());
+        exit.setTypeface(Global.getFont());
     }
 
     @Override

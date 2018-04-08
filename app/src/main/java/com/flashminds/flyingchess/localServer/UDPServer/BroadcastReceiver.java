@@ -2,7 +2,7 @@ package com.flashminds.flyingchess.localServer.UDPServer;
 
 
 import com.flashminds.flyingchess.dataPack.DataPack;
-import com.flashminds.flyingchess.entity.Game;
+import com.flashminds.flyingchess.entity.Global;
 
 import java.io.IOException;
 import java.net.DatagramSocket;
@@ -29,7 +29,7 @@ public class BroadcastReceiver implements Runnable {
         while (isRunning) {
             try {
                 if (this.receiveSocket == null)
-                    Game.delay(500);
+                    Global.delay(500);
                 DataPack dataPack = this.receiveSocket.receive();
                 parent.dataPackReceived(dataPack);
             } catch (Exception e) {

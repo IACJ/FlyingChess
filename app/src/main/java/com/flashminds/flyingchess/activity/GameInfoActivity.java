@@ -16,9 +16,9 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.flashminds.flyingchess.entity.Global;
 import com.flashminds.flyingchess.manager.DataManager;
 import com.flashminds.flyingchess.dataPack.DataPack;
-import com.flashminds.flyingchess.entity.Game;
 import com.flashminds.flyingchess.R;
 import com.flashminds.flyingchess.manager.SoundManager;
 import com.flashminds.flyingchess.dataPack.Target;
@@ -46,8 +46,8 @@ public class GameInfoActivity extends AppCompatActivity implements Target {
         setContentView(R.layout.activity_game_info);
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);//Activity切换动画
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        Game.activityManager.add(this);
-        Game.soundManager.playMusic(SoundManager.BACKGROUND);
+        Global.activityManager.add(this);
+        Global.soundManager.playMusic(SoundManager.BACKGROUND);
         //init
         createButton = (Button) findViewById(R.id.create);
         backButton = (Button) findViewById(R.id.back);
@@ -68,21 +68,21 @@ public class GameInfoActivity extends AppCompatActivity implements Target {
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {//start a new game
-                Game.soundManager.playSound(SoundManager.BUTTON);
-                if (Game.dataManager.getGameMode() == DataManager.GM_WLAN) {
-                    Game.socketManager.send(DataPack.R_ROOM_CREATE, Game.dataManager.getMyId(), Game.dataManager.getMyName() + "'s Room");
-                } else if (Game.dataManager.getGameMode() == DataManager.GM_LAN) {
-                    Game.localServer.startHost();
-                    Game.socketManager.connectToLocalServer();
-                    Game.delay(500);
-                    Game.socketManager.send(DataPack.R_LOGIN, new Build().MODEL, "123");
+                Global.soundManager.playSound(SoundManager.BUTTON);
+                if (Global.dataManager.getGameMode() == DataManager.GM_WLAN) {
+                    Global.socketManager.send(DataPack.R_ROOM_CREATE, Global.dataManager.getMyId(), Global.dataManager.getMyName() + "'s Room");
+                } else if (Global.dataManager.getGameMode() == DataManager.GM_LAN) {
+                    Global.localServer.startHost();
+                    Global.socketManager.connectToLocalServer();
+                    Global.delay(500);
+                    Global.socketManager.send(DataPack.R_LOGIN, new Build().MODEL, "123");
                 }
             }
         });
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Game.soundManager.playSound(SoundManager.BUTTON);
+                Global.soundManager.playSound(SoundManager.BUTTON);
                 goBack();
             }
         });
@@ -97,23 +97,23 @@ public class GameInfoActivity extends AppCompatActivity implements Target {
         joinButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Game.soundManager.playSound(SoundManager.BUTTON);
+                Global.soundManager.playSound(SoundManager.BUTTON);
                 if (roomUUID.size() == 0){
                     Toast.makeText(GameInfoActivity.this,"未选择可进入的房间",Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                if (Game.dataManager.getGameMode() == DataManager.GM_LAN) {
-                    Game.socketManager.connectLanServer(Game.localServer.getRoomIp(roomUUID.get(roomIndex)));
-                    Game.delay(500);
-                    Game.socketManager.send(DataPack.R_LOGIN, new Build().MODEL, "123");
+                if (Global.dataManager.getGameMode() == DataManager.GM_LAN) {
+                    Global.socketManager.connectLanServer(Global.localServer.getRoomIp(roomUUID.get(roomIndex)));
+                    Global.delay(500);
+                    Global.socketManager.send(DataPack.R_LOGIN, new Build().MODEL, "123");
                 } else {
                     boolean find = false;
                     synchronized (roomListData) {
                         for (HashMap<String, String> map : roomListData) {
                             if (map.get("id").compareTo(roomId) == 0) {
                                 if (map.get("state").compareTo("waiting") == 0) {
-                                    Game.socketManager.send(DataPack.R_ROOM_ENTER, Game.dataManager.getMyId(), roomId);
+                                    Global.socketManager.send(DataPack.R_ROOM_ENTER, Global.dataManager.getMyId(), roomId);
                                     find = true;
                                 }
                                 break;
@@ -126,13 +126,13 @@ public class GameInfoActivity extends AppCompatActivity implements Target {
             }
         });
         //network init
-        if (Game.dataManager.getGameMode() != DataManager.GM_LOCAL) {
-            Game.socketManager.registerActivity(DataPack.A_ROOM_LOOKUP, this);
-            Game.socketManager.registerActivity(DataPack.A_ROOM_CREATE, this);
-            Game.socketManager.registerActivity(DataPack.A_ROOM_ENTER, this);
+        if (Global.dataManager.getGameMode() != DataManager.GM_LOCAL) {
+            Global.socketManager.registerActivity(DataPack.A_ROOM_LOOKUP, this);
+            Global.socketManager.registerActivity(DataPack.A_ROOM_CREATE, this);
+            Global.socketManager.registerActivity(DataPack.A_ROOM_ENTER, this);
             new Thread(worker).start();
-            if (Game.dataManager.getGameMode() == DataManager.GM_LAN) {
-                Game.localServer.registerMsg(this);
+            if (Global.dataManager.getGameMode() == DataManager.GM_LAN) {
+                Global.localServer.registerMsg(this);
             }
         }
         title.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/comici.ttf"));
@@ -143,13 +143,13 @@ public class GameInfoActivity extends AppCompatActivity implements Target {
     @Override
     public void onStart() {
         super.onStart();
-        Game.soundManager.resumeMusic(SoundManager.BACKGROUND);
+        Global.soundManager.resumeMusic(SoundManager.BACKGROUND);
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        Game.soundManager.pauseMusic();
+        Global.soundManager.pauseMusic();
     }
 
     @Override
@@ -164,12 +164,12 @@ public class GameInfoActivity extends AppCompatActivity implements Target {
     }
 
     private void goBack() {
-        if (Game.dataManager.getGameMode() == DataManager.GM_WLAN) {
-            Game.socketManager.send(DataPack.R_LOGOUT, Game.dataManager.getMyId());
+        if (Global.dataManager.getGameMode() == DataManager.GM_WLAN) {
+            Global.socketManager.send(DataPack.R_LOGOUT, Global.dataManager.getMyId());
         }
         startActivity(new Intent(getApplicationContext(), ChooseModeActivity.class));
-        if (Game.dataManager.getGameMode() == DataManager.GM_LAN) {
-            Game.localServer.stop();
+        if (Global.dataManager.getGameMode() == DataManager.GM_LAN) {
+            Global.localServer.stop();
         }
     }
 
@@ -207,12 +207,12 @@ public class GameInfoActivity extends AppCompatActivity implements Target {
             }
         } else if (dataPack.getCommand() == DataPack.A_ROOM_CREATE) {
             if (dataPack.isSuccessful()) {
-                Game.dataManager.setRoomId(dataPack.getMessage(0));
+                Global.dataManager.setRoomId(dataPack.getMessage(0));
                 Intent intent = new Intent(getApplicationContext(), RoomActivity.class);
                 ArrayList<String> msgs = new ArrayList<>();
-                msgs.add(Game.dataManager.getMyId());
-                msgs.add(Game.dataManager.getMyName());
-                msgs.add(Game.dataManager.getOnlineScore());
+                msgs.add(Global.dataManager.getMyId());
+                msgs.add(Global.dataManager.getMyName());
+                msgs.add(Global.dataManager.getOnlineScore());
                 msgs.add("-1");
                 intent.putStringArrayListExtra("msgs", msgs);
                 startActivity(intent);//switch wo chess board activity
@@ -226,13 +226,13 @@ public class GameInfoActivity extends AppCompatActivity implements Target {
             }
         } else if (dataPack.getCommand() == DataPack.A_ROOM_ENTER) {
             if (dataPack.isSuccessful()) {
-                if (Game.dataManager.getGameMode() == DataManager.GM_LAN) {
-                    Game.dataManager.setMyId(dataPack.getMessage(0));
+                if (Global.dataManager.getGameMode() == DataManager.GM_LAN) {
+                    Global.dataManager.setMyId(dataPack.getMessage(0));
                 }
-                Game.dataManager.setRoomId(roomId);
+                Global.dataManager.setRoomId(roomId);
                 Intent intent = new Intent(getApplicationContext(), RoomActivity.class);
                 ArrayList<String> msgs = new ArrayList<>(dataPack.getMessageList());
-                if (Game.dataManager.getGameMode() == DataManager.GM_LAN) {//取出自己的ID
+                if (Global.dataManager.getGameMode() == DataManager.GM_LAN) {//取出自己的ID
                     msgs.remove(0);
                 }
                 intent.putStringArrayListExtra("msgs", msgs);
@@ -255,11 +255,11 @@ class Worker implements Runnable {
 
     @Override
     public void run() {
-        if (Game.dataManager.getGameMode() == DataManager.GM_WLAN) {
+        if (Global.dataManager.getGameMode() == DataManager.GM_WLAN) {
             DataPack dataPack = new DataPack(DataPack.R_ROOM_LOOKUP, null);
-            Game.socketManager.send(dataPack);
-        } else if (Game.dataManager.getGameMode() == DataManager.GM_LAN) {
-            Game.localServer.updateRoomListImmediately();
+            Global.socketManager.send(dataPack);
+        } else if (Global.dataManager.getGameMode() == DataManager.GM_LAN) {
+            Global.localServer.updateRoomListImmediately();
         }
     }
 }

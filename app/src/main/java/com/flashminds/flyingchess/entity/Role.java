@@ -45,7 +45,7 @@ public class Role {
         if (dice == 6) {
             return true;
         } else {
-            int[] p = Game.chessBoard.getAirplane(color).position;
+            int[] p = Global.chessBoard.getAirplane(color).position;
             for (int i = 0; i < 4; i++) {
                 if (p[i] >= 0)//-1 : 未起飞，-2 :已完成;
                     return true;
@@ -55,20 +55,20 @@ public class Role {
     }
 
     public boolean move() { // 规则：计算
-        if ((Game.chessBoard.getAirplane(color).position[whichPlane] == -1 && dice != 6) ||
-                Game.chessBoard.getAirplane(color).position[whichPlane] == -2) { //不能移动
+        if ((Global.chessBoard.getAirplane(color).position[whichPlane] == -1 && dice != 6) ||
+                Global.chessBoard.getAirplane(color).position[whichPlane] == -2) { //不能移动
             return false;
         }
-        if (Game.chessBoard.getAirplane(color).position[whichPlane] == -1) { //起飞
-            Game.chessBoard.getAirplane(color).position[whichPlane] = 0;
+        if (Global.chessBoard.getAirplane(color).position[whichPlane] == -1) { //起飞
+            Global.chessBoard.getAirplane(color).position[whichPlane] = 0;
             return true;
         }
-        Game.chessBoard.getAirplane(color).lastPosition[whichPlane] = Game.chessBoard.getAirplane(color).position[whichPlane];
-        int nextStep = Game.chessBoard.getAirplane(color).position[whichPlane] + dice;
+        Global.chessBoard.getAirplane(color).lastPosition[whichPlane] = Global.chessBoard.getAirplane(color).position[whichPlane];
+        int nextStep = Global.chessBoard.getAirplane(color).position[whichPlane] + dice;
 
         if (nextStep > 56) { // 移动溢出
             nextStep = 56 - (nextStep - 56);
-            Game.chessBoard.setOverflow(true);
+            Global.chessBoard.setOverflow(true);
         } else if (nextStep == 56) { // 胜利
             nextStep = -2;
         } else if (nextStep == 18) { // 飞行后小跳
@@ -81,14 +81,14 @@ public class Role {
                 }
             }
         }
-        Game.chessBoard.getAirplane(color).position[whichPlane] = nextStep;
+        Global.chessBoard.getAirplane(color).position[whichPlane] = nextStep;
         return true;
     }
 
     public void setDiceValid(int dice) {
-        if (Game.dataManager.getMyId().compareTo(id) == 0) {//ME
-            if (canRoll && !Game.dataManager.isGiveUp()) {
-                this.dice = Game.chessBoard.getDice().roll();
+        if (Global.dataManager.getMyId().compareTo(id) == 0) {//ME
+            if (canRoll && !Global.dataManager.isGiveUp()) {
+                this.dice = Global.chessBoard.getDice().roll();
                 isDiceValid = true;
             }
         } else {
@@ -98,8 +98,8 @@ public class Role {
     }
 
     public void setPlaneValid(int whichPlane) {
-        if (Game.dataManager.getMyId().compareTo(id) == 0) {//ME
-            if (canChoosePlane && !Game.dataManager.isGiveUp()) {
+        if (Global.dataManager.getMyId().compareTo(id) == 0) {//ME
+            if (canChoosePlane && !Global.dataManager.isGiveUp()) {
                 this.whichPlane = whichPlane;
                 isPlaneValid = true;
             }
@@ -123,42 +123,42 @@ public class Role {
                 canRoll = true;
                 isDiceValid = false;
                 while (!isDiceValid) {//等待按下骰子
-                    if (Game.dataManager.isGiveUp()) {//托管
+                    if (Global.dataManager.isGiveUp()) {//托管
                         canRoll = false;//防止产生随机数时  玩家按下骰子
                         isDiceValid = false;
                         dice = AIDice();
                         break;
                     }
-                    Game.delay(200);
+                    Global.delay(200);
                 }
-                Game.logManager.p("ME roll:", dice);
+                Global.logManager.p("ME roll:", dice);
                 canRoll = false;
                 isDiceValid = false;
                 break;
             }
             case PLAYER: {
                 while (waitForDice) {
-                    if (offline && Game.dataManager.getHostId().compareTo(Game.dataManager.getMyId()) == 0) {//断线且我是房主
+                    if (offline && Global.dataManager.getHostId().compareTo(Global.dataManager.getMyId()) == 0) {//断线且我是房主
                         dice = AIDice();
-                        Game.logManager.p("PLAYER offline and dice:", dice);
+                        Global.logManager.p("PLAYER offline and dice:", dice);
                         break;
                     }
-                    Game.delay(100);
+                    Global.delay(100);
                 }
                 waitForDice = true;
-                Game.logManager.p("PLAYER roll:", dice);
+                Global.logManager.p("PLAYER roll:", dice);
                 break;
             }
             case ROBOT: {
-                if (Game.dataManager.getMyId().compareTo(Game.dataManager.getHostId()) == 0) {//我是房主
+                if (Global.dataManager.getMyId().compareTo(Global.dataManager.getHostId()) == 0) {//我是房主
                     dice = AIDice();
                 } else {
                     while (waitForDice) {
-                        Game.delay(100);
+                        Global.delay(100);
                     }
                     waitForDice = true;
                 }
-                Game.logManager.p("ROBOT roll:", dice);
+                Global.logManager.p("ROBOT roll:", dice);
                 break;
             }
         }
@@ -171,43 +171,43 @@ public class Role {
                 canChoosePlane = true;
                 isPlaneValid = false;
                 while (!isPlaneValid) {
-                    if (Game.dataManager.isGiveUp()) {//托管
+                    if (Global.dataManager.isGiveUp()) {//托管
                         canChoosePlane = false;
                         isPlaneValid = false;
                         whichPlane = AIChoosePlane();
                         break;
                     }
-                    Game.delay(200);
+                    Global.delay(200);
                 }
                 canChoosePlane = false;
                 isPlaneValid = false;
-                Game.logManager.p("ME fly:", whichPlane);
+                Global.logManager.p("ME fly:", whichPlane);
                 break;
             }
             case PLAYER: {
                 while (waitForPlane) {
-                    if (offline && Game.dataManager.getHostId().compareTo(Game.dataManager.getMyId()) == 0) {//断线且我是房主
+                    if (offline && Global.dataManager.getHostId().compareTo(Global.dataManager.getMyId()) == 0) {//断线且我是房主
                         whichPlane = AIChoosePlane();
-                        Game.logManager.p("PLAYER offline and fly:", whichPlane);
+                        Global.logManager.p("PLAYER offline and fly:", whichPlane);
                         break;
                     }
-                    Game.delay(100);
+                    Global.delay(100);
                 }
                 waitForPlane = true;
-                Game.logManager.p("PLAYER fly:", whichPlane);
+                Global.logManager.p("PLAYER fly:", whichPlane);
                 break;
             }
             case ROBOT: {
-                if (Game.dataManager.getMyId().compareTo(Game.dataManager.getHostId()) == 0) {//我是房主
+                if (Global.dataManager.getMyId().compareTo(Global.dataManager.getHostId()) == 0) {//我是房主
                     whichPlane = AIChoosePlane();
                 } else {
 
                     while (waitForPlane) {
-                        Game.delay(100);
+                        Global.delay(100);
                     }
                     waitForPlane = true;
                 }
-                Game.logManager.p("ROBOT fly:", whichPlane);
+                Global.logManager.p("ROBOT fly:", whichPlane);
                 break;
             }
         }
@@ -215,21 +215,21 @@ public class Role {
     }
 
     private int AIDice() {
-        Game.delay(500);
+        Global.delay(500);
         Random r = new Random(System.currentTimeMillis());
         return r.nextInt(6) + 1;
     }
 
     private int AIChoosePlane() {
-        Game.delay(500);
+        Global.delay(500);
         Random r = new Random(System.currentTimeMillis());
         int whichPlane = -1;
         //rule 寻找可用飞机
         ArrayList<Integer> avaPlane = new ArrayList<>();
         for (int i = 0; i < 4; i++) {
-            if (Game.chessBoard.getAirplane(color).position[i] >= 0) {
+            if (Global.chessBoard.getAirplane(color).position[i] >= 0) {
                 avaPlane.add(i);
-            } else if (Game.chessBoard.getAirplane(color).position[i] == -1 && dice % 2 == 0) {
+            } else if (Global.chessBoard.getAirplane(color).position[i] == -1 && dice == 6) {
                 avaPlane.add(i);
             }
         }
@@ -239,7 +239,7 @@ public class Role {
         //rule 寻找没有靠近终点的飞机
         ArrayList<Integer> farAwayPlane = new ArrayList<>();
         for (int i = 0; i < avaPlane.size(); i++) {
-            if (Game.chessBoard.getAirplane(color).position[avaPlane.get(i)] < 50)
+            if (Global.chessBoard.getAirplane(color).position[avaPlane.get(i)] < 50)
                 farAwayPlane.add(avaPlane.get(i));
         }
         if (farAwayPlane.size() > 0) {
@@ -247,14 +247,14 @@ public class Role {
         }
         //rule 寻找正好正好多走四步的飞机
         for (int i = 0; i < farAwayPlane.size(); i++) {
-            if ((Game.chessBoard.getAirplane(color).position[farAwayPlane.get(i)] + 2 + dice) % 4 == 0) {
+            if ((Global.chessBoard.getAirplane(color).position[farAwayPlane.get(i)] + 2 + dice) % 4 == 0) {
                 whichPlane = farAwayPlane.get(i);
                 break;
             }
         }
         //rule 寻找正好到达的飞机
         for (int i = 0; i < 4; i++) {
-            if (56 - Game.chessBoard.getAirplane(color).position[i] == dice) {
+            if (56 - Global.chessBoard.getAirplane(color).position[i] == dice) {
                 whichPlane = i;
                 break;
             }
