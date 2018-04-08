@@ -22,8 +22,13 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
+/**
+ * Edited by IACJ on 2018/4/8.
+ *
+ * 主界面，选择Local、Lan、Wan模式。
+ */
 public class ChooseModeActivity extends AppCompatActivity implements Target {
-    Button local, lan, wlan;
+    Button btnLocal,local, lan, wlan;
     boolean exit;
     Timer closeTimer;
     ImageView bk, bk2;
@@ -40,6 +45,7 @@ public class ChooseModeActivity extends AppCompatActivity implements Target {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         Game.soundManager.playMusic(SoundManager.BACKGROUND);
         //init
+        btnLocal = (Button) findViewById(R.id.btn_local);
         local = (Button) findViewById(R.id.button2);
         lan = (Button) findViewById(R.id.button3);
         wlan = (Button) findViewById(R.id.button4);
@@ -52,6 +58,15 @@ public class ChooseModeActivity extends AppCompatActivity implements Target {
         waitBackground = (Button) findViewById(R.id.waitbackground);
         records = (Button) findViewById(R.id.records);
         //trigger
+        btnLocal.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                Game.soundManager.playSound(SoundManager.BUTTON);
+                Intent intent = new Intent(ChooseModeActivity.this,LocalRoomActivity.class);
+                startActivity(intent);
+            }
+        } );
+
         local.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {//choose local game

@@ -11,15 +11,16 @@
     android:background="@drawable/sky_color"
     tools:context=".activity.ChooseModeActivity">
 
+
     <Button
+        android:id="@+id/btn_local"
+        android:background="@drawable/button_local"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="local"
-        android:id="@+id/button2"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
         android:allowUndo="false"
-        android:background="@drawable/button_local"
         android:layout_marginLeft="30sp"
         android:layout_marginBottom="30sp"
         android:layout_marginTop="30sp"
@@ -29,13 +30,30 @@
         android:textColor="#fbeb5d" />
 
     <Button
+        android:id="@+id/button2"
+        android:background="@drawable/button_local"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="lan"
+        android:text="_local"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:allowUndo="false"
+        android:layout_marginLeft="30sp"
+        android:layout_marginBottom="90sp"
+        android:layout_marginTop="30sp"
+        android:translationZ="1dp"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="#fbeb5d" />
+
+    <Button
         android:id="@+id/button3"
+        android:background="@drawable/button_lan"
+        android:text="lan"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:background="@drawable/button_lan"
         android:layout_marginBottom="30sp"
         android:layout_marginTop="30sp"
         android:translationZ="1dp"
@@ -44,13 +62,13 @@
         android:textColor="#fbeb5d" />
 
     <Button
+        android:id="@+id/button4"
+        android:background="@drawable/button_wlan"
+        android:text="wlan"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="wlan"
-        android:id="@+id/button4"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
-        android:background="@drawable/button_wlan"
         android:layout_marginBottom="30sp"
         android:layout_marginRight="30sp"
         android:layout_marginTop="30sp"
@@ -60,9 +78,9 @@
         android:textStyle="bold" />
 
     <ImageView
+        android:id="@+id/backgroud"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/backgroud"
         android:layout_alignParentEnd="true"
         android:layout_above="@+id/button2"
         android:layout_centerHorizontal="true"
@@ -71,30 +89,30 @@
         android:layout_marginTop="20sp" />
 
     <ImageView
+        android:id="@+id/backgroud2"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/backgroud2"
         android:layout_alignParentBottom="true"
+        android:layout_below="@+id/backgroud"
         android:layout_centerHorizontal="true"
-        android:translationZ="-1dp"
         android:scaleType="fitXY"
-        android:layout_below="@+id/backgroud" />
+        android:translationZ="-1dp" />
 
     <include
+        layout="@layout/content_wait_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        layout="@layout/content_wait_view"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true" />
 
     <Button
+        android:id="@+id/records"
+        android:background="@drawable/records"
         android:layout_width="45sp"
         android:layout_height="40sp"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:background="@drawable/records"
         android:layout_marginTop="2sp"
-        android:layout_marginRight="5sp"
-        android:id="@+id/records" />
+        android:layout_marginRight="5sp"/>
 
 </RelativeLayout>

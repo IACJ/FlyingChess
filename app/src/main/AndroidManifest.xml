@@ -24,15 +24,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".activity.WelcomeActivity"
             android:screenOrientation="landscape">
         </activity>
-
         <activity
             android:name=".activity.ChooseModeActivity"
             android:screenOrientation="landscape" />
+
+        <activity
+            android:name=".activity.LocalRoomActivity"
+            android:screenOrientation="landscape" />
+
         <activity
             android:name=".activity.LoginActivity"
             android:screenOrientation="landscape" />
