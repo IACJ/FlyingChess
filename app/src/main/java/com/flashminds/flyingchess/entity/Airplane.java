@@ -10,10 +10,6 @@ public class Airplane {
     public Airplane() {
         position = new int[4];
         lastPosition = new int[4];
-        init();
-    }
-
-    public void init() {
         lastPosition[0] = -1;
         lastPosition[1] = -1;
         lastPosition[2] = -1;

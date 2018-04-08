@@ -41,40 +41,44 @@ public class Role {
         waitForPlane = true;
     }
 
-    public boolean canIMove() {//test whether i can move a plane
-        if (dice % 2 == 0) {//dice=2 4 6
+    public boolean canIMove() {// 能否移动
+        if (dice == 6) {
             return true;
         } else {
             int[] p = Game.chessBoard.getAirplane(color).position;
             for (int i = 0; i < 4; i++) {
-                if (p[i] >= 0)//-1 means stop,-2 means over;
+                if (p[i] >= 0)//-1 : 未起飞，-2 :已完成;
                     return true;
             }
         }
         return false;
     }
 
-    public boolean move() {
-        if ((Game.chessBoard.getAirplane(color).position[whichPlane] == -1 && dice % 2 != 0) || Game.chessBoard.getAirplane(color).position[whichPlane] == -2)
+    public boolean move() { // 规则：计算
+        if ((Game.chessBoard.getAirplane(color).position[whichPlane] == -1 && dice != 6) ||
+                Game.chessBoard.getAirplane(color).position[whichPlane] == -2) { //不能移动
             return false;
-        if (Game.chessBoard.getAirplane(color).position[whichPlane] == -1) {
+        }
+        if (Game.chessBoard.getAirplane(color).position[whichPlane] == -1) { //起飞
             Game.chessBoard.getAirplane(color).position[whichPlane] = 0;
             return true;
         }
         Game.chessBoard.getAirplane(color).lastPosition[whichPlane] = Game.chessBoard.getAirplane(color).position[whichPlane];
         int nextStep = Game.chessBoard.getAirplane(color).position[whichPlane] + dice;
-        if (nextStep > 56) {
+
+        if (nextStep > 56) { // 移动溢出
             nextStep = 56 - (nextStep - 56);
             Game.chessBoard.setOverflow(true);
-        } else if (nextStep == 56)
+        } else if (nextStep == 56) { // 胜利
             nextStep = -2;
-        else if (nextStep == 18)
+        } else if (nextStep == 18) { // 飞行后小跳
             nextStep = 34;
-        else if (nextStep < 50) {
-            if ((nextStep - 2) % 4 == 0) {
+        } else if (nextStep < 50) {
+            if ((nextStep - 2) % 4 == 0) { //小跳
                 nextStep += 4;
-                if (nextStep == 18)
+                if (nextStep == 18){ // 小跳后飞行
                     nextStep = 30;
+                }
             }
         }
         Game.chessBoard.getAirplane(color).position[whichPlane] = nextStep;
@@ -211,11 +215,13 @@ public class Role {
     }
 
     private int AIDice() {
+        Game.delay(500);
         Random r = new Random(System.currentTimeMillis());
         return r.nextInt(6) + 1;
     }
 
     private int AIChoosePlane() {
+        Game.delay(500);
         Random r = new Random(System.currentTimeMillis());
         int whichPlane = -1;
         //rule 寻找可用飞机

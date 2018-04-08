@@ -83,7 +83,7 @@ public class LocalRoomActivity extends AppCompatActivity {
                 Game.soundManager.playSound(SoundManager.BUTTON);
                 if (idlePlayerListData.size() == 1){
                     Game.replayManager.startRecord();
-                    Intent intent = new Intent(getApplicationContext(), ChessBoardActivity.class);
+                    Intent intent = new Intent(getApplicationContext(), LocalGamingActivity.class);
                     startActivity(intent);
                 } else {
                     Toast.makeText(getApplicationContext(), "陈独秀请你找个位置坐下~", Toast.LENGTH_SHORT).show();

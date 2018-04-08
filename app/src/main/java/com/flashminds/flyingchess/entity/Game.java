@@ -14,6 +14,7 @@ import com.flashminds.flyingchess.R;
 import com.flashminds.flyingchess.manager.ActivityManager;
 import com.flashminds.flyingchess.manager.DataManager;
 import com.flashminds.flyingchess.manager.GameManager;
+import com.flashminds.flyingchess.manager.LocalGameManager;
 import com.flashminds.flyingchess.manager.LogManager;
 import com.flashminds.flyingchess.manager.ReplayManager;
 import com.flashminds.flyingchess.manager.SocketManager;
@@ -29,6 +30,7 @@ import java.util.HashMap;
  * Created by karthur on 2016/4/16.
  */
 public class Game {
+    public static LocalGameManager localGameManager;
     public static GameManager gameManager;
     public static DataManager dataManager;
     public static ChessBoard chessBoard;
@@ -46,6 +48,8 @@ public class Game {
     private static RotateAnimationWorker rotateAnimationWorker;
     private static Typeface typeface;
     private static HashMap<Integer, Bitmap> bitmaps;
+
+
 
     public static void init(AppCompatActivity activity) {
         Game.activity = activity;
@@ -143,35 +147,36 @@ public class Game {
         activity.startActivity(new Intent(activity.getApplicationContext(), ChooseModeActivity.class));
     }
 
-}
+    static class RotateAnimationWorker implements Runnable {
+        private View view;
+        private boolean run;
 
-class RotateAnimationWorker implements Runnable {
-    private View view;
-    private boolean run;
+        public RotateAnimationWorker() {
+            run = true;
+        }
 
-    public RotateAnimationWorker() {
-        run = true;
-    }
+        public void setView(View view) {
+            this.view = view;
+        }
 
-    public void setView(View view) {
-        this.view = view;
-    }
+        public void stop() {
+            run = false;
+        }
 
-    public void stop() {
-        run = false;
-    }
-
-    @Override
-    public void run() {
-        run = true;
-        while (run) {
-            Game.delay(80);
-            view.post(new Runnable() {
-                @Override
-                public void run() {
-                    view.setRotation(view.getRotation() + 20);
-                }
-            });
+        @Override
+        public void run() {
+            run = true;
+            while (run) {
+                Game.delay(80);
+                view.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        view.setRotation(view.getRotation() + 20);
+                    }
+                });
+            }
         }
     }
 }
+
+

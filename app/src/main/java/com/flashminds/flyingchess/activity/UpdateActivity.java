@@ -8,6 +8,10 @@ import android.widget.Button;
 import com.flashminds.flyingchess.entity.Game;
 import com.flashminds.flyingchess.R;
 
+/**
+ * Deprecated by IACJ on 2018/4/9
+ */
+@Deprecated
 public class UpdateActivity extends Activity {
     Button ok, cancel;
     boolean update;

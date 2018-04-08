@@ -1,11 +1,11 @@
 <resources>
-    <string name="app_name">FlyingChess</string>
-    <string name="name">Name</string>
+    <string name="app_name">欢乐飞行棋</string>
+    <string name="name">昵称</string>
     <string name="login">Login</string>
     <string name="register">Register</string>
     <string name="password">Password</string>
     <string name="password_confirm">Password confirm</string>
-    <string name="resume">Continue</string>
-    <string name="robot">Auto</string>
-    <string name="exit">Exit</string>
+    <string name="resume">返回游戏</string>
+    <string name="robot">托管</string>
+    <string name="exit">退出游戏</string>
 </resources>

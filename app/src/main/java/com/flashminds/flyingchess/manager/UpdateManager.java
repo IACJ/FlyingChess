@@ -6,7 +6,10 @@ import com.flashminds.flyingchess.entity.UpdateWorker;
 
 /**
  * Created by karthur on 2016/5/12.
+ *
+ * Deprecated by IACJ on 2018/4/9
  */
+@Deprecated
 public class UpdateManager {
     public UpdateWorker uw;
     private boolean checked;
