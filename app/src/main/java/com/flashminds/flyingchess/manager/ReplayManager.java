@@ -16,6 +16,8 @@ import java.util.Date;
 
 /**
  * Created by Great on 2016/5/12.
+ *
+ * Edited by IACJ on 2018/4/9
  */
 public class ReplayManager {
     public static final String PATH = Environment.getExternalStorageDirectory().getPath() + "/FlashMinds.com/FlyingChess/replay/";
@@ -63,12 +65,17 @@ public class ReplayManager {
             reader = new BufferedReader(new FileReader(file));
         } catch (Exception e) {
             isReplay = false;
+            e.printStackTrace();
         }
         isReplay = true;
         return isReplay;
     }
 
     public void savePlayerNum(int num) {
+        System.out.println("测试：");
+        System.out.println(PATH);
+        System.out.println(isReplay);
+        System.out.println(num);
         if (isReplay == false) {
             try {
                 writer.write(num + "\n");

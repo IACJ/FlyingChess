@@ -3,7 +3,7 @@ package com.flashminds.flyingchess.manager;
 import android.os.Bundle;
 import android.os.Message;
 
-import com.flashminds.flyingchess.activity.local.LocalGamingActivity;
+import com.flashminds.flyingchess.activity.localGame.LocalGamingActivity;
 import com.flashminds.flyingchess.entity.Global;
 import com.flashminds.flyingchess.entity.Role;
 
@@ -190,7 +190,7 @@ public class LocalGameManager {//game process control
             Global.soundManager.playSound(SoundManager.FLYLONG);
             planeAnimate(color, 30);
             crash(color, 30, whichPlane);
-        } else if (toPos == 34) { // 走玩之后飞，然后小跳
+        } else if (toPos == 34) { // 走完之后飞，然后小跳
             for (int pos = curPos + 1; pos <= 18; pos++) {
                 Global.soundManager.playSound(SoundManager.FLYSHORT);
                 planeAnimate(color, pos);

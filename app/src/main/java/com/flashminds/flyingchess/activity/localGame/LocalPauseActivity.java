@@ -1,4 +1,4 @@
-package com.flashminds.flyingchess.activity.local;
+package com.flashminds.flyingchess.activity.localGame;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -59,7 +59,8 @@ public class LocalPauseActivity extends Activity {
             @Override
             public void onClick(View v) {
             Global.localGameManager.gameOver();
-            Global.replayManager.stopReplay();
+            Global.replayManager.closeRecord();
+            Global.replayManager.clearRecord();
             startActivity(new Intent(getApplicationContext(), ChooseModeActivity.class));
             Global.dataManager.giveUp(false);
             }

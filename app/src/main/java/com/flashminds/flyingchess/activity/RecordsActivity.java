@@ -20,6 +20,11 @@ import com.flashminds.flyingchess.manager.SoundManager;
 import java.io.File;
 import java.util.ArrayList;
 
+/**
+ * Edited by IACJ on 2018/4/9.
+ *
+ * 弹出式窗口，管理回放记录。
+ */
 public class RecordsActivity extends AppCompatActivity {
     ListView recordList;
     ArrayList<String> records;
@@ -31,10 +36,18 @@ public class RecordsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_records);
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        //Global.activityManager.add(this);
         Global.soundManager.playMusic(SoundManager.BACKGROUND);
-        //////////////
-        setupViewComponent();
+
+        recordList = (ListView) findViewById(R.id.recordList);
+        records = searchRecords(Global.replayManager.PATH);
+        recordsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, records);
+        if (records.isEmpty()) {
+            Toast.makeText(getApplicationContext(), "没有回放记录!", Toast.LENGTH_SHORT).show();
+        } else {
+            recordList.setAdapter(recordsAdapter);
+            recordList.setOnItemClickListener(onItemClickLis);
+            recordList.setOnItemLongClickListener(onItemLongClickLis);
+        }
     }
 
     @Override
@@ -49,18 +62,6 @@ public class RecordsActivity extends AppCompatActivity {
         Global.soundManager.pauseMusic();
     }
 
-    private void setupViewComponent() {
-        recordList = (ListView) findViewById(R.id.recordList);
-        records = searchRecords(Global.replayManager.PATH);
-        recordsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, records);
-        if (records.isEmpty())
-            Toast.makeText(getApplicationContext(), "No Records!", Toast.LENGTH_SHORT).show();
-        else {
-            recordList.setAdapter(recordsAdapter);
-            recordList.setOnItemClickListener(onItemClickLis);
-            recordList.setOnItemLongClickListener(onItemLongClickLis);
-        }
-    }
 
     AdapterView.OnItemClickListener onItemClickLis = new AdapterView.OnItemClickListener() {
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -72,7 +73,7 @@ public class RecordsActivity extends AppCompatActivity {
             for (int i = 0; i < playNum; i++) {
                 Global.playersData.put(Global.replayManager.getSavedKey(), Global.replayManager.getSavedRole());
             }
-            startActivity(new Intent(getApplicationContext(), ChessBoardActivity.class));
+            startActivity(new Intent(getApplicationContext(), ReplayGameActivity.class));
         }
     };
 

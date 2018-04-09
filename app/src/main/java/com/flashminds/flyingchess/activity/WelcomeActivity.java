@@ -36,6 +36,7 @@ public class WelcomeActivity extends AppCompatActivity {
         sv = (SurfaceView) findViewById(R.id.surfaceView);
         ///////////
         Global.init(this);
+        Global.activityManager.add(this);
         sv.getHolder().addCallback(new SurfaceHolder.Callback() {
             @Override
             public void surfaceCreated(SurfaceHolder holder) {
@@ -47,20 +48,17 @@ public class WelcomeActivity extends AppCompatActivity {
                     mediaPlayer.setLooping(false);
                     mediaPlayer.prepare();
                     mediaPlayer.start();
-
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
 
             @Override
-            public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-
-            }
-
+            public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {}
             @Override
             public void surfaceDestroyed(SurfaceHolder holder) {
                 if (mediaPlayer != null) {
+                    mediaPlayer.stop();
                     mediaPlayer.release();
                 }
             }
@@ -77,7 +75,7 @@ public class WelcomeActivity extends AppCompatActivity {
             }
         }, 4500);
 
-        Global.activityManager.add(this);
+
         //next activity is choose mode activity
     }
 }

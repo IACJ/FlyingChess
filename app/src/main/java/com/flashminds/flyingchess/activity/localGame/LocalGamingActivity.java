@@ -1,4 +1,4 @@
-package com.flashminds.flyingchess.activity.local;
+package com.flashminds.flyingchess.activity.localGame;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -130,6 +130,7 @@ public class LocalGamingActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //ui setting
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chess_board);
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);//Activity切换动画
@@ -179,8 +180,7 @@ public class LocalGamingActivity extends AppCompatActivity {
 
         handler = new LocalGamingHandler(this);
 
-
-        //  绘制棋盘
+        // 绘制棋盘
         DisplayMetrics dm = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);
         boardWidth = dm.heightPixels;

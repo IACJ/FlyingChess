@@ -1,4 +1,4 @@
-package com.flashminds.flyingchess.activity.local;
+package com.flashminds.flyingchess.activity.localGame;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,7 +13,6 @@ import android.widget.Toast;
 
 import com.flashminds.flyingchess.R;
 import com.flashminds.flyingchess.activity.ChooseModeActivity;
-import com.flashminds.flyingchess.activity.local.LocalGamingActivity;
 import com.flashminds.flyingchess.entity.ChessBoard;
 import com.flashminds.flyingchess.entity.Global;
 import com.flashminds.flyingchess.entity.Role;

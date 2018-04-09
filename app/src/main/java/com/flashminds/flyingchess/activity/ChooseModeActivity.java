@@ -11,7 +11,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.flashminds.flyingchess.activity.local.LocalRoomActivity;
+import com.flashminds.flyingchess.activity.localGame.LocalRoomActivity;
 import com.flashminds.flyingchess.entity.Global;
 import com.flashminds.flyingchess.manager.DataManager;
 import com.flashminds.flyingchess.dataPack.DataPack;
@@ -45,7 +45,7 @@ public class ChooseModeActivity extends AppCompatActivity implements Target {
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);//Activity切换动画
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         Global.soundManager.playMusic(SoundManager.BACKGROUND);
-        //init
+        // 查找view
         btnLocal = (Button) findViewById(R.id.btn_local);
         local = (Button) findViewById(R.id.button2);
         lan = (Button) findViewById(R.id.button3);
@@ -58,7 +58,8 @@ public class ChooseModeActivity extends AppCompatActivity implements Target {
         waitImage = (ImageView) findViewById(R.id.wait);
         waitBackground = (Button) findViewById(R.id.waitbackground);
         records = (Button) findViewById(R.id.records);
-        //trigger
+
+        // 按钮事件
         btnLocal.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {

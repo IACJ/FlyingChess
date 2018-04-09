@@ -9,6 +9,8 @@ import java.io.IOException;
 
 /**
  * Created by karthur on 2016/5/13.
+ *
+ * Deprecated by IACJ on 2018/4/9
  */
 @Deprecated
 public class LogManager {
