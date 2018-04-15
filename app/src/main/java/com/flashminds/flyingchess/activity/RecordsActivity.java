@@ -74,6 +74,7 @@ public class RecordsActivity extends AppCompatActivity {
             for (int i = 0; i < playNum; i++) {
                 Global.playersData.put(Global.replayManager.getSavedKey(), Global.replayManager.getSavedRole());
             }
+            Global.dataManager.setMyId("0");
             startActivity(new Intent(getApplicationContext(), ReplayGameActivity.class));
         }
     };

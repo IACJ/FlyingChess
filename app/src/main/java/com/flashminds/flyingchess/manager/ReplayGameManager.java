@@ -79,35 +79,16 @@ public class ReplayGameManager  {//game process control
                 win = false;
             }
         }
+        System.out.println(id+" id");
+        System.out.println(Global.dataManager.getMyId()+" Global.dataManager.getMyId()");
         if (win) {
             if (Integer.valueOf(id) < 0) {
                 String[] s = {"Red", "Green", "Blue", "Yellow"};
                 toast(s[color] + " robot is the winner!");
-                if (Global.dataManager.getGameMode() == DataManager.GM_WLAN && Global.dataManager.getHostId().compareTo(Global.dataManager.getMyId()) == 0) {//我是房主
-                    LinkedList<String> msgs = new LinkedList<>();
-                    msgs.addLast(id);
-                    msgs.addLast(Global.dataManager.getRoomId());
-                    msgs.addLast("ROBOT");
-                    Global.socketManager.send(new DataPack(DataPack.R_GAME_FINISHED, msgs));
-                }
-            } else if (id.compareTo(Global.dataManager.getMyId()) == 0) {//我赢了
+            } else if (id.equals(Global.dataManager.getMyId()) ) {//我赢了
                 toast("I am the winner!");
-                if (Global.dataManager.getGameMode() == DataManager.GM_WLAN) {
-                    LinkedList<String> msgs = new LinkedList<>();
-                    msgs.addLast(id);
-                    msgs.addLast(Global.dataManager.getRoomId());
-                    msgs.addLast(Global.dataManager.getMyName());
-                    Global.socketManager.send(new DataPack(DataPack.R_GAME_FINISHED, msgs));
-                }
             } else {//player
                 toast("player" + Global.playersData.get(id).name + "is the winner!");
-                if (Global.dataManager.getGameMode() == DataManager.GM_WLAN && Global.playersData.get(id).offline && Global.dataManager.getHostId().compareTo(Global.dataManager.getMyId()) == 0) {//掉线且我是房主
-                    LinkedList<String> msgs = new LinkedList<>();
-                    msgs.addLast(id);
-                    msgs.addLast(id);
-                    msgs.addLast(Global.playersData.get(id).name);
-                    Global.socketManager.send(new DataPack(DataPack.R_GAME_FINISHED, msgs));
-                }
             }
             Global.dataManager.setWinner(id);
             gameOver();
@@ -246,13 +227,7 @@ public class ReplayGameManager  {//game process control
                 for (int j = 0; j < 4; j++) {
                     int crashPos = Global.chessBoard.getAirplane(i).position[j];
                     if (crashPos > 0) {
-                        Global.logManager.p("crash:", "find plane:", j, "position:", crashPos, "(x,y):", "(", Global.chessBoard.map[i][crashPos][0], ",", Global.chessBoard.map[i][crashPos][1], ")");
-                    } else {
-                        Global.logManager.p("crash:", "find plane:", j, "position:", crashPos, "(x,y):", "(", "home", ")");
-                    }
-                    if (crashPos > 0) {
                         if (Global.chessBoard.map[i][crashPos][0] == curX && Global.chessBoard.map[i][crashPos][1] == curY) {//撞别人
-                            Global.logManager.p("crash:", "crash success");
                             crashPlane = j;
                             count++;
                         }
