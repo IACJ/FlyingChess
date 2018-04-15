@@ -42,7 +42,7 @@ public class Role {
     }
 
     public boolean canIMove() {//test whether i can move a plane
-        if (dice % 2 == 0) {//dice=2 4 6
+        if (dice == 6) {//dice=2 4 6   ->  dice = 6
             return true;
         } else {
             int[] p = Game.chessBoard.getAirplane(color).position;
@@ -55,7 +55,7 @@ public class Role {
     }
 
     public boolean move() {
-        if ((Game.chessBoard.getAirplane(color).position[whichPlane] == -1 && dice % 2 != 0) || Game.chessBoard.getAirplane(color).position[whichPlane] == -2)
+        if ((Game.chessBoard.getAirplane(color).position[whichPlane] == -1 && dice != 6) || Game.chessBoard.getAirplane(color).position[whichPlane] == -2)   //dice % 2 !=0  ->   dice != 6
             return false;
         if (Game.chessBoard.getAirplane(color).position[whichPlane] == -1) {
             Game.chessBoard.getAirplane(color).position[whichPlane] = 0;
@@ -63,12 +63,12 @@ public class Role {
         }
         Game.chessBoard.getAirplane(color).lastPosition[whichPlane] = Game.chessBoard.getAirplane(color).position[whichPlane];
         int nextStep = Game.chessBoard.getAirplane(color).position[whichPlane] + dice;
-        if (nextStep > 56) {
+        if (nextStep > 56) {       //没有正好到达终点，回退
             nextStep = 56 - (nextStep - 56);
             Game.chessBoard.setOverflow(true);
-        } else if (nextStep == 56)
+        } else if (nextStep == 56)   //成功
             nextStep = -2;
-        else if (nextStep == 18)
+        else if (nextStep == 18)    //跳跃点
             nextStep = 34;
         else if (nextStep < 50) {
             if ((nextStep - 2) % 4 == 0) {
@@ -223,7 +223,7 @@ public class Role {
         for (int i = 0; i < 4; i++) {
             if (Game.chessBoard.getAirplane(color).position[i] >= 0) {
                 avaPlane.add(i);
-            } else if (Game.chessBoard.getAirplane(color).position[i] == -1 && dice % 2 == 0) {
+            } else if (Game.chessBoard.getAirplane(color).position[i] == -1 && dice == 6) {
                 avaPlane.add(i);
             }
         }

@@ -109,6 +109,9 @@ public class GameManager implements Target {//game process control
                 amIWin(role.id, color);
             }
             Game.delay(200);
+            if(dice == 6) {
+                Game.gameManager.turnTo(color);
+            }
         }
     }
 

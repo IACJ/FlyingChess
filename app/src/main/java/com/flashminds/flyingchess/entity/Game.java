@@ -81,7 +81,8 @@ public class Game {
     public static void initBitmap() {
         bitmaps.put(R.raw.choosemodebk, Game.loadBitmap(R.raw.choosemodebk));
         bitmaps.put(R.raw.cloud, Game.loadBitmap(R.raw.cloud));
-        bitmaps.put(R.raw.map_min, Game.loadRectBitMap(R.raw.map_min));
+        //bitmaps.put(R.raw.map_min, Game.loadRectBitMap(R.raw.map_min));
+        bitmaps.put(R.raw.map_test, Game.loadRectBitMap(R.raw.map_test));
         d = new Drawable[6];
         d[0] = activity.getResources().getDrawable(R.drawable.dices, null);
         d[1] = activity.getResources().getDrawable(R.drawable.dices2, null);
@@ -91,6 +92,7 @@ public class Game {
         d[5] = activity.getResources().getDrawable(R.drawable.dices6, null);
     }
 
+    //获取资源图片
     private static Bitmap loadBitmap(int id) {
         DisplayMetrics dm = new DisplayMetrics();
         activity.getWindowManager().getDefaultDisplay().getMetrics(dm);

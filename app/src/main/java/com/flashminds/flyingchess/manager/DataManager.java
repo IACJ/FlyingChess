@@ -21,7 +21,7 @@ public class DataManager {//数据存储类
     private String onlineScore;
     private int gameMode;//游戏模式
     private String lastWinner;
-    private boolean giveUp;
+    private boolean giveUp;  //托管
 
     Data data;
 

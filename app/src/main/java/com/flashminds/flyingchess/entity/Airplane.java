@@ -14,7 +14,7 @@ public class Airplane {
     }
 
     public void init() {
-        lastPosition[0] = -1;
+        lastPosition[0] = -1;    //-1意味着停止
         lastPosition[1] = -1;
         lastPosition[2] = -1;
         lastPosition[3] = -1;

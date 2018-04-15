@@ -1,9 +1,15 @@
 package com.flashminds.flyingchess.activity;
 
+import android.app.Service;
 import android.content.Intent;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.view.KeyEvent;
@@ -28,6 +34,10 @@ import java.util.ArrayList;
 public class ChessBoardActivity extends AppCompatActivity {
     Button pauseButton;
     Button throwDiceButton;
+
+    SensorManager manager;
+    ShakeListener listener;
+
     Button[][] plane;
     int boardWidth;
     public Handler handler;
@@ -72,9 +82,9 @@ public class ChessBoardActivity extends AppCompatActivity {
         handler = new MyHandler(this);
         map = (ImageView) findViewById(R.id.map);
 
-        xt = new TextView[4];
-        xname = new TextView[4];
-        xscore = new TextView[4];
+        xt = new TextView[4];   //次序箭头
+        xname = new TextView[4];  //玩家名字
+        xscore = new TextView[4];   //玩家分数
         xt[0] = (TextView) findViewById(R.id.rt);
         xt[1] = (TextView) findViewById(R.id.gt);
         xt[2] = (TextView) findViewById(R.id.bt);
@@ -92,9 +102,12 @@ public class ChessBoardActivity extends AppCompatActivity {
         DisplayMetrics dm = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);
         boardWidth = dm.heightPixels;
-        n = 19;
-        dx = boardWidth / n + 0.8f;
-        map.setImageBitmap(Game.getBitmap(R.raw.map_min));
+//        n = 19;
+//        dx = boardWidth / n + 0.8f;
+        n = 36;
+        dx = boardWidth / n;
+        //map.setImageBitmap(Game.getBitmap(R.raw.map_min));
+        map.setImageBitmap(Game.getBitmap(R.raw.map_test));
         //trigger
         pauseButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -108,32 +121,39 @@ public class ChessBoardActivity extends AppCompatActivity {
                 Game.playersData.get(Game.dataManager.getMyId()).setDiceValid(0);
             }
         });
+
+        manager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        listener = new ShakeListener();
+        manager.registerListener(listener, manager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), manager.SENSOR_DELAY_NORMAL);
+
         /////////////////
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
                 plane[i][j].setOnClickListener(new myOnClickListener(i, j));
             }
         }
+
         ///setting
-        moveTo(plane[0][0], 1, n - 4);
-        moveTo(plane[0][1], 3, n - 4);
-        moveTo(plane[0][2], 1, n - 2);
-        moveTo(plane[0][3], 3, n - 2);
+        moveTo(plane[0][0], 3, 29);
+        moveTo(plane[0][1], 5, 29);
+        moveTo(plane[0][2], 3, 31);
+        moveTo(plane[0][3], 5, 31);
 
-        moveTo(plane[1][0], n - 4, n - 4);
-        moveTo(plane[1][1], n - 2, n - 4);
-        moveTo(plane[1][2], n - 4, n - 2);
-        moveTo(plane[1][3], n - 2, n - 2);
+        moveTo(plane[1][0], 29, 29);
+        moveTo(plane[1][1], 31, 29);
+        moveTo(plane[1][2], 29, 31);
+        moveTo(plane[1][3], 31, 31);
 
-        moveTo(plane[2][0], n - 4, 1);
-        moveTo(plane[2][1], n - 2, 1);
-        moveTo(plane[2][2], n - 4, 3);
-        moveTo(plane[2][3], n - 2, 3);
+        moveTo(plane[2][0], 29, 3);
+        moveTo(plane[2][1], 31, 3);
+        moveTo(plane[2][2], 29, 5);
+        moveTo(plane[2][3], 31, 5);
 
-        moveTo(plane[3][0], 1, 1);
-        moveTo(plane[3][1], 3, 1);
-        moveTo(plane[3][2], 1, 3);
-        moveTo(plane[3][3], 3, 3);
+        moveTo(plane[3][0], 3, 3);
+        moveTo(plane[3][1], 5, 3);
+        moveTo(plane[3][2], 3, 5);
+        moveTo(plane[3][3], 5, 5);
+
 
         plane[0][0].setVisibility(View.INVISIBLE);
         plane[0][1].setVisibility(View.INVISIBLE);
@@ -351,5 +371,29 @@ class myOnClickListener implements View.OnClickListener {
     public void onClick(View v) {
         if (Game.playersData.get(Game.dataManager.getMyId()).color == color)
             Game.playersData.get(Game.dataManager.getMyId()).setPlaneValid(which);
+    }
+}
+
+class ShakeListener implements SensorEventListener {
+
+    @Override
+    public void onSensorChanged(SensorEvent sensorEvent) {
+        //获取传感器类型
+        int sensorType = sensorEvent.sensor.getType();
+        //values[0]:X轴，values[1]:Y轴，values[2]:Z轴
+        float[] values = sensorEvent.values;
+        //如果传感器类型为加速段传感器，则判断是否为摇一摇
+        if(sensorType == Sensor.TYPE_ACCELEROMETER) {
+            if((Math.abs(values[0]) > 17 || Math.abs(values[1]) > 17 ||
+                    Math.abs(values[2]) > 17))
+            {
+                Game.playersData.get(Game.dataManager.getMyId()).setDiceValid(0);
+            }
+        }
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int i) {
+
     }
 }
