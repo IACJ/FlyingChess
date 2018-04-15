@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
 import android.view.WindowManager;
 
 import com.flashminds.flyingchess.entity.Global;
@@ -24,6 +25,8 @@ import java.util.TimerTask;
 public class WelcomeActivity extends AppCompatActivity {
     SurfaceView sv;
     MediaPlayer mediaPlayer;
+
+    Boolean jump = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,19 +66,32 @@ public class WelcomeActivity extends AppCompatActivity {
                 }
             }
         });
+        sv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mediaPlayer != null) {
+                    mediaPlayer.stop();
+                    mediaPlayer.release();
+                }
+                jump = true;
+                mediaPlayer = null;
+                sv = null;
+                Intent intent = new Intent(getApplicationContext(), ChooseModeActivity.class);
+                startActivity(intent);//switch activity
+            }
+        });
 
 
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
-                Intent intent = new Intent(getApplicationContext(), ChooseModeActivity.class);
-                startActivity(intent);//switch activity
-                mediaPlayer = null;
-                sv = null;
+                if (jump == false){
+                    mediaPlayer = null;
+                    sv = null;
+                    Intent intent = new Intent(getApplicationContext(), ChooseModeActivity.class);
+                    startActivity(intent);//switch activity
+                }
             }
         }, 11500);
-
-
-        //next activity is choose mode activity
     }
 }
