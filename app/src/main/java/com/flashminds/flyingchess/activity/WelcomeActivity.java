@@ -73,7 +73,7 @@ public class WelcomeActivity extends AppCompatActivity {
                 mediaPlayer = null;
                 sv = null;
             }
-        }, 4500);
+        }, 11500);
 
 
         //next activity is choose mode activity
