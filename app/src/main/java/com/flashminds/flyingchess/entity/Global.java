@@ -16,6 +16,7 @@ import com.flashminds.flyingchess.manager.DataManager;
 import com.flashminds.flyingchess.manager.GameManager;
 import com.flashminds.flyingchess.manager.LocalGameManager;
 import com.flashminds.flyingchess.manager.LogManager;
+import com.flashminds.flyingchess.manager.ReplayGameManager;
 import com.flashminds.flyingchess.manager.ReplayManager;
 import com.flashminds.flyingchess.manager.SocketManager;
 import com.flashminds.flyingchess.manager.SoundManager;
@@ -28,8 +29,11 @@ import java.util.HashMap;
 
 /**
  * Created by karthur on 2016/4/16.
+ *
+ * Edited by IACJ on 2018/4/15
  */
 public class Global {
+    public static ReplayGameManager replayGameManager;
     public static LocalGameManager localGameManager;
     public static GameManager gameManager;
     public static DataManager dataManager;

@@ -1,4 +1,4 @@
-package com.flashminds.flyingchess.activity;
+package com.flashminds.flyingchess.activity.replay;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,12 +15,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.flashminds.flyingchess.R;
-import com.flashminds.flyingchess.dataPack.DataPack;
+import com.flashminds.flyingchess.activity.ChooseModeActivity;
+import com.flashminds.flyingchess.activity.PauseActivity;
 import com.flashminds.flyingchess.entity.Global;
-import com.flashminds.flyingchess.manager.DataManager;
+import com.flashminds.flyingchess.manager.ReplayGameManager;
 import com.flashminds.flyingchess.manager.SoundManager;
-
-import java.util.ArrayList;
 
 /**
  * Created by IACJ on 2018/4/9.
@@ -38,7 +37,6 @@ public class ReplayGameActivity extends AppCompatActivity {
     public Handler handler;
     float dx;
     int n;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,17 +57,14 @@ public class ReplayGameActivity extends AppCompatActivity {
         plane[0][1] = (Button) findViewById(R.id.R2);
         plane[0][2] = (Button) findViewById(R.id.R3);
         plane[0][3] = (Button) findViewById(R.id.R4);
-
         plane[1][0] = (Button) findViewById(R.id.G1);
         plane[1][1] = (Button) findViewById(R.id.G2);
         plane[1][2] = (Button) findViewById(R.id.G3);
         plane[1][3] = (Button) findViewById(R.id.G4);
-
         plane[2][0] = (Button) findViewById(R.id.B1);
         plane[2][1] = (Button) findViewById(R.id.B2);
         plane[2][2] = (Button) findViewById(R.id.B3);
         plane[2][3] = (Button) findViewById(R.id.B4);
-
         plane[3][0] = (Button) findViewById(R.id.Y1);
         plane[3][1] = (Button) findViewById(R.id.Y2);
         plane[3][2] = (Button) findViewById(R.id.Y3);
@@ -79,12 +74,10 @@ public class ReplayGameActivity extends AppCompatActivity {
         xt[1] = (TextView) findViewById(R.id.gt);
         xt[2] = (TextView) findViewById(R.id.bt);
         xt[3] = (TextView) findViewById(R.id.yt);
-
         xname[0] = (TextView) findViewById(R.id.rname);
         xname[1] = (TextView) findViewById(R.id.gname);
         xname[2] = (TextView) findViewById(R.id.bname);
         xname[3] = (TextView) findViewById(R.id.yname);
-
         xscore[0] = (TextView) findViewById(R.id.rscore);
         xscore[1] = (TextView) findViewById(R.id.gscore);
         xscore[2] = (TextView) findViewById(R.id.bscore);
@@ -119,22 +112,18 @@ public class ReplayGameActivity extends AppCompatActivity {
         moveTo(plane[0][1], 3, n - 4);
         moveTo(plane[0][2], 1, n - 2);
         moveTo(plane[0][3], 3, n - 2);
-
         moveTo(plane[1][0], n - 4, n - 4);
         moveTo(plane[1][1], n - 2, n - 4);
         moveTo(plane[1][2], n - 4, n - 2);
         moveTo(plane[1][3], n - 2, n - 2);
-
         moveTo(plane[2][0], n - 4, 1);
         moveTo(plane[2][1], n - 2, 1);
         moveTo(plane[2][2], n - 4, 3);
         moveTo(plane[2][3], n - 2, 3);
-
         moveTo(plane[3][0], 1, 1);
         moveTo(plane[3][1], 3, 1);
         moveTo(plane[3][2], 1, 3);
         moveTo(plane[3][3], 3, 3);
-
 
         for (String key : Global.playersData.keySet()) {
             plane[Global.playersData.get(key).color][0].setVisibility(View.VISIBLE);
@@ -153,7 +142,8 @@ public class ReplayGameActivity extends AppCompatActivity {
         }
         throwDiceButton.setBackground(Global.d[0]);
 
-//        Global.gameManager.newTurn(this);
+        Global.replayGameManager = new ReplayGameManager();
+        Global.replayGameManager.startGame(this);
     }
 
     @Override
@@ -180,7 +170,7 @@ public class ReplayGameActivity extends AppCompatActivity {
     }
 
     public void exit() {
-        Global.gameManager.gameOver();
+        Global.replayGameManager.gameOver();
         startActivity(new Intent(getApplicationContext(), ChooseModeActivity.class));
     }
 
@@ -227,7 +217,7 @@ public class ReplayGameActivity extends AppCompatActivity {
                 break;
                 case 5://finished
                 {
-                    Toast.makeText(parent, "Replay finished!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(parent, "回放结束!", Toast.LENGTH_LONG).show();
                     parent.startActivity(new Intent(parent.getApplicationContext(), ChooseModeActivity.class));
                     break;
                 }
@@ -242,6 +232,20 @@ public class ReplayGameActivity extends AppCompatActivity {
                 default:
                     super.handleMessage(msg);
             }
+        }
+    }
+    class myOnClickListener implements View.OnClickListener {
+        int color, which;
+
+        public myOnClickListener(int color, int which) {
+            this.color = color;
+            this.which = which;
+        }
+
+        @Override
+        public void onClick(View v) {
+            if (Global.playersData.get(Global.dataManager.getMyId()).color == color)
+                Global.playersData.get(Global.dataManager.getMyId()).setPlaneValid(which);
         }
     }
 }

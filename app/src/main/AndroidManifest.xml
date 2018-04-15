@@ -44,7 +44,7 @@
             android:theme="@style/Theme.AppCompat.Light.Dialog.Alert"/>
 
         <activity
-            android:name=".activity.ReplayGameActivity"
+            android:name=".activity.replay.ReplayGameActivity"
             android:screenOrientation="landscape" />
 
 
