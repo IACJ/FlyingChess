@@ -20,10 +20,18 @@ import com.flashminds.flyingchess.R;
 import com.flashminds.flyingchess.entity.Role;
 import com.flashminds.flyingchess.manager.SoundManager;
 import com.flashminds.flyingchess.dataPack.Target;
+import com.flashminds.flyingchess.service.NetworkServiceProxy;
+import com.google.gson.JsonObject;
+import com.tencent.mars.sample.wrapper.TaskProperty;
+import com.tencent.mars.sample.wrapper.remote.JsonMarsTaskWrapper;
+import com.tencent.mars.sample.wrapper.remote.MarsServiceProxy;
+import com.tencent.mars.sample.wrapper.remote.MarsTaskProperty;
+import com.tencent.mars.xlog.Log;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.concurrent.TimeUnit;
 
 public class RoomActivity extends AppCompatActivity implements Target {
     Button startButton, backButton, site[], addRobotButton[];
@@ -32,7 +40,7 @@ public class RoomActivity extends AppCompatActivity implements Target {
     LinkedList<HashMap<String, String>> idlePlayerListData;
     SimpleAdapter idlePlayerListAdapter;
     TextView title;
-
+    private static final String TAG = "RoomActivity";
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,6 +73,7 @@ public class RoomActivity extends AppCompatActivity implements Target {
             @Override
             public void onClick(View v) {
                 Game.soundManager.playSound(SoundManager.BUTTON);
+                test();
                 if (idlePlayerListData.size() > 1)
                     Toast.makeText(getApplicationContext(), "some one is not ready!", Toast.LENGTH_SHORT).show();
                 else {
@@ -439,5 +448,73 @@ public class RoomActivity extends AppCompatActivity implements Target {
             Intent intent = new Intent(getApplicationContext(), ChooseModeActivity.class);
             startActivity(intent);
         }
+    }
+    JsonObject getRoomRequest;
+    JsonObject getRoomResponse;
+
+    @TaskProperty(
+            host = "125.216.245.27",
+            path = "/servlet_test/login"
+    )
+    class TestJsonMarsTaskWrapper extends JsonMarsTaskWrapper {
+
+        String text;
+        int errType = -1;
+        int errCode = -1;
+
+        TestJsonMarsTaskWrapper(String text) {
+            super(new JsonObject(), new JsonObject());
+
+            this.text = text;
+        }
+
+        @Override
+        public void onPreEncode(JsonObject request) {
+            request.addProperty("text", text);
+            // TODO: sleep for a while for cancelling test
+            try {
+                TimeUnit.SECONDS.sleep(1);
+
+            } catch (InterruptedException e) {
+                //
+            }
+        }
+
+        @Override
+        public void onPostDecode(JsonObject response) {
+            // TODO:
+            Log.i(TAG,"post ok");
+        }
+
+        @Override
+        public void onTaskEnd(int errType, int errCode) {
+            Log.d(TAG, "%s taskID = %d, error = (%d, %d)", request.toString(), getProperties().getInt(MarsTaskProperty.OPTIONS_TASK_ID), errType, errCode);
+
+            this.errType = errType;
+            this.errCode = errCode;
+        }
+    }
+    private JsonMarsTaskWrapper taskGetRoom=new JsonMarsTaskWrapper(getRoomRequest,getRoomResponse) {
+        @Override
+        public void onPreEncode(JsonObject request) {
+            Log.i(TAG,"pre ok");
+        }
+
+        @Override
+        public void onPostDecode(JsonObject response) {
+            Log.d("a",response.toString());
+            Log.d("a","testok");
+
+        }
+
+        @Override
+        public void onTaskEnd(int errType, int errCode) {
+            Log.d("a","testok");
+        }
+    };
+    private void test(){
+        TestJsonMarsTaskWrapper task=new TestJsonMarsTaskWrapper("network test");
+        NetworkServiceProxy.send(task);
+
     }
 }

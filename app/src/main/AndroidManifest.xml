@@ -10,26 +10,24 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <application
+        android:name=".manager.ApplicationManager"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <activity
             android:name=".activity.RequestPermissionActivity"
             android:screenOrientation="landscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".activity.WelcomeActivity"
-            android:screenOrientation="landscape">
-        </activity>
-
+            android:screenOrientation="landscape"></activity>
         <activity
             android:name=".activity.ChooseModeActivity"
             android:screenOrientation="landscape" />
@@ -61,6 +59,11 @@
             android:name=".activity.RecordsActivity"
             android:screenOrientation="landscape"
             android:theme="@style/Theme.AppCompat.Light.Dialog.Alert" />
+
+        <service
+            android:name=".service.NetworkService"
+            android:enabled="true"
+            android:exported="true"></service>
     </application>
 
 </manifest>

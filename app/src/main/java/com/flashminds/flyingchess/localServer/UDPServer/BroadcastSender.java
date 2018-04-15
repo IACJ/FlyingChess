@@ -32,7 +32,9 @@ public class BroadcastSender implements Runnable {
     public BroadcastSender(UDPServer parent, final AppCompatActivity activity) {
         this.parent = parent;
         try {
-            WifiManager wm = (WifiManager) activity.getSystemService(Context.WIFI_SERVICE);
+            //在早于24版本的android中使用context.getSystemService会导致内存泄漏
+            //需要使用context.getApplicationContext().getSystemService
+            WifiManager wm = (WifiManager) activity.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
             localIp = getLocalHostIp();
             ipSection = getIpSection(localIp, wm.getDhcpInfo().netmask);
             sendSocket = new DataPackUdpSocket(new DatagramSocket());
