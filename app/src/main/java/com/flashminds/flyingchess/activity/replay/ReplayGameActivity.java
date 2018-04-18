@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.flashminds.flyingchess.R;
 import com.flashminds.flyingchess.activity.ChooseModeActivity;
 import com.flashminds.flyingchess.activity.PauseActivity;
+import com.flashminds.flyingchess.entity.ChessBoard;
 import com.flashminds.flyingchess.entity.Global;
 import com.flashminds.flyingchess.manager.ReplayGameManager;
 import com.flashminds.flyingchess.manager.SoundManager;
@@ -89,8 +90,8 @@ public class ReplayGameActivity extends AppCompatActivity {
         DisplayMetrics dm = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);
         boardWidth = dm.heightPixels;
-        n = 19;
-        dx = boardWidth / n + 0.8f;
+        n = 36;
+        dx = boardWidth / n;
         map.setImageBitmap(Global.getBitmap(R.raw.map_min));
 
         // 按钮事件
@@ -107,23 +108,12 @@ public class ReplayGameActivity extends AppCompatActivity {
                 plane[i][j].setVisibility(View.INVISIBLE);
             }
         }
-        ///setting
-        moveTo(plane[0][0], 1, n - 4);
-        moveTo(plane[0][1], 3, n - 4);
-        moveTo(plane[0][2], 1, n - 2);
-        moveTo(plane[0][3], 3, n - 2);
-        moveTo(plane[1][0], n - 4, n - 4);
-        moveTo(plane[1][1], n - 2, n - 4);
-        moveTo(plane[1][2], n - 4, n - 2);
-        moveTo(plane[1][3], n - 2, n - 2);
-        moveTo(plane[2][0], n - 4, 1);
-        moveTo(plane[2][1], n - 2, 1);
-        moveTo(plane[2][2], n - 4, 3);
-        moveTo(plane[2][3], n - 2, 3);
-        moveTo(plane[3][0], 1, 1);
-        moveTo(plane[3][1], 3, 1);
-        moveTo(plane[3][2], 1, 3);
-        moveTo(plane[3][3], 3, 3);
+        // 初始化飞机view
+        for (int i=0;i<4;i++){
+            for (int j=0;j<4;j++){
+                moveTo(plane[i][j], ChessBoard.mapStart[i][j][0],ChessBoard.mapStart[i][j][1]);
+            }
+        }
 
         for (String key : Global.playersData.keySet()) {
             plane[Global.playersData.get(key).color][0].setVisibility(View.VISIBLE);

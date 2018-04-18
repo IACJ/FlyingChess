@@ -1,6 +1,10 @@
 package com.flashminds.flyingchess.activity.localGame;
 
 import android.content.Intent;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -18,6 +22,7 @@ import com.flashminds.flyingchess.R;
 import com.flashminds.flyingchess.activity.ChooseModeActivity;
 import com.flashminds.flyingchess.activity.GameEndActivity;
 import com.flashminds.flyingchess.activity.RoomActivity;
+import com.flashminds.flyingchess.entity.ChessBoard;
 import com.flashminds.flyingchess.entity.Global;
 import com.flashminds.flyingchess.manager.LocalGameManager;
 import com.flashminds.flyingchess.manager.SoundManager;
@@ -35,6 +40,9 @@ public class LocalGamingActivity extends AppCompatActivity {
     TextView[] xname = new TextView[4];
     TextView[] xscore = new TextView[4];
     ImageView map;
+
+    SensorManager manager;
+    ShakeListener listener;
 
     int boardWidth;
     public Handler handler;
@@ -184,9 +192,18 @@ public class LocalGamingActivity extends AppCompatActivity {
         DisplayMetrics dm = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);
         boardWidth = dm.heightPixels;
-        n = 19;
-        dx = boardWidth / n + 0.8f;
+//        n = 19;
+//        dx = boardWidth / n + 0.8f;
+
+        n = 36;
+        dx = boardWidth / n;
         map.setImageBitmap(Global.getBitmap(R.raw.map_min));
+
+        manager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        listener = new ShakeListener();
+        manager.registerListener(listener,
+                manager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+                manager.SENSOR_DELAY_NORMAL);
 
         // 按钮事件
         pauseButton.setOnClickListener(new View.OnClickListener() {
@@ -209,25 +226,12 @@ public class LocalGamingActivity extends AppCompatActivity {
             }
         }
         // 初始化飞机view
-        movePlaneTo(plane[0][0], 1, n - 4);
-        movePlaneTo(plane[0][1], 3, n - 4);
-        movePlaneTo(plane[0][2], 1, n - 2);
-        movePlaneTo(plane[0][3], 3, n - 2);
+        for (int i=0;i<4;i++){
+            for (int j=0;j<4;j++){
+                movePlaneTo(plane[i][j], ChessBoard.mapStart[i][j][0],ChessBoard.mapStart[i][j][1]);
+            }
+        }
 
-        movePlaneTo(plane[1][0], n - 4, n - 4);
-        movePlaneTo(plane[1][1], n - 2, n - 4);
-        movePlaneTo(plane[1][2], n - 4, n - 2);
-        movePlaneTo(plane[1][3], n - 2, n - 2);
-
-        movePlaneTo(plane[2][0], n - 4, 1);
-        movePlaneTo(plane[2][1], n - 2, 1);
-        movePlaneTo(plane[2][2], n - 4, 3);
-        movePlaneTo(plane[2][3], n - 2, 3);
-
-        movePlaneTo(plane[3][0], 1, 1);
-        movePlaneTo(plane[3][1], 3, 1);
-        movePlaneTo(plane[3][2], 1, 3);
-        movePlaneTo(plane[3][3], 3, 3);
 
         Global.replayManager.savePlayerNum(Global.playersData.size());
         for (String key : Global.playersData.keySet()) {
@@ -290,6 +294,27 @@ public class LocalGamingActivity extends AppCompatActivity {
             return true;
         }
         return super.dispatchKeyEvent(event);
+    }
+
+    class ShakeListener implements SensorEventListener {
+        @Override
+        public void onSensorChanged(SensorEvent sensorEvent) {
+            //获取传感器类型
+            int sensorType = sensorEvent.sensor.getType();
+            //values[0]:X轴，values[1]:Y轴，values[2]:Z轴
+            float[] values = sensorEvent.values;
+            //如果传感器类型为加速段传感器，则判断是否为摇一摇
+            if(sensorType == Sensor.TYPE_ACCELEROMETER) {
+                if((Math.abs(values[0]) > 17 || Math.abs(values[1]) > 17 ||
+                        Math.abs(values[2]) > 17)) {
+                    Global.playersData.get(Global.dataManager.getMyId()).setDiceValid(0);
+
+                }
+            }
+        }
+        @Override
+        public void onAccuracyChanged(Sensor sensor, int i) {
+        }
     }
 }
 
