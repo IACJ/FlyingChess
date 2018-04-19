@@ -70,6 +70,8 @@ public class DataPack {
     private boolean isSuccessful = false;
     private List<String> msgList = null;
 
+
+    // <各种构造函数>
     public DataPack(int command, boolean isSuccessful, List<String> msgList, Date date) {
         this.command = command;
         this.date = date;
@@ -104,6 +106,8 @@ public class DataPack {
         this.msgList = null;
         this.isSuccessful = false;
     }
+    // <各种构造函数/>
+
 
     public boolean isValid() {
         return command != INVALID;

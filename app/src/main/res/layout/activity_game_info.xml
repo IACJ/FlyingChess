@@ -17,29 +17,29 @@
         android:layout_height="match_parent">
 
         <LinearLayout
+            android:background="@drawable/title"
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="3.8"
-            android:background="@drawable/title"
             android:layout_marginLeft="10sp"
             android:layout_marginRight="10sp">
 
             <Button
+                android:id="@+id/back"
+                android:background="@drawable/button_back"
                 android:layout_width="30sp"
                 android:layout_height="30sp"
-                android:background="@drawable/button_back"
-                android:id="@+id/back"
                 android:visibility="visible"
                 android:layout_marginLeft="5sp"
                 android:layout_marginTop="2sp" />
 
             <TextView
+                android:id="@+id/room_title"
+                android:text="房间列表"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="Room List"
-                android:id="@+id/room_title"
                 android:layout_marginRight="80sp"
                 android:textStyle="bold"
                 android:typeface="serif"
@@ -55,10 +55,10 @@
             android:layout_weight="1">
 
             <include
+                android:layout_toStartOf="@+id/create"
+                layout="@layout/content_room_list"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                layout="@layout/content_room_list"
-                android:layout_toStartOf="@+id/create"
                 android:layout_above="@+id/join"
                 android:layout_below="@+id/back"
                 android:layout_marginTop="20sp"
@@ -74,11 +74,11 @@
                 android:layout_weight="1.5">
 
                 <ImageView
+                    android:id="@+id/imageView3"
+                    android:src="@drawable/lady"
                     android:layout_width="wrap_content"
                     android:layout_height="fill_parent"
-                    android:id="@+id/imageView3"
                     android:layout_gravity="center_horizontal"
-                    android:src="@drawable/lady"
                     android:scaleType="fitXY"
                     android:layout_marginRight="70sp"
                     android:layout_marginTop="20sp"
@@ -99,10 +99,10 @@
                 android:layout_weight="1" />
 
             <Button
+                android:id="@+id/join"
+                android:text="加入房间"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="join In"
-                android:id="@+id/join"
                 android:layout_alignParentBottom="true"
                 android:background="@drawable/button_normal"
                 android:layout_toStartOf="@+id/create"
@@ -112,10 +112,10 @@
                 android:textColor="#686436" />
 
             <Button
+                android:id="@+id/create"
+                android:text="创建房间"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="createRoom"
-                android:id="@+id/create"
                 android:background="@drawable/button_normal"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentEnd="true"

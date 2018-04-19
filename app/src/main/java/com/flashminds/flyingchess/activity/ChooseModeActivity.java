@@ -45,6 +45,7 @@ public class ChooseModeActivity extends AppCompatActivity implements Target {
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);//Activity切换动画
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         Global.soundManager.playMusic(SoundManager.BACKGROUND);
+        Global.activityManager.add(this);
         // 查找view
         btnLocal = (Button) findViewById(R.id.btn_local);
         local = (Button) findViewById(R.id.button2);
@@ -91,11 +92,12 @@ public class ChooseModeActivity extends AppCompatActivity implements Target {
             @Override
             public void onClick(View v) {
                 Global.soundManager.playSound(SoundManager.BUTTON);
+
                 Global.dataManager.setGameMode(DataManager.GM_LAN);
-                Intent intent = new Intent(getApplicationContext(), GameInfoActivity.class);
-                startActivity(intent);
                 Global.dataManager.setMyName(new Build().MODEL);
                 Global.localServer.startListen();
+                Intent intent = new Intent(getApplicationContext(), GameInfoActivity.class);
+                startActivity(intent);
                 clean();
             }
         });
@@ -109,6 +111,7 @@ public class ChooseModeActivity extends AppCompatActivity implements Target {
                 wlan.setVisibility(View.INVISIBLE);
                 records.setVisibility(View.INVISIBLE);
                 waitImage.setVisibility(View.VISIBLE);
+                btnLocal.setVisibility(View.INVISIBLE);
                 waitBackground.setVisibility(View.VISIBLE);
                 Global.startWaitAnimation(waitImage);
                 clean();
@@ -120,19 +123,46 @@ public class ChooseModeActivity extends AppCompatActivity implements Target {
                 startActivity(new Intent(getApplicationContext(), RecordsActivity.class));
             }
         });
-        //internet init
-        Global.socketManager.registerActivity(DataPack.CONNECTED, this);
-        //setting
-        Global.activityManager.add(this);
-        Global.updateManager.checkUpdate();
+
+
+
+        // 动态设置V iew UI
         waitImage.setVisibility(View.INVISIBLE);
         waitBackground.setVisibility(View.INVISIBLE);
-        //background img
         bk.setImageBitmap(Global.getBitmap(R.raw.choosemodebk));
         bk2.setImageBitmap(Global.getBitmap(R.raw.cloud));
         lan.setTypeface(Global.getFont());
         wlan.setTypeface(Global.getFont());
         local.setTypeface(Global.getFont());
+
+        //注册响应远程事件
+        Global.socketManager.registerActivity(DataPack.CONNECTED, this);
+        //        Global.updateManager.checkUpdate();
+    }
+    @Override
+    public void processDataPack(DataPack dataPack) {
+        if (dataPack.getCommand() == DataPack.CONNECTED) {
+            if (dataPack.isSuccessful()) {
+                Global.dataManager.setGameMode(DataManager.GM_WLAN);
+                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                startActivity(intent);
+            } else {
+                wlan.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(getApplicationContext(), "连接服务器失败！", Toast.LENGTH_SHORT).show();
+                        btnLocal.setVisibility(View.VISIBLE);
+                        local.setVisibility(View.VISIBLE);
+                        lan.setVisibility(View.VISIBLE);
+                        wlan.setVisibility(View.VISIBLE);
+                        records.setVisibility(View.VISIBLE);
+                        waitBackground.setVisibility(View.INVISIBLE);
+                        waitImage.setVisibility(View.INVISIBLE);
+                    }
+                });
+            }
+            Global.stopWaitAnimation();
+        }
     }
 
     @Override
@@ -173,28 +203,5 @@ public class ChooseModeActivity extends AppCompatActivity implements Target {
         return super.dispatchKeyEvent(event);
     }
 
-    @Override
-    public void processDataPack(DataPack dataPack) {
-        if (dataPack.getCommand() == DataPack.CONNECTED) {
-            if (dataPack.isSuccessful()) {
-                Global.dataManager.setGameMode(DataManager.GM_WLAN);
-                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-                startActivity(intent);
-            } else {
-                wlan.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(getApplicationContext(), "Sorry,i can not connect to server now!", Toast.LENGTH_SHORT).show();
-                        local.setVisibility(View.VISIBLE);
-                        lan.setVisibility(View.VISIBLE);
-                        wlan.setVisibility(View.VISIBLE);
-                        records.setVisibility(View.VISIBLE);
-                        waitBackground.setVisibility(View.INVISIBLE);
-                        waitImage.setVisibility(View.INVISIBLE);
-                    }
-                });
-            }
-            Global.stopWaitAnimation();
-        }
-    }
+
 }

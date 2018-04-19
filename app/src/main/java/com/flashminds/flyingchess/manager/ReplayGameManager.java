@@ -213,7 +213,7 @@ public class ReplayGameManager  {//game process control
     }
 
     public void crash(int color, int pos, int whichPlane) {
-        Global.logManager.p("crash:", "my color:", color, "my pos:", pos, "which plane:", whichPlane);
+
         if (pos >= 50)//不被人撞
             return;
         int crashColor = color;
@@ -223,7 +223,7 @@ public class ReplayGameManager  {//game process control
         int curY = Global.chessBoard.map[color][pos][1];
         for (int i = 0; i < 4; i++) {
             if (i != color) {
-                Global.logManager.p("crash:", "find color:", i);
+
                 for (int j = 0; j < 4; j++) {
                     int crashPos = Global.chessBoard.getAirplane(i).position[j];
                     if (crashPos > 0) {

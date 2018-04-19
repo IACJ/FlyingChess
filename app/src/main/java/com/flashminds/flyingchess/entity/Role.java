@@ -131,7 +131,7 @@ public class Role {
                     }
                     Global.delay(200);
                 }
-                Global.logManager.p("ME roll:", dice);
+
                 canRoll = false;
                 isDiceValid = false;
                 break;
@@ -140,13 +140,13 @@ public class Role {
                 while (waitForDice) {
                     if (offline && Global.dataManager.getHostId().compareTo(Global.dataManager.getMyId()) == 0) {//断线且我是房主
                         dice = AIDice();
-                        Global.logManager.p("PLAYER offline and dice:", dice);
+
                         break;
                     }
                     Global.delay(100);
                 }
                 waitForDice = true;
-                Global.logManager.p("PLAYER roll:", dice);
+
                 break;
             }
             case ROBOT: {
@@ -158,7 +158,7 @@ public class Role {
                     }
                     waitForDice = true;
                 }
-                Global.logManager.p("ROBOT roll:", dice);
+
                 break;
             }
         }
@@ -181,20 +181,20 @@ public class Role {
                 }
                 canChoosePlane = false;
                 isPlaneValid = false;
-                Global.logManager.p("ME fly:", whichPlane);
+
                 break;
             }
             case PLAYER: {
                 while (waitForPlane) {
                     if (offline && Global.dataManager.getHostId().compareTo(Global.dataManager.getMyId()) == 0) {//断线且我是房主
                         whichPlane = AIChoosePlane();
-                        Global.logManager.p("PLAYER offline and fly:", whichPlane);
+
                         break;
                     }
                     Global.delay(100);
                 }
                 waitForPlane = true;
-                Global.logManager.p("PLAYER fly:", whichPlane);
+
                 break;
             }
             case ROBOT: {
@@ -207,7 +207,7 @@ public class Role {
                     }
                     waitForPlane = true;
                 }
-                Global.logManager.p("ROBOT fly:", whichPlane);
+
                 break;
             }
         }

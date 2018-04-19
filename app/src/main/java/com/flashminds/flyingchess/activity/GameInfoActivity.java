@@ -27,6 +27,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 
+/**
+ * Edited by IACJ on 2018/4/18
+ */
+
 public class GameInfoActivity extends AppCompatActivity implements Target {
     Button createButton, joinButton, backButton;
     ListView roomListView;
@@ -48,7 +52,7 @@ public class GameInfoActivity extends AppCompatActivity implements Target {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         Global.activityManager.add(this);
         Global.soundManager.playMusic(SoundManager.BACKGROUND);
-        //init
+        // 查找 View
         createButton = (Button) findViewById(R.id.create);
         backButton = (Button) findViewById(R.id.back);
         joinButton = (Button) findViewById(R.id.join);
@@ -69,6 +73,7 @@ public class GameInfoActivity extends AppCompatActivity implements Target {
             @Override
             public void onClick(View v) {//start a new game
                 Global.soundManager.playSound(SoundManager.BUTTON);
+
                 if (Global.dataManager.getGameMode() == DataManager.GM_WLAN) {
                     Global.socketManager.send(DataPack.R_ROOM_CREATE, Global.dataManager.getMyId(), Global.dataManager.getMyName() + "'s Room");
                 } else if (Global.dataManager.getGameMode() == DataManager.GM_LAN) {
@@ -247,19 +252,18 @@ public class GameInfoActivity extends AppCompatActivity implements Target {
             }
         }
     }
-}
+    class Worker implements Runnable {
+        private boolean exit;
 
-///////////////////////////////////////////////////////////////////////////////////
-class Worker implements Runnable {
-    private boolean exit;
-
-    @Override
-    public void run() {
-        if (Global.dataManager.getGameMode() == DataManager.GM_WLAN) {
-            DataPack dataPack = new DataPack(DataPack.R_ROOM_LOOKUP, null);
-            Global.socketManager.send(dataPack);
-        } else if (Global.dataManager.getGameMode() == DataManager.GM_LAN) {
-            Global.localServer.updateRoomListImmediately();
+        @Override
+        public void run() {
+            if (Global.dataManager.getGameMode() == DataManager.GM_WLAN) {
+                DataPack dataPack = new DataPack(DataPack.R_ROOM_LOOKUP, null);
+                Global.socketManager.send(dataPack);
+            } else if (Global.dataManager.getGameMode() == DataManager.GM_LAN) {
+                Global.localServer.updateRoomListImmediately();
+            }
         }
     }
 }
+

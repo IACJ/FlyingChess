@@ -39,18 +39,18 @@ public class UpdateActivity extends Activity {
         });
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        if (update) {
-            Global.updateManager.uw.confirmUpdate();
-        } else {
-            Global.updateManager.uw.cancleUpdate();
-        }
-    }
+//    @Override
+//    public void onStart() {
+//        super.onStart();
+//    }
+//
+//    @Override
+//    public void onStop() {
+//        super.onStop();
+//        if (update) {
+//            Global.updateManager.uw.confirmUpdate();
+//        } else {
+//            Global.updateManager.uw.cancleUpdate();
+//        }
+//    }
 }

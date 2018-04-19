@@ -12,15 +12,16 @@ import java.net.InetSocketAddress;
 
 /**
  * Created by Ryan on 16/5/15.
+ *
+ * Edited by IACJ on 2018/4/19
  */
 public class DataPackUdpSocket {
     protected DatagramSocket socket = null;
-    protected Gson dataPackGson = new GsonBuilder().setDateFormat("yyyy-MM-dd hh:mm:ss").create();
-    protected byte[] inBuf = null;
+    protected Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd hh:mm:ss").create();
+    protected byte[] buffer = new byte[1024];
 
     public DataPackUdpSocket(DatagramSocket socket) {
         this.socket = socket;
-        inBuf = new byte[1024];
     }
 
     /**
@@ -31,7 +32,7 @@ public class DataPackUdpSocket {
      * @param ip       The ip to which the datapack is sent.
      */
     public void send(DataPack dataPack, InetAddress ip, int port) throws IOException {
-        byte[] bytes = dataPackGson.toJson(dataPack, DataPack.class).getBytes();
+        byte[] bytes = gson.toJson(dataPack, DataPack.class).getBytes();
         DatagramPacket packet = new DatagramPacket(bytes, bytes.length, ip, port);
         socket.send(packet);
     }
@@ -43,10 +44,10 @@ public class DataPackUdpSocket {
      * @return The data pack read.
      */
     public DataPack receive() throws IOException {
-        DatagramPacket packet = new DatagramPacket(inBuf, inBuf.length);
+        DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
         socket.receive(packet);
         System.out.println(new String(packet.getData()));
-        return dataPackGson.fromJson(new String(packet.getData()).trim(), DataPack.class);
+        return gson.fromJson(new String(packet.getData()).trim(), DataPack.class);
     }
 
     /**

@@ -35,11 +35,11 @@ public class GameManager implements Target {//game process control
         finished = false;
         gw = new GameWorker();
         new Thread(gw).start();
-        Global.logManager.p("new Turn");
+
     }
 
     public void gameOver() {
-        Global.logManager.p("game over");
+
         gw.exit();
     }
 
@@ -51,7 +51,7 @@ public class GameManager implements Target {//game process control
             }
         }
         if (role != null) {//此颜色有玩家
-            Global.logManager.p("turn to:", role.name, " color is:", role.color);
+
             Message msg = new Message();
             Bundle b = new Bundle();
             b.putInt("color", color);
@@ -60,7 +60,7 @@ public class GameManager implements Target {//game process control
             board.handler.sendMessage(msg);
 
             whichPlane = -1;
-            Global.logManager.p("turn to:", "waite for dice");
+
 
             if (Global.replayManager.isReplay == true) {
                 dice = Global.replayManager.getSavedDice();
@@ -69,11 +69,11 @@ public class GameManager implements Target {//game process control
                 dice = role.roll();
 
             Global.replayManager.saveDice(dice);
-            Global.logManager.p("turn to:", "dice is :", dice);
+
             if (!Global.replayManager.isReplay && Global.dataManager.getGameMode() != DataManager.GM_LOCAL) {
                 if ((role.offline || role.type == Role.ROBOT) && Global.dataManager.getHostId().compareTo(Global.dataManager.getMyId()) == 0 || role.type == Role.ME) {
                     Global.socketManager.send(DataPack.R_GAME_PROCEED_DICE, role.id, Global.dataManager.getRoomId(), dice);
-                    Global.logManager.p("turn to:", "send dice:", dice);
+
                 }
             }
             Global.soundManager.playSound(SoundManager.DICE);
@@ -87,21 +87,20 @@ public class GameManager implements Target {//game process control
                     role.move();
                 } else {
                     do {
-                        Global.logManager.p("turu to: wait for which plane");
+
                         whichPlane = role.choosePlane();
-                        Global.logManager.p("turn to: plane result:", whichPlane);
+
                     } while (!role.move());
                 }
                 canFly = true;
                 Global.replayManager.saveWhichPlane(whichPlane);
             } else if (role.type == Role.ME) {
                 toast("sad...I can not move");
-                Global.logManager.p("turn to: i can not fly");
+
             }
             if (!Global.replayManager.isReplay && Global.dataManager.getGameMode() != DataManager.GM_LOCAL) {
                 if ((role.offline || role.type != Role.PLAYER) && Global.dataManager.getHostId().compareTo(Global.dataManager.getMyId()) == 0 || role.type == Role.ME) {
                     Global.socketManager.send(DataPack.R_GAME_PROCEED_PLANE, role.id, Global.dataManager.getRoomId(), whichPlane);
-                    Global.logManager.p("turn to: send which plane :", whichPlane);
                 }
             }
             if (canFly) {
@@ -272,7 +271,7 @@ public class GameManager implements Target {//game process control
     }
 
     public void crash(int color, int pos, int whichPlane) {
-        Global.logManager.p("crash:", "my color:", color, "my pos:", pos, "which plane:", whichPlane);
+
         if (pos >= 50)//不被人撞
             return;
         int crashColor = color;
@@ -282,17 +281,13 @@ public class GameManager implements Target {//game process control
         int curY = Global.chessBoard.map[color][pos][1];
         for (int i = 0; i < 4; i++) {
             if (i != color) {
-                Global.logManager.p("crash:", "find color:", i);
+
                 for (int j = 0; j < 4; j++) {
                     int crashPos = Global.chessBoard.getAirplane(i).position[j];
-                    if (crashPos > 0) {
-                        Global.logManager.p("crash:", "find plane:", j, "position:", crashPos, "(x,y):", "(", Global.chessBoard.map[i][crashPos][0], ",", Global.chessBoard.map[i][crashPos][1], ")");
-                    } else {
-                        Global.logManager.p("crash:", "find plane:", j, "position:", crashPos, "(x,y):", "(", "home", ")");
-                    }
+
                     if (crashPos > 0) {
                         if (Global.chessBoard.map[i][crashPos][0] == curX && Global.chessBoard.map[i][crashPos][1] == curY) {//撞别人
-                            Global.logManager.p("crash:", "crash success");
+
                             crashPlane = j;
                             count++;
                         }

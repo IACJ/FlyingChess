@@ -34,13 +34,13 @@ public class DataPackUtil {
         return msgList;
     }
 
-    public static List<String> getRoomInfoMessage(Room room) {
-        List<String> msgList = new LinkedList<>();
-        // add room id
-        msgList.add(String.valueOf(room.getId()));
-        // add room name
-        msgList.add(room.getName());
-//        msgList.add(String.valueOf(room.getPlayers().size()));
-        return msgList;
-    }
+//    public static List<String> getRoomInfoMessage(Room room) {
+//        List<String> msgList = new LinkedList<>();
+//        // add room id
+//        msgList.add(String.valueOf(room.getId()));
+//        // add room name
+//        msgList.add(room.getName());
+////        msgList.add(String.valueOf(room.getPlayers().size()));
+//        return msgList;
+//    }
 }

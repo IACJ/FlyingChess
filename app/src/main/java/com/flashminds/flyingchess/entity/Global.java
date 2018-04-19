@@ -42,8 +42,6 @@ public class Global {
     public static HashMap<String, Role> playersData;
     public static ActivityManager activityManager;
     public static SoundManager soundManager;
-    public static UpdateManager updateManager;
-    public static LogManager logManager;
     public static ReplayManager replayManager;
     public static LocalServer localServer;
     public static Drawable d[];
@@ -64,8 +62,6 @@ public class Global {
         playersData = new HashMap<>();
         activityManager = new ActivityManager(activity);
         soundManager = new SoundManager(activity);
-        updateManager = new UpdateManager(activity);
-        logManager = new LogManager();
         replayManager = new ReplayManager();
         localServer = new LocalServer(activity);
         rotateAnimationWorker = new RotateAnimationWorker();

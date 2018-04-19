@@ -7,13 +7,11 @@ import java.util.HashMap;
 
 /**
  * Created by karthur on 2016/4/24.
+ *
+ * Edited by IACJ on 2018/4/18
  */
 public class MsgHandler {
-    HashMap<Integer, Target> targets;
-
-    public MsgHandler() {
-        targets = new HashMap<>();
-    }
+    HashMap<Integer, Target> targets= new HashMap<>();;
 
     public void registerActivity(int datapack_commond, Target target) {
         targets.put(datapack_commond, target);

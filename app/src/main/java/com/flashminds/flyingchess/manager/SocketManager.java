@@ -10,6 +10,7 @@ import com.flashminds.flyingchess.entity.SocketReader;
 import com.flashminds.flyingchess.entity.SocketWriter;
 
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.security.KeyStore;
 import java.util.LinkedList;
@@ -20,11 +21,13 @@ import javax.net.ssl.TrustManagerFactory;
 
 /**
  * Created by karthur on 2016/4/26.
+ *
+ * Edited by IACJ on 2018/4/18
  */
 public class SocketManager extends MsgHandler {
     private Socket sock = null;
     private AppCompatActivity activity = null;
-    private boolean connected;
+    private boolean connected = false;
 
     private SocketWriter sw;
     private SocketReader sr;
@@ -32,7 +35,6 @@ public class SocketManager extends MsgHandler {
     public SocketManager(AppCompatActivity activity) {
         //super();
         this.activity = activity;
-        connected = false;
     }
 
     public void connectToLocalServer() {
@@ -85,14 +87,16 @@ public class SocketManager extends MsgHandler {
             @Override
             public void run() {
                 try {
-                    SSLContext sslContext = SSLContext.getInstance("SSLv3");
-                    TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance("X509");
+//                    SSLContext sslContext = SSLContext.getInstance("SSLv3");
+//                    TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance("X509");
+//                    KeyStore trustKeyStore = KeyStore.getInstance("BKS");
+//                    trustKeyStore.load(activity.getBaseContext().getResources().openRawResource(R.raw.flyingchess), "hustcs1307".toCharArray());
+//                    trustManagerFactory.init(trustKeyStore);
+//                    sslContext.init(null, trustManagerFactory.getTrustManagers(), null);
+//                    sock = (SSLSocket) sslContext.getSocketFactory().createSocket(Global.dataManager.data.ip, 6666);
+                    sock = new Socket();
+                    sock.connect( new InetSocketAddress(Global.dataManager.data.ip,6666),1500);
 
-                    KeyStore trustKeyStore = KeyStore.getInstance("BKS");
-                    trustKeyStore.load(activity.getBaseContext().getResources().openRawResource(R.raw.flyingchess), "hustcs1307".toCharArray());
-                    trustManagerFactory.init(trustKeyStore);
-                    sslContext.init(null, trustManagerFactory.getTrustManagers(), null);
-                    sock = (SSLSocket) sslContext.getSocketFactory().createSocket(Global.dataManager.data.ip, 6666);
                     sock.setSoTimeout(2000);
                     sock.setTcpNoDelay(true);
                     sw = new SocketWriter(sock.getOutputStream());

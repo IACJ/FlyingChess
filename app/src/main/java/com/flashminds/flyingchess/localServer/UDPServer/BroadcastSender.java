@@ -4,6 +4,7 @@ package com.flashminds.flyingchess.localServer.UDPServer;
 import android.content.Context;
 import android.net.wifi.WifiManager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
 import com.flashminds.flyingchess.dataPack.DataPack;
 import com.flashminds.flyingchess.localServer.TCPServer.GameObjects.Room;
@@ -28,6 +29,8 @@ public class BroadcastSender implements Runnable {
     private UDPServer parent = null;
     private DataPack dataPack = null;
     private List<String> ipSection = null;
+
+    private static final String TAG = "BroadcastSender";
 
     public BroadcastSender(UDPServer parent, final AppCompatActivity activity) {
         this.parent = parent;
@@ -67,6 +70,7 @@ public class BroadcastSender implements Runnable {
             while (isRunning) {
                 if (this.dataPack != null) {
                     for (String ip : ipSection) {
+                        Log.d(TAG, "run: 向ip地址广播发送dataPack "+ip);
                         this.sendSocket.send(this.dataPack, InetAddress.getByName(ip), port);
                     }
                 }
