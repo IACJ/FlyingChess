@@ -1,4 +1,4 @@
-package com.flashminds.flyingchess.activity;
+package com.flashminds.flyingchess.activity.lanGame;
 
 import android.content.Intent;
 import android.hardware.Sensor;
@@ -18,19 +18,24 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.flashminds.flyingchess.R;
+import com.flashminds.flyingchess.activity.ChooseModeActivity;
+import com.flashminds.flyingchess.activity.GameEndActivity;
+import com.flashminds.flyingchess.activity.GameInfoActivity;
+import com.flashminds.flyingchess.activity.PauseActivity;
+import com.flashminds.flyingchess.activity.RoomActivity;
+import com.flashminds.flyingchess.dataPack.DataPack;
 import com.flashminds.flyingchess.entity.ChessBoard;
 import com.flashminds.flyingchess.Global;
 import com.flashminds.flyingchess.manager.DataManager;
-import com.flashminds.flyingchess.dataPack.DataPack;
-import com.flashminds.flyingchess.R;
 import com.flashminds.flyingchess.manager.SoundManager;
 
 import java.util.ArrayList;
 
 /**
- * Edited by IACJ on 2018/4/1.
+ * Edited by IACJ on 2018/4/22.
  */
-public class ChessBoardActivity extends AppCompatActivity {
+public class LanGamingActivity extends AppCompatActivity {
     Button pauseButton;
     Button throwDiceButton;
     Button[][] plane;
@@ -153,7 +158,7 @@ public class ChessBoardActivity extends AppCompatActivity {
             xname[Global.playersData.get(key).color].setText(Global.playersData.get(key).name);
             xscore[Global.playersData.get(key).color].setText(Global.playersData.get(key).score);
         }
-        Global.gameManager.newTurn(this);
+//        Global.gameManager.newTurn(this);
 
         for (int i = 0; i < 4; i++) {
             xname[i].setTypeface(Global.getFont());
@@ -216,9 +221,9 @@ public class ChessBoardActivity extends AppCompatActivity {
     }
 
     class MyHandler extends Handler {
-        ChessBoardActivity parent;
+        LanGamingActivity parent;
 
-        public MyHandler(ChessBoardActivity parent) {
+        public MyHandler(LanGamingActivity parent) {
             this.parent = parent;
         }
 

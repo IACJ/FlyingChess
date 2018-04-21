@@ -4,11 +4,8 @@ import android.os.Bundle;
 import android.os.Message;
 
 import com.flashminds.flyingchess.activity.replay.ReplayGameActivity;
-import com.flashminds.flyingchess.dataPack.DataPack;
-import com.flashminds.flyingchess.entity.Global;
+import com.flashminds.flyingchess.Global;
 import com.flashminds.flyingchess.entity.Role;
-
-import java.util.LinkedList;
 
 /**
  * Created by IACJ on 2018/4/15.

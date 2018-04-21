@@ -55,6 +55,10 @@ public class LocalServer {
         return UUID.randomUUID().toString();
     }
 
+    public void stopListen(){
+        udpServer.stopListen();
+    }
+
     public void startHost() {
         udpServer.startBroadcast();
         new Thread(new Runnable() {

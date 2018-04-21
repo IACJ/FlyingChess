@@ -22,15 +22,12 @@ public class UDPServer {
     private BroadcastSender sender = null;
     private BroadcastReceiver receiver = null;
     private LocalServer parent = null;
-    private HashMap<UUID, DataPack> roomMap = null;
-    private ExecutorService executor = null;
+    private HashMap<UUID, DataPack> roomMap = new HashMap<>();
+    private ExecutorService executor = Executors.newFixedThreadPool(2);
     private AppCompatActivity activity = null;
 
     public UDPServer(LocalServer parent, AppCompatActivity activity) {
-
         this.parent = parent;
-        this.roomMap = new HashMap<>();
-        this.executor = Executors.newFixedThreadPool(2);
         this.activity = activity;
     }
 
@@ -73,14 +70,16 @@ public class UDPServer {
     }
 
     public void startBroadcast() {
-        if (this.sender != null)
-            this.sender.stop(null);
+//        if (this.sender != null)
+//            this.sender.stop(null);
 
         this.sender = new BroadcastSender(this, activity);
         this.executor.submit(this.sender);
     }
 
     public void startListen() {
+
+
         this.receiver = new BroadcastReceiver(this);
         this.executor.submit(this.receiver);
     }
@@ -92,6 +91,7 @@ public class UDPServer {
     public void stopListen() {
         this.roomMap.clear();
         this.receiver.stop();
+        receiver=null;
     }
 
 }

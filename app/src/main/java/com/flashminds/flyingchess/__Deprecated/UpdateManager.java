@@ -1,8 +1,8 @@
-package com.flashminds.flyingchess.manager;
+package com.flashminds.flyingchess.__Deprecated;
 
 import android.support.v7.app.AppCompatActivity;
 
-import com.flashminds.flyingchess.entity.UpdateWorker;
+import com.flashminds.flyingchess.__Deprecated.UpdateWorker;
 
 /**
  * Created by karthur on 2016/5/12.

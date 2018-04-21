@@ -10,7 +10,7 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.view.WindowManager;
 
-import com.flashminds.flyingchess.entity.Global;
+import com.flashminds.flyingchess.Global;
 import com.flashminds.flyingchess.R;
 
 import java.io.IOException;

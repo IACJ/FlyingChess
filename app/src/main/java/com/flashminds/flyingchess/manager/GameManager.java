@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.os.Message;
 
 import com.flashminds.flyingchess.dataPack.DataPack;
-import com.flashminds.flyingchess.entity.Global;
+import com.flashminds.flyingchess.Global;
 import com.flashminds.flyingchess.entity.Role;
 import com.flashminds.flyingchess.dataPack.Target;
 import com.flashminds.flyingchess.activity.ChessBoardActivity;
@@ -353,27 +353,27 @@ public class GameManager implements Target {//game process control
                 break;
         }
     }
-}
+    class GameWorker implements Runnable {
+        private boolean run;
 
-class GameWorker implements Runnable {
-    private boolean run;
+        public GameWorker() {
+            run = true;
+        }
 
-    public GameWorker() {
-        run = true;
-    }
+        @Override
+        public void run() {
+            run = true;
+            int i = 0;
+            while (run) {//control round
+                i = (i % 4);//轮询颜色
+                Global.gameManager.turnTo(i);
+                i++;
+            }
+        }
 
-    @Override
-    public void run() {
-        run = true;
-        int i = 0;
-        while (run) {//control round
-            i = (i % 4);//轮询颜色
-            Global.gameManager.turnTo(i);
-            i++;
+        public void exit() {
+            run = false;
         }
     }
-
-    public void exit() {
-        run = false;
-    }
 }
+

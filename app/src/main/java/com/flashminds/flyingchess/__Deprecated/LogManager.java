@@ -1,4 +1,4 @@
-package com.flashminds.flyingchess.manager;
+package com.flashminds.flyingchess.__Deprecated;
 
 import android.os.Environment;
 

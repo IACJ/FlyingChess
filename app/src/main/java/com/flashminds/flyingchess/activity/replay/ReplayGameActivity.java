@@ -18,7 +18,7 @@ import com.flashminds.flyingchess.R;
 import com.flashminds.flyingchess.activity.ChooseModeActivity;
 import com.flashminds.flyingchess.activity.PauseActivity;
 import com.flashminds.flyingchess.entity.ChessBoard;
-import com.flashminds.flyingchess.entity.Global;
+import com.flashminds.flyingchess.Global;
 import com.flashminds.flyingchess.manager.ReplayGameManager;
 import com.flashminds.flyingchess.manager.SoundManager;
 

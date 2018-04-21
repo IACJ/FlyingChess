@@ -5,6 +5,7 @@ import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -21,7 +22,7 @@ import com.flashminds.flyingchess.activity.ChooseModeActivity;
 import com.flashminds.flyingchess.activity.RoomActivity;
 import com.flashminds.flyingchess.dataPack.DataPack;
 import com.flashminds.flyingchess.dataPack.Target;
-import com.flashminds.flyingchess.entity.Global;
+import com.flashminds.flyingchess.Global;
 import com.flashminds.flyingchess.manager.DataManager;
 import com.flashminds.flyingchess.manager.SoundManager;
 
@@ -45,6 +46,8 @@ public class LanHallActivity extends AppCompatActivity implements Target {
     TextView title;
     LinkedList<String> roomUUID;
 
+    private static final String TAG = "LanHallActivity";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //ui setting
@@ -54,6 +57,8 @@ public class LanHallActivity extends AppCompatActivity implements Target {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         Global.activityManager.add(this);
         Global.soundManager.playMusic(SoundManager.BACKGROUND);
+        Global.dataManager.setGameMode(DataManager.GM_LAN);
+        Global.dataManager.setMyName(new Build().MODEL);
 
         // 查找 View
         createButton = (Button) findViewById(R.id.create);
@@ -81,11 +86,14 @@ public class LanHallActivity extends AppCompatActivity implements Target {
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {//start a new game
+
+                Log.d(TAG, "onClick: 你点击了onclick ");
                 Global.soundManager.playSound(SoundManager.BUTTON);
 
                 Global.localServer.startHost();
                 Global.socketManager.connectToLocalServer();
                 Global.delay(500);
+                Log.d(TAG, "onClick: 发送R_LOGIN");
                 Global.socketManager.send(DataPack.R_LOGIN, new Build().MODEL, "123");
             }
         });
@@ -124,6 +132,18 @@ public class LanHallActivity extends AppCompatActivity implements Target {
         title.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/comici.ttf"));
         joinButton.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/comici.ttf"));
         createButton.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/comici.ttf"));
+
+        Global.localServer.startListen();
+        Global.socketManager.registerActivity(DataPack.A_ROOM_LOOKUP, this);
+        Global.socketManager.registerActivity(DataPack.A_ROOM_CREATE, this);
+        Global.socketManager.registerActivity(DataPack.A_ROOM_ENTER, this);
+
+        if (Global.dataManager.getGameMode() == DataManager.GM_LAN) {
+            Global.localServer.registerMsg(this);
+        }
+        new Thread(worker).start();
+
+
     }
 
     @Override
@@ -156,84 +176,115 @@ public class LanHallActivity extends AppCompatActivity implements Target {
 
     @Override
     public void processDataPack(DataPack dataPack) {
-        if (dataPack.getCommand() == DataPack.A_ROOM_LOOKUP) {
-            synchronized (roomListData) {
-                roomListData.clear();
-                roomUUID.clear();
-                for (int i = 0; i < dataPack.getMessageList().size(); ) {
-                    HashMap<String, String> data = new HashMap<>();
-                    String str = dataPack.getMessage(i);
-                    roomUUID.addLast(str);
-                    data.put("room", dataPack.getMessage(i + 1));
-                    if (str.length() > 3) {
-                        data.put("id", str.substring(str.length() - 3));
-                    } else {
-                        data.put("id", str);
+        switch (dataPack.getCommand()){
+            case DataPack.A_ROOM_LOOKUP : {
+                synchronized (roomListData) {
+                    roomListData.clear();
+                    roomUUID.clear();
+                    for (int i = 0; i < dataPack.getMessageList().size(); ) {
+                        HashMap<String, String> data = new HashMap<>();
+                        String str = dataPack.getMessage(i);
+                        roomUUID.addLast(str);
+                        data.put("room", dataPack.getMessage(i + 1));
+                        if (str.length() > 3) {
+                            data.put("id", str.substring(str.length() - 3));
+                        } else {
+                            data.put("id", str);
+                        }
+                        data.put("player", dataPack.getMessage(i + 2));
+                        if (dataPack.getMessage(i + 3).compareTo("0") == 0) {
+                            data.put("state", "waiting");
+                        } else {
+                            data.put("state", "flying");
+                        }
+                        roomListData.addLast(data);
+                        i += 4;
                     }
-                    data.put("player", dataPack.getMessage(i + 2));
-                    if (dataPack.getMessage(i + 3).compareTo("0") == 0) {
-                        data.put("state", "waiting");
-                    } else {
-                        data.put("state", "flying");
-                    }
-                    roomListData.addLast(data);
-                    i += 4;
+                    roomListView.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            roomListAdapter.notifyDataSetChanged();
+                        }
+                    });
                 }
-                roomListView.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        roomListAdapter.notifyDataSetChanged();
-                    }
-                });
+                break;
             }
-        } else if (dataPack.getCommand() == DataPack.A_ROOM_CREATE) {
-            if (dataPack.isSuccessful()) {
-                Global.dataManager.setRoomId(dataPack.getMessage(0));
-                Intent intent = new Intent(getApplicationContext(), RoomActivity.class);
-                ArrayList<String> msgs = new ArrayList<>();
-                msgs.add(Global.dataManager.getMyId());
-                msgs.add(Global.dataManager.getMyName());
-                msgs.add(Global.dataManager.getOnlineScore());
-                msgs.add("-1");
-                intent.putStringArrayListExtra("msgs", msgs);
-                startActivity(intent);//switch wo chess board activity
-            } else {
-                createButton.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(getApplicationContext(), "create room failed!", Toast.LENGTH_SHORT).show();
-                    }
-                });
+            case DataPack.A_ROOM_CREATE : {
+                if (dataPack.isSuccessful()) {
+
+
+                    Global.dataManager.setRoomId(dataPack.getMessage(0));
+                    Intent intent = new Intent(getApplicationContext(), RoomActivity.class);
+                    ArrayList<String> msgs = new ArrayList<>();
+                    msgs.add(Global.dataManager.getMyId());
+                    msgs.add(Global.dataManager.getMyName());
+                    msgs.add(Global.dataManager.getOnlineScore());
+                    msgs.add("-1");
+                    intent.putStringArrayListExtra("msgs", msgs);
+                    startActivity(intent);//switch wo chess board activity
+                } else {
+                    createButton.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getApplicationContext(), "create room failed!", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+                break;
             }
-        } else if (dataPack.getCommand() == DataPack.A_ROOM_ENTER) {
-            if (dataPack.isSuccessful()) {
-                if (Global.dataManager.getGameMode() == DataManager.GM_LAN) {
+            case DataPack.A_ROOM_ENTER :{
+                if (dataPack.isSuccessful()) {
+
+
+                    Global.localServer.stopListen();
+
                     Global.dataManager.setMyId(dataPack.getMessage(0));
-                }
-                Global.dataManager.setRoomId(roomId);
-                Intent intent = new Intent(getApplicationContext(), RoomActivity.class);
-                ArrayList<String> msgs = new ArrayList<>(dataPack.getMessageList());
-                if (Global.dataManager.getGameMode() == DataManager.GM_LAN) {//取出自己的ID
+
+                    Global.dataManager.setRoomId(roomId);
+                    Intent intent = new Intent(getApplicationContext(), LanRoomActivity.class);
+                    ArrayList<String> msgs = new ArrayList<>(dataPack.getMessageList());
+
                     msgs.remove(0);
+
+                    intent.putStringArrayListExtra("msgs", msgs);
+                    startActivity(intent);//switch wo chess board activity
+                } else {
+                    createButton.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getApplicationContext(), "join room failed!", Toast.LENGTH_SHORT).show();
+                        }
+                    });
                 }
-                intent.putStringArrayListExtra("msgs", msgs);
-                startActivity(intent);//switch wo chess board activity
-            } else {
+                break;
+            }
+            default:{
                 createButton.post(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(getApplicationContext(), "join room failed!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "未知错误！", Toast.LENGTH_SHORT).show();
                     }
                 });
             }
         }
     }
     class Worker implements Runnable {
-        private boolean exit;
+        private boolean running = true;
 
         @Override
         public void run() {
-                Global.localServer.updateRoomListImmediately();
+            while (running){
+                try {
+                    Global.localServer.updateRoomListImmediately();
+                    Thread.sleep(3000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        public void stop(){
+            running = false;
         }
     }
 }

@@ -2,6 +2,7 @@ package com.flashminds.flyingchess.localServer.TCPServer;
 
 
 import android.os.Build;
+import android.util.Log;
 
 import com.flashminds.flyingchess.localServer.LocalServer;
 import com.flashminds.flyingchess.localServer.TCPServer.GameObjects.Room;
@@ -15,18 +16,20 @@ import java.util.concurrent.Executors;
 
 public class TCPServer {
     private ServerSocket serverSocket = null;
-    private ExecutorService socketExecutor = null;
+    private ExecutorService socketExecutor =  Executors.newCachedThreadPool();
     private LocalServer parent = null;
     private Room selfRoom = null;
     private boolean isRunning = true;
 
+    private static final String TAG = "TCPServer";
+
 
     public TCPServer(LocalServer parent) {
-        this.socketExecutor = Executors.newCachedThreadPool();
         this.parent = parent;
     }
 
     public void start() {
+        isRunning = true;
         try {
             if (serverSocket == null || !serverSocket.isBound() || serverSocket.isClosed())
                 this.serverSocket = new ServerSocket(6666);
@@ -72,6 +75,8 @@ public class TCPServer {
 //        } catch (Exception e) {
 //            e.printStackTrace();
 //        }
+
+        Log.d(TAG, "stop: TCPServer关闭！！");
         Room room = this.selfRoom;
         this.isRunning = false;
         this.selfRoom = null;

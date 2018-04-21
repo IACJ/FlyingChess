@@ -23,7 +23,7 @@ import com.flashminds.flyingchess.activity.ChooseModeActivity;
 import com.flashminds.flyingchess.activity.GameEndActivity;
 import com.flashminds.flyingchess.activity.RoomActivity;
 import com.flashminds.flyingchess.entity.ChessBoard;
-import com.flashminds.flyingchess.entity.Global;
+import com.flashminds.flyingchess.Global;
 import com.flashminds.flyingchess.manager.LocalGameManager;
 import com.flashminds.flyingchess.manager.SoundManager;
 

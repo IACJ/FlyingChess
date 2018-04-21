@@ -9,7 +9,7 @@ import android.widget.Button;
 
 import com.flashminds.flyingchess.R;
 import com.flashminds.flyingchess.activity.ChooseModeActivity;
-import com.flashminds.flyingchess.entity.Global;
+import com.flashminds.flyingchess.Global;
 
 /**
  * Created by IACJ on 2018/4/9.

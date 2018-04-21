@@ -11,7 +11,7 @@ import com.flashminds.flyingchess.R;
 import com.flashminds.flyingchess.activity.ChooseModeActivity;
 import com.flashminds.flyingchess.activity.GameInfoActivity;
 import com.flashminds.flyingchess.dataPack.DataPack;
-import com.flashminds.flyingchess.entity.Global;
+import com.flashminds.flyingchess.Global;
 import com.flashminds.flyingchess.manager.DataManager;
 
 public class ReplayPauseActivity extends Activity {

@@ -13,7 +13,7 @@ import android.widget.Toast;
 
 import com.flashminds.flyingchess.activity.lanGame.LanHallActivity;
 import com.flashminds.flyingchess.activity.localGame.LocalRoomActivity;
-import com.flashminds.flyingchess.entity.Global;
+import com.flashminds.flyingchess.Global;
 import com.flashminds.flyingchess.manager.DataManager;
 import com.flashminds.flyingchess.dataPack.DataPack;
 import com.flashminds.flyingchess.R;
@@ -67,8 +67,7 @@ public class ChooseModeActivity extends AppCompatActivity implements Target {
             @Override
             public void onClick(View v) {
                 Global.soundManager.playSound(SoundManager.BUTTON);
-                Intent intent = new Intent(ChooseModeActivity.this,LocalRoomActivity.class);
-                startActivity(intent);
+                startActivity(new Intent(ChooseModeActivity.this,LocalRoomActivity.class));
             }
         } );
 
@@ -76,13 +75,7 @@ public class ChooseModeActivity extends AppCompatActivity implements Target {
             @Override
             public void onClick(View v) {
                 Global.soundManager.playSound(SoundManager.BUTTON);
-
-                Global.dataManager.setGameMode(DataManager.GM_LAN);
-                Global.dataManager.setMyName(new Build().MODEL);
-                Global.localServer.startListen();
-                Intent intent = new Intent(getApplicationContext(), LanHallActivity.class);
-                startActivity(intent);
-                clean();
+                startActivity( new Intent(getApplicationContext(), LanHallActivity.class));
             }
         });
 

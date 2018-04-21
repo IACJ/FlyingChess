@@ -14,6 +14,8 @@ import java.util.List;
 
 /**
  * Created by Ryan on 16/4/12.
+ *
+ * Edited by IACJ on 2018/04/22
  */
 public class DataPackSocketRunnable implements Runnable {
     private Player selfPlayer = null;
@@ -21,7 +23,6 @@ public class DataPackSocketRunnable implements Runnable {
     private TCPServer parent = null;
 
     public DataPackSocketRunnable(DataPackTcpSocket socket, TCPServer server) throws IOException {
-        this.selfPlayer = null;
         this.socket = socket;
         this.parent = server;
     }
@@ -29,8 +30,6 @@ public class DataPackSocketRunnable implements Runnable {
     public void run() {
         try {
 
-
-            // enter process loop
             while (true) {
                 processDataPack(socket.receive());
             }
@@ -75,6 +74,8 @@ public class DataPackSocketRunnable implements Runnable {
                     List<String> msgList = new ArrayList<>();
                     msgList.add(String.valueOf(player.getId()));
                     msgList.addAll(DataPackUtil.getRoomPlayerInfoMessage(parent.getSelfRoom()));
+
+                    System.out.println("进入房间 R_LOGIN 发送！");
                     socket.send(new DataPack(DataPack.A_ROOM_ENTER, true, msgList));
                     return;
                 }

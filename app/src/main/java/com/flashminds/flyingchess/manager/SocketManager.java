@@ -1,11 +1,8 @@
 package com.flashminds.flyingchess.manager;
 
-import android.support.v7.app.AppCompatActivity;
-
 import com.flashminds.flyingchess.dataPack.DataPack;
-import com.flashminds.flyingchess.entity.Global;
-import com.flashminds.flyingchess.entity.MsgHandler;
-import com.flashminds.flyingchess.R;
+import com.flashminds.flyingchess.Global;
+import com.flashminds.flyingchess.dataPack.Target;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -18,26 +15,24 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.nio.charset.Charset;
-import java.security.KeyStore;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
-
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSocket;
-import javax.net.ssl.TrustManagerFactory;
 
 /**
  * Created by karthur on 2016/4/26.
  *
  * Edited by IACJ on 2018/4/18
  */
-public class SocketManager extends MsgHandler {
+public class SocketManager  {
     private Socket sock = null;
     private SocketWriter sw;
     private SocketReader sr;
     private boolean connected = false;
+
+    HashMap<Integer, Target> targets= new HashMap<>();
 
 
     public void connectToLocalServer() {
@@ -132,6 +127,16 @@ public class SocketManager extends MsgHandler {
         return sw.send(dataPack);
     }
 
+
+    public void registerActivity(int datapack_commond, Target target) {
+        targets.put(datapack_commond, target);
+    }
+
+    protected void processDataPack(DataPack dataPack) {
+        if (targets.containsKey(dataPack.getCommand())) {
+            targets.get(dataPack.getCommand()).processDataPack(dataPack);
+        }
+    }
 
     /**
      * 内部类 `SocketReader`

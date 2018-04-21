@@ -1,4 +1,4 @@
-package com.flashminds.flyingchess.entity;
+package com.flashminds.flyingchess.__Deprecated;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -13,6 +13,7 @@ import android.widget.RemoteViews;
 
 import com.flashminds.flyingchess.R;
 import com.flashminds.flyingchess.activity.UpdateActivity;
+import com.flashminds.flyingchess.Global;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;

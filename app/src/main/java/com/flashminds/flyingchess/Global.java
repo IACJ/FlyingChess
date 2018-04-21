@@ -1,4 +1,4 @@
-package com.flashminds.flyingchess.entity;
+package com.flashminds.flyingchess;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -9,19 +9,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.view.View;
 
+import com.flashminds.flyingchess.entity.ChessBoard;
+import com.flashminds.flyingchess.entity.Role;
 import com.flashminds.flyingchess.localServer.LocalServer;
-import com.flashminds.flyingchess.R;
 import com.flashminds.flyingchess.manager.ActivityManager;
 import com.flashminds.flyingchess.manager.DataManager;
 import com.flashminds.flyingchess.manager.GameManager;
 import com.flashminds.flyingchess.manager.LocalGameManager;
-import com.flashminds.flyingchess.manager.LogManager;
 import com.flashminds.flyingchess.manager.ReplayGameManager;
 import com.flashminds.flyingchess.manager.ReplayManager;
 import com.flashminds.flyingchess.manager.SocketManager;
 import com.flashminds.flyingchess.manager.SoundManager;
 import com.flashminds.flyingchess.activity.ChooseModeActivity;
-import com.flashminds.flyingchess.manager.UpdateManager;
 
 import java.io.IOException;
 import java.io.InputStream;

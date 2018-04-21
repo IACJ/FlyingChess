@@ -16,7 +16,7 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.flashminds.flyingchess.entity.Global;
+import com.flashminds.flyingchess.Global;
 import com.flashminds.flyingchess.manager.DataManager;
 import com.flashminds.flyingchess.dataPack.DataPack;
 import com.flashminds.flyingchess.R;

@@ -53,6 +53,9 @@
         <activity
             android:name=".activity.lanGame.LanHallActivity"
             android:screenOrientation="landscape" />
+        <activity
+            android:name=".activity.lanGame.LanRoomActivity"
+            android:screenOrientation="landscape" />
 
 
 

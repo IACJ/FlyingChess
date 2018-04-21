@@ -14,7 +14,7 @@ import android.widget.Toast;
 import com.flashminds.flyingchess.R;
 import com.flashminds.flyingchess.activity.ChooseModeActivity;
 import com.flashminds.flyingchess.entity.ChessBoard;
-import com.flashminds.flyingchess.entity.Global;
+import com.flashminds.flyingchess.Global;
 import com.flashminds.flyingchess.entity.Role;
 import com.flashminds.flyingchess.manager.DataManager;
 import com.flashminds.flyingchess.manager.SoundManager;

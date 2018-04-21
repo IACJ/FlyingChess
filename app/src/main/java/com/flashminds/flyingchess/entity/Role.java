@@ -1,5 +1,7 @@
 package com.flashminds.flyingchess.entity;
 
+import com.flashminds.flyingchess.Global;
+
 import java.util.ArrayList;
 import java.util.Random;
 

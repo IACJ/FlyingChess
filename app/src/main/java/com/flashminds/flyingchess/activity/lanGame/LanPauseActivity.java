@@ -1,4 +1,4 @@
-package com.flashminds.flyingchess.activity;
+package com.flashminds.flyingchess.activity.lanGame;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -7,12 +7,14 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 
+import com.flashminds.flyingchess.R;
+import com.flashminds.flyingchess.activity.ChooseModeActivity;
+import com.flashminds.flyingchess.activity.GameInfoActivity;
+import com.flashminds.flyingchess.dataPack.DataPack;
 import com.flashminds.flyingchess.Global;
 import com.flashminds.flyingchess.manager.DataManager;
-import com.flashminds.flyingchess.dataPack.DataPack;
-import com.flashminds.flyingchess.R;
 
-public class PauseActivity extends Activity {
+public class LanPauseActivity extends Activity {
     Button resume, robot, exit;
 
     @Override

@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.os.Message;
 
 import com.flashminds.flyingchess.activity.localGame.LocalGamingActivity;
-import com.flashminds.flyingchess.entity.Global;
+import com.flashminds.flyingchess.Global;
 import com.flashminds.flyingchess.entity.Role;
 
 /**

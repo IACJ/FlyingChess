@@ -1,4 +1,4 @@
-package com.flashminds.flyingchess.activity;
+package com.flashminds.flyingchess.activity.lanGame;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,24 +12,28 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.flashminds.flyingchess.R;
+import com.flashminds.flyingchess.activity.ChessBoardActivity;
+import com.flashminds.flyingchess.activity.ChooseModeActivity;
+import com.flashminds.flyingchess.activity.GameInfoActivity;
+import com.flashminds.flyingchess.dataPack.DataPack;
+import com.flashminds.flyingchess.dataPack.Target;
 import com.flashminds.flyingchess.entity.ChessBoard;
 import com.flashminds.flyingchess.Global;
-import com.flashminds.flyingchess.manager.DataManager;
-import com.flashminds.flyingchess.dataPack.DataPack;
-import com.flashminds.flyingchess.R;
 import com.flashminds.flyingchess.entity.Role;
+import com.flashminds.flyingchess.manager.DataManager;
 import com.flashminds.flyingchess.manager.SoundManager;
-import com.flashminds.flyingchess.dataPack.Target;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
+
 /**
  * Edited by IACJ on 2018/4/4.
  *
  * 开始游戏前的房间设定
  */
-public class RoomActivity extends AppCompatActivity implements Target {
+public class LanRoomActivity extends AppCompatActivity implements Target {
     Button startButton, backButton, site[], addRobotButton[];
     int[] siteState;// -1 none   0 robot    1 people
     ListView idlePlayerView;
@@ -92,10 +96,12 @@ public class RoomActivity extends AppCompatActivity implements Target {
                 Global.soundManager.playSound(SoundManager.BUTTON);
                 if (Global.dataManager.getGameMode() != DataManager.GM_LOCAL) {
                     Global.socketManager.send(DataPack.R_ROOM_EXIT, Global.dataManager.getMyId(), Global.dataManager.getRoomId(), Global.playersData.get(Global.dataManager.getMyId()).color);
-                    startActivity(new Intent(getApplicationContext(), GameInfoActivity.class));
+
                     if (Global.dataManager.getGameMode() == DataManager.GM_LAN) {
                         Global.localServer.stopHost();
                     }
+                    startActivity(new Intent(getApplicationContext(), LanHallActivity.class));
+
                 } else if (Global.dataManager.getGameMode() == DataManager.GM_LOCAL) {
                     startActivity(new Intent(getApplicationContext(), ChooseModeActivity.class));
                 }

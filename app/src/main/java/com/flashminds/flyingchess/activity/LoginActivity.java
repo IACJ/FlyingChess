@@ -14,7 +14,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.flashminds.flyingchess.dataPack.DataPack;
-import com.flashminds.flyingchess.entity.Global;
+import com.flashminds.flyingchess.Global;
 import com.flashminds.flyingchess.R;
 import com.flashminds.flyingchess.manager.SoundManager;
 import com.flashminds.flyingchess.dataPack.Target;

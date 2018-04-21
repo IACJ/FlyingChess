@@ -5,7 +5,7 @@ import android.content.res.AssetManager;
 import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 
-import com.flashminds.flyingchess.entity.Global;
+import com.flashminds.flyingchess.Global;
 
 import java.io.IOException;
 import java.util.HashMap;

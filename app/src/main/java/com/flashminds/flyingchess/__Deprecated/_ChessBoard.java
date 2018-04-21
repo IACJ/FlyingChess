@@ -1,4 +1,7 @@
-package com.flashminds.flyingchess.entity;
+package com.flashminds.flyingchess.__Deprecated;
+
+import com.flashminds.flyingchess.entity.Airplane;
+import com.flashminds.flyingchess.entity.Dice;
 
 /**
  * Created by karthur on 2016/4/9.
