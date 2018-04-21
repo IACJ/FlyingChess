@@ -30,6 +30,21 @@
         android:textColor="#fbeb5d" />
 
     <Button
+        android:id="@+id/btn_lan"
+        android:background="@drawable/button_lan"
+        android:text="lan"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="30sp"
+        android:layout_marginTop="30sp"
+        android:translationZ="1dp"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="#fbeb5d" />
+
+    <Button
         android:id="@+id/button2"
         android:background="@drawable/button_local"
         android:layout_width="wrap_content"
@@ -54,7 +69,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="30sp"
+        android:layout_marginBottom="90sp"
         android:layout_marginTop="30sp"
         android:translationZ="1dp"
         android:textSize="20sp"

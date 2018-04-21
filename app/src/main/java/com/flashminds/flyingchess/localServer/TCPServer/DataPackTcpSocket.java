@@ -46,7 +46,7 @@ public class DataPackTcpSocket {
     }
 
     /**
-     * Close the socket.
+     * Close the dSocket.
      */
     public void close() throws IOException {
         send(new DataPack(DataPack.TERMINATE));

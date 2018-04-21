@@ -14,6 +14,7 @@ import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
@@ -22,7 +23,7 @@ import java.util.List;
  * Created by BingF on 2016/5/15.
  */
 public class BroadcastSender implements Runnable {
-    private DataPackUdpSocket sendSocket;
+    private MyUdpSocket sendSocket;
     private boolean isRunning = true;
     private String localIp = null;
     private int port = 6667;
@@ -38,7 +39,11 @@ public class BroadcastSender implements Runnable {
             WifiManager wm = (WifiManager) activity.getSystemService(Context.WIFI_SERVICE);
             localIp = getLocalHostIp();
             ipSection = getIpSection(localIp, wm.getDhcpInfo().netmask);
-            sendSocket = new DataPackUdpSocket(new DatagramSocket());
+            sendSocket = new MyUdpSocket();
+
+            Log.d(TAG, "BroadcastSender: localIP为 "+localIp);
+            Log.d(TAG, "BroadcastSender: ipSection为 "+ ipSection );
+
         } catch (Exception e) {
             e.printStackTrace();
         }

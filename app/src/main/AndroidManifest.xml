@@ -26,6 +26,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".activity.WelcomeActivity"
             android:screenOrientation="landscape">
@@ -48,6 +49,11 @@
         <activity
             android:name=".activity.replay.ReplayGameActivity"
             android:screenOrientation="landscape" />
+
+        <activity
+            android:name=".activity.lanGame.LanHallActivity"
+            android:screenOrientation="landscape" />
+
 
 
         <activity

@@ -1,4 +1,4 @@
-package com.flashminds.flyingchess.activity;
+package com.flashminds.flyingchess.activity.lanGame;
 
 import android.content.Intent;
 import android.graphics.Typeface;
@@ -16,22 +16,24 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.flashminds.flyingchess.R;
+import com.flashminds.flyingchess.activity.ChooseModeActivity;
+import com.flashminds.flyingchess.activity.RoomActivity;
+import com.flashminds.flyingchess.dataPack.DataPack;
+import com.flashminds.flyingchess.dataPack.Target;
 import com.flashminds.flyingchess.entity.Global;
 import com.flashminds.flyingchess.manager.DataManager;
-import com.flashminds.flyingchess.dataPack.DataPack;
-import com.flashminds.flyingchess.R;
 import com.flashminds.flyingchess.manager.SoundManager;
-import com.flashminds.flyingchess.dataPack.Target;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 
 /**
- * Edited by IACJ on 2018/4/18
+ * Create by IACJ on 2018/4/22
  */
 
-public class GameInfoActivity extends AppCompatActivity implements Target {
+public class LanHallActivity extends AppCompatActivity implements Target {
     Button createButton, joinButton, backButton;
     ListView roomListView;
     LinearLayout onlineLayout;
@@ -57,6 +59,9 @@ public class GameInfoActivity extends AppCompatActivity implements Target {
         createButton = (Button) findViewById(R.id.create);
         backButton = (Button) findViewById(R.id.back);
         joinButton = (Button) findViewById(R.id.join);
+
+        title = (TextView) findViewById(R.id.room_title);
+
         roomListView = (ListView) findViewById(R.id.roomList);
 
         roomListData = new LinkedList<>();
@@ -65,10 +70,11 @@ public class GameInfoActivity extends AppCompatActivity implements Target {
         roomListAdapter = new SimpleAdapter(getApplicationContext(), roomListData, R.layout.content_room_list_item, t, t2);
         roomListView.setAdapter(roomListAdapter);
         worker = new Worker();
+
         onlineLayout = (LinearLayout) findViewById(R.id.onlineLayout);
         roomId = "";
         roomIndex = -1;
-        title = (TextView) findViewById(R.id.room_title);
+
         roomUUID = new LinkedList<>();
 
         // 点击事件
@@ -77,16 +83,13 @@ public class GameInfoActivity extends AppCompatActivity implements Target {
             public void onClick(View v) {//start a new game
                 Global.soundManager.playSound(SoundManager.BUTTON);
 
-                if (Global.dataManager.getGameMode() == DataManager.GM_WLAN) {
-                    Global.socketManager.send(DataPack.R_ROOM_CREATE, Global.dataManager.getMyId(), Global.dataManager.getMyName() + "'s Room");
-                } else if (Global.dataManager.getGameMode() == DataManager.GM_LAN) {
-                    Global.localServer.startHost();
-                    Global.socketManager.connectToLocalServer();
-                    Global.delay(500);
-                    Global.socketManager.send(DataPack.R_LOGIN, new Build().MODEL, "123");
-                }
+                Global.localServer.startHost();
+                Global.socketManager.connectToLocalServer();
+                Global.delay(500);
+                Global.socketManager.send(DataPack.R_LOGIN, new Build().MODEL, "123");
             }
         });
+
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -107,42 +110,17 @@ public class GameInfoActivity extends AppCompatActivity implements Target {
             public void onClick(View v) {
                 Global.soundManager.playSound(SoundManager.BUTTON);
                 if (roomUUID.size() == 0){
-                    Toast.makeText(GameInfoActivity.this,"未选择可进入的房间",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LanHallActivity.this,"请选择可进入的房间",Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                if (Global.dataManager.getGameMode() == DataManager.GM_LAN) {
-                    Global.socketManager.connectLanServer(Global.localServer.getRoomIp(roomUUID.get(roomIndex)));
-                    Global.delay(500);
-                    Global.socketManager.send(DataPack.R_LOGIN, new Build().MODEL, "123");
-                } else {
-                    boolean find = false;
-                    synchronized (roomListData) {
-                        for (HashMap<String, String> map : roomListData) {
-                            if (map.get("id").compareTo(roomId) == 0) {
-                                if (map.get("state").compareTo("waiting") == 0) {
-                                    Global.socketManager.send(DataPack.R_ROOM_ENTER, Global.dataManager.getMyId(), roomId);
-                                    find = true;
-                                }
-                                break;
-                            }
-                        }
-                        if (!find)
-                            Toast.makeText(getApplicationContext(), "join room failed", Toast.LENGTH_SHORT).show();
-                    }
-                }
+                Global.socketManager.connectLanServer(Global.localServer.getRoomIp(roomUUID.get(roomIndex)));
+                Global.delay(500);
+                Global.socketManager.send(DataPack.R_LOGIN, new Build().MODEL, "123");
             }
         });
-        //network init
-        if (Global.dataManager.getGameMode() != DataManager.GM_LOCAL) {
-            Global.socketManager.registerActivity(DataPack.A_ROOM_LOOKUP, this);
-            Global.socketManager.registerActivity(DataPack.A_ROOM_CREATE, this);
-            Global.socketManager.registerActivity(DataPack.A_ROOM_ENTER, this);
-            new Thread(worker).start();
-            if (Global.dataManager.getGameMode() == DataManager.GM_LAN) {
-                Global.localServer.registerMsg(this);
-            }
-        }
+
+        // 设置字体
         title.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/comici.ttf"));
         joinButton.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/comici.ttf"));
         createButton.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/comici.ttf"));
@@ -172,13 +150,8 @@ public class GameInfoActivity extends AppCompatActivity implements Target {
     }
 
     private void goBack() {
-        if (Global.dataManager.getGameMode() == DataManager.GM_WLAN) {
-            Global.socketManager.send(DataPack.R_LOGOUT, Global.dataManager.getMyId());
-        }
         startActivity(new Intent(getApplicationContext(), ChooseModeActivity.class));
-        if (Global.dataManager.getGameMode() == DataManager.GM_LAN) {
-            Global.localServer.stop();
-        }
+        Global.localServer.stop();
     }
 
     @Override
@@ -260,13 +233,7 @@ public class GameInfoActivity extends AppCompatActivity implements Target {
 
         @Override
         public void run() {
-            if (Global.dataManager.getGameMode() == DataManager.GM_WLAN) {
-                DataPack dataPack = new DataPack(DataPack.R_ROOM_LOOKUP, null);
-                Global.socketManager.send(dataPack);
-            } else if (Global.dataManager.getGameMode() == DataManager.GM_LAN) {
                 Global.localServer.updateRoomListImmediately();
-            }
-            System.out.println("卧槽");
         }
     }
 }

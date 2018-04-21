@@ -56,7 +56,7 @@ public class Global {
     public static void init(AppCompatActivity activity) {
         Global.activity = activity;
         dataManager = new DataManager();
-        socketManager = new SocketManager(activity);
+        socketManager = new SocketManager();
         gameManager = new GameManager();
         chessBoard = new ChessBoard();
         playersData = new HashMap<>();

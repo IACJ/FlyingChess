@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.flashminds.flyingchess.activity.lanGame.LanHallActivity;
 import com.flashminds.flyingchess.activity.localGame.LocalRoomActivity;
 import com.flashminds.flyingchess.entity.Global;
 import com.flashminds.flyingchess.manager.DataManager;
@@ -29,7 +30,7 @@ import java.util.TimerTask;
  * 主界面，选择Local、Lan、Wan模式。
  */
 public class ChooseModeActivity extends AppCompatActivity implements Target {
-    Button btnLocal,local, lan, wlan;
+    Button btnLocal,btnLan,local, lan, wlan;
     boolean exit;
     Timer closeTimer;
     ImageView bk, bk2;
@@ -48,6 +49,7 @@ public class ChooseModeActivity extends AppCompatActivity implements Target {
         Global.activityManager.add(this);
         // 查找view
         btnLocal = (Button) findViewById(R.id.btn_local);
+        btnLan = (Button) findViewById(R.id.btn_lan);
         local = (Button) findViewById(R.id.button2);
         lan = (Button) findViewById(R.id.button3);
         wlan = (Button) findViewById(R.id.button4);
@@ -69,6 +71,21 @@ public class ChooseModeActivity extends AppCompatActivity implements Target {
                 startActivity(intent);
             }
         } );
+
+        btnLan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Global.soundManager.playSound(SoundManager.BUTTON);
+
+                Global.dataManager.setGameMode(DataManager.GM_LAN);
+                Global.dataManager.setMyName(new Build().MODEL);
+                Global.localServer.startListen();
+                Intent intent = new Intent(getApplicationContext(), LanHallActivity.class);
+                startActivity(intent);
+                clean();
+            }
+        });
+
 
         local.setOnClickListener(new View.OnClickListener() {
             @Override

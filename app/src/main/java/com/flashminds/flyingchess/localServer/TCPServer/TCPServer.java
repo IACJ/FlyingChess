@@ -63,7 +63,7 @@ public class TCPServer {
     public Room stop() {
 //        try {
 //            // send shutdown datapack to ever online users
-//            // and stop the socket.
+//            // and stop the dSocket.
 //            for (Player player : this.selfRoom.getAllPlayers()) {
 //                player.getSocket().send(new DataPack(DataPack.TERMINATE));
 //                player.getSocket().close();

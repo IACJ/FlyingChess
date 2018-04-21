@@ -11,15 +11,16 @@ import java.net.DatagramSocket;
  * Created by BingF on 2016/5/15.
  */
 public class BroadcastReceiver implements Runnable {
-    private DataPackUdpSocket receiveSocket = null;
+    private MyUdpSocket receiveSocket = null;
+    private UDPServer parent = null;
+
     private boolean isRunning = true;
     private final static int port = 6667;
-    private UDPServer parent = null;
 
     public BroadcastReceiver(UDPServer parent) {
         try {
             this.parent = parent;
-            this.receiveSocket = new DataPackUdpSocket(new DatagramSocket(port));
+            this.receiveSocket = new MyUdpSocket(port);
         } catch (Exception e) {
             e.printStackTrace();
         }

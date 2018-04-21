@@ -9,58 +9,66 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.net.SocketException;
 
 /**
  * Created by Ryan on 16/5/15.
  *
  * Edited by IACJ on 2018/4/19
  */
-public class DataPackUdpSocket {
-    protected DatagramSocket socket = null;
-    protected Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd hh:mm:ss").create();
-    protected byte[] buffer = new byte[1024];
+public class MyUdpSocket {
+    private DatagramSocket dSocket = null;
+    private Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd hh:mm:ss").create();
+    private byte[] buffer = new byte[1024];
 
-    public DataPackUdpSocket(DatagramSocket socket) {
-        this.socket = socket;
+    ///////////////////////////////////////////////////////<构造方法> begin
+    public MyUdpSocket() throws SocketException {
+        this.dSocket = new DatagramSocket();
     }
 
+    public MyUdpSocket(int port) throws SocketException {
+        this.dSocket = new DatagramSocket(port);
+    }
+    ////////////////////////////////////////////////////////</构造方法> end
+
     /**
-     * This method sends out the datapack immediately, in the thread
-     * which calls the method.
-     *
-     * @param dataPack The datapack to be sent.
-     * @param ip       The ip to which the datapack is sent.
+     * 向目标 ip 发送 dataPack
+     *`
+     * @param dataPack 要发送的dataPack
+     * @param ip       目标ip
      */
     public void send(DataPack dataPack, InetAddress ip, int port) throws IOException {
         byte[] bytes = gson.toJson(dataPack, DataPack.class).getBytes();
         DatagramPacket packet = new DatagramPacket(bytes, bytes.length, ip, port);
-        socket.send(packet);
+        dSocket.send(packet);
     }
 
     /**
-     * Receive one data pack from the inputstream, which
-     * will be blocking until one data pack is successfully read.
+     * 接收一个 dataPack
      *
-     * @return The data pack read.
+     * @return 接收的 dataPack
      */
     public DataPack receive() throws IOException {
         DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
-        socket.receive(packet);
+        dSocket.receive(packet);
         System.out.println(new String(packet.getData()));
         return gson.fromJson(new String(packet.getData()).trim(), DataPack.class);
     }
 
     /**
-     * Close the socket.
+     * 关闭 dSocket
      */
     public void close() throws IOException {
-        this.socket.close();
+        this.dSocket.close();
     }
 
+    /**
+     * get该 dSocket 的地址
+     */
     public InetSocketAddress getInetSocketAddress() {
         InetAddress ip = null;
-        ip = this.socket.getInetAddress();
-        int port = this.socket.getPort();
+        ip = this.dSocket.getInetAddress();
+        int port = this.dSocket.getPort();
         InetSocketAddress address = new InetSocketAddress(ip, port);
         return address;
     }
