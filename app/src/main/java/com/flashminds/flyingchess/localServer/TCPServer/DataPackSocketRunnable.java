@@ -231,24 +231,4 @@ public class DataPackSocketRunnable implements Runnable {
         } catch (IndexOutOfBoundsException e) {
         }
     }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == null)
-            return false;
-
-        if (!(obj instanceof DataPackSocketRunnable))
-            return false;
-
-        DataPackSocketRunnable socketRunnable = (DataPackSocketRunnable) obj;
-
-        if (socketRunnable.socket == null)
-            return false;
-
-        if (socketRunnable.socket.getInetSocketAddress().equals(this.socket.getInetSocketAddress())) {
-            return true;
-        }
-
-        return false;
-    }
 }

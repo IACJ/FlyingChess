@@ -85,15 +85,12 @@ public class LanHallActivity extends AppCompatActivity implements Target {
         // 点击事件
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {//start a new game
-
-                Log.d(TAG, "onClick: 你点击了onclick ");
+            public void onClick(View v) {
                 Global.soundManager.playSound(SoundManager.BUTTON);
 
                 Global.localServer.startHost();
                 Global.socketManager.connectToLocalServer();
                 Global.delay(500);
-                Log.d(TAG, "onClick: 发送R_LOGIN");
                 Global.socketManager.send(DataPack.R_LOGIN, new Build().MODEL, "123");
             }
         });
@@ -234,18 +231,14 @@ public class LanHallActivity extends AppCompatActivity implements Target {
             }
             case DataPack.A_ROOM_ENTER :{
                 if (dataPack.isSuccessful()) {
-
-
                     Global.localServer.stopListen();
 
                     Global.dataManager.setMyId(dataPack.getMessage(0));
-
                     Global.dataManager.setRoomId(roomId);
                     Intent intent = new Intent(getApplicationContext(), LanRoomActivity.class);
                     ArrayList<String> msgs = new ArrayList<>(dataPack.getMessageList());
 
                     msgs.remove(0);
-
                     intent.putStringArrayListExtra("msgs", msgs);
                     startActivity(intent);//switch wo chess board activity
                 } else {

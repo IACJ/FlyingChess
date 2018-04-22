@@ -1,5 +1,7 @@
 package com.flashminds.flyingchess.manager;
 
+import android.util.Log;
+
 import com.flashminds.flyingchess.dataPack.DataPack;
 import com.flashminds.flyingchess.Global;
 import com.flashminds.flyingchess.dataPack.Target;
@@ -8,6 +10,7 @@ import com.google.gson.GsonBuilder;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -94,7 +97,7 @@ public class SocketManager  {
                     sock = new Socket();
                     sock.connect( new InetSocketAddress(Global.dataManager.data.ip,6666),1500);
 
-                    sock.setSoTimeout(2000);
+                    sock.setSoTimeout(1500);
                     sock.setTcpNoDelay(true);
                     sw = new SocketWriter(sock.getOutputStream());
                     sr = new SocketReader(sock.getInputStream());
@@ -128,8 +131,8 @@ public class SocketManager  {
     }
 
 
-    public void registerActivity(int datapack_commond, Target target) {
-        targets.put(datapack_commond, target);
+    public void registerActivity(int datapackCommond, Target target) {
+        targets.put(datapackCommond, target);
     }
 
     protected void processDataPack(DataPack dataPack) {
@@ -146,58 +149,57 @@ public class SocketManager  {
     public class SocketReader implements Runnable {
 
         private Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd hh:mm:ss").create();
-        private DataInputStream is = null;
-        private boolean connected = false;
+        private DataInputStream dis;
+        private boolean connected ;
+
+        private static final String TAG = "SocketReader";
 
 
         public SocketReader(InputStream is) {
-            this.is = new DataInputStream(is);
+            this.dis = new DataInputStream(is);
         }
 
         @Override
         public void run() {
             connected = true;
-            while (true) {
+            while (connected) {
                 try {
-                    Global.socketManager.processDataPack(receive());
+                    // 接收一个数据包并处理
+                    int blockSize;
+                    blockSize = this.dis.readInt();
+                    byte[] bytes = new byte[blockSize];
+                    this.dis.readFully(bytes);
+                    String json = new String(bytes, "UTF-8");
+                    Log.d(TAG, "receive: 读取字节数："+blockSize+",读取内容："+json);
+
+                    DataPack dataPack = gson.fromJson(json, DataPack.class);
+                    Global.socketManager.processDataPack(dataPack);
+                } catch (EOFException e){
+                    connected = false;
                 } catch (Exception e) {
                     e.printStackTrace();
                     connected = false;
-                    Global.offlineTip();
-                    break;
                 }
             }
-        }
-
-        private DataPack receive() throws IOException {
-            int blockSize;
-            blockSize = this.is.readInt();
-
-
-            byte[] bytes = new byte[blockSize];
-            this.is.readFully(bytes);
-            String json = new String(bytes, "UTF-8");
-
-            System.out.println("读取字节数："+blockSize);
-            System.out.println("读取内容："+json);
-            return gson.fromJson(json, DataPack.class);
         }
     }
 
     /**
-     * 内部类 `SocketWriter`
+     * 内部类： `SocketWriter`
      *
-     * 发送数据包
      */
     public class SocketWriter implements Runnable {
 
         private Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd hh:mm:ss").create();
         private LinkedBlockingQueue<DataPack> dataPackQueue = new LinkedBlockingQueue<>();
-        private DataOutputStream os = null;
-        private boolean connected = false;
+        private DataOutputStream dos;
+        private boolean connected;
+
+        private static final String TAG = "SocketWriter";
+
 
         public SocketWriter(OutputStream os) {
-            this.os = new DataOutputStream(os);
+            this.dos = new DataOutputStream(os);
         }
 
         @Override
@@ -209,17 +211,15 @@ public class SocketManager  {
                     List<DataPack> dataPackList = new ArrayList<>();
                     this.dataPackQueue.drainTo(dataPackList);
                     for (DataPack dataPack : dataPackList) {
-
                         byte[] sendBytes = gson.toJson(dataPack, DataPack.class).getBytes(Charset.forName("UTF-8"));
                         int bytesSize = sendBytes.length;
-                        System.out.println("发送字节数:"+bytesSize);
-                        System.out.println("发送数据:"+gson.toJson(dataPack, DataPack.class));
-                        this.os.writeInt(bytesSize);
-                        this.os.flush();
-                        this.os.write(sendBytes);
-                        this.os.flush();
-                    }
 
+                        Log.d(TAG, "run: 发送字节数:"+bytesSize+",发送数据:"+gson.toJson(dataPack, DataPack.class));
+                        
+                        this.dos.writeInt(bytesSize);
+                        this.dos.write(sendBytes);
+                        this.dos.flush();
+                    }
                     Thread.sleep(100);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -229,11 +229,8 @@ public class SocketManager  {
             }
         }
 
-
         /**
          * 把 datapack 放入消息队列
-         *
-         * @param dataPack The datapack to be queued.
          */
         public boolean send(DataPack dataPack) {
             if (connected) {

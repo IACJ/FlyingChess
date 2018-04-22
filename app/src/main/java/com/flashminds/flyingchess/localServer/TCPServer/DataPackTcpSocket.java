@@ -16,6 +16,8 @@ import java.nio.charset.Charset;
 
 /**
  * Created by Ryan on 16/4/26.
+ *
+ * Edited by IACJ on 2018/4/22
  */
 public class DataPackTcpSocket {
     protected Socket socket = null;
@@ -35,50 +37,51 @@ public class DataPackTcpSocket {
     }
 
     /**
-     * Receive one data pack from the inputstream, which
-     * will be blocking until one data pack is successfully read.
-     *
-     * @return The data pack read.
+     * 读取一个 DataPack
      */
     public DataPack receive() throws IOException {
         int blockSize = this.is.readInt();
-
         byte[] bytes = new byte[blockSize];
         this.is.readFully(bytes);
 
-        // parse the datapack and return
+        Log.d(TAG, "receive: 字节数："+blockSize);
+        Log.d(TAG, "receive: 数据："+new String(bytes, "UTF-8"));
+
         return dataPackGson.fromJson(new String(bytes, "UTF-8"), DataPack.class);
     }
 
+
+
     /**
-     * Close the dSocket.
+     * 发送 DataPack
+     */
+    public synchronized void send(DataPack dataPack) throws IOException {
+        try {
+
+            byte[] sendBytes = dataPackGson.toJson(dataPack, DataPack.class).getBytes(Charset.forName("UTF-8"));
+            int bytesSize = sendBytes.length;
+
+            this.os.writeInt(bytesSize);
+            this.os.flush();
+            this.os.write(sendBytes);
+            this.os.flush();
+
+            Log.d(TAG, "send: 字节数："+bytesSize);
+            Log.d(TAG, "send: 数据："+dataPackGson.toJson(dataPack, DataPack.class));
+
+        } catch (SocketException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 关闭 Socket
      */
     public void close() throws IOException {
         send(new DataPack(DataPack.TERMINATE));
         this.os.close();
         this.is.close();
         this.socket.close();
-    }
-
-    /**
-     * This method sends out the datapack immediately, in the thread
-     * which calls the method.
-     *
-     * @param dataPack The datapack to be sent.
-     */
-    public synchronized void send(DataPack dataPack) throws IOException {
-        try {
-            Log.d(TAG, "send: 消息发送");
-            byte[] sendBytes = dataPackGson.toJson(dataPack, DataPack.class).getBytes(Charset.forName("UTF-8"));
-            int bytesSize = sendBytes.length;
-
-            this.os.writeInt(bytesSize);
-            this.os.write(sendBytes);
-            this.os.flush();
-
-        } catch (SocketException e) {
-            e.printStackTrace();
-        }
     }
 
     public InetSocketAddress getInetSocketAddress() {

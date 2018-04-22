@@ -27,6 +27,8 @@ import java.util.concurrent.Executors;
 
 /**
  * Created by BingF on 2016/5/15.
+ *
+ * Edited by IACJ on 2018/4/22
  */
 public class UDPServer {
     private BroadcastSender sender = null;
@@ -123,10 +125,7 @@ public class UDPServer {
                 localIp = getLocalHostIp();
                 ipSection = getIpSection(localIp, wm.getDhcpInfo().netmask);
                 sendSocket = new MyUdpSocket();
-
-                Log.d(TAG, "BroadcastSender: localIP为 "+localIp);
-                Log.d(TAG, "BroadcastSender: ipSection为 "+ ipSection );
-
+                Log.d(TAG, "BroadcastSender: localIP为 "+localIp+",  ipSection为 "+ ipSection);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -269,6 +268,11 @@ public class UDPServer {
             return ipSection;
         }
     }
+
+    /**
+     * 内部类： 广播接收
+     */
+
     public class BroadcastReceiver implements Runnable {
         private MyUdpSocket receiveSocket = null;
         private UDPServer parent = null;
@@ -291,8 +295,6 @@ public class UDPServer {
                     if (this.receiveSocket == null)
                         Global.delay(500);
 
-                    if (this.receiveSocket == null)
-                        break;
                     DataPack dataPack = this.receiveSocket.receive();
                     parent.dataPackReceived(dataPack);
                 } catch (Exception e) {
@@ -300,7 +302,6 @@ public class UDPServer {
                     if (e.getMessage().equals("Socket closed") ){
                         System.out.println("强行关闭socket连接");
                     }
-//                e.printStackTrace();
                 }
             }
         }

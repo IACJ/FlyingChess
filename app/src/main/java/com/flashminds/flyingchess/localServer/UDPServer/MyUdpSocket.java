@@ -45,8 +45,6 @@ public class MyUdpSocket {
 
     /**
      * 接收一个 dataPack
-     *
-     * @return 接收的 dataPack
      */
     public DataPack receive() throws IOException {
         DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
@@ -59,16 +57,5 @@ public class MyUdpSocket {
      */
     public void close() throws IOException {
         this.dSocket.close();
-    }
-
-    /**
-     * get该 dSocket 的地址
-     */
-    public InetSocketAddress getInetSocketAddress() {
-        InetAddress ip = null;
-        ip = this.dSocket.getInetAddress();
-        int port = this.dSocket.getPort();
-        InetSocketAddress address = new InetSocketAddress(ip, port);
-        return address;
     }
 }

@@ -142,9 +142,6 @@ public class Global {
         return typeface;
     }
 
-    public static void offlineTip() {
-        activity.startActivity(new Intent(activity.getApplicationContext(), ChooseModeActivity.class));
-    }
 
     static class RotateAnimationWorker implements Runnable {
         private View view;
