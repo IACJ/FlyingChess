@@ -29,6 +29,7 @@ public class TCPServer {
     }
 
     public void start() {
+        Log.d(TAG, "start: TCPServer 打开");
         isRunning = true;
         try {
             if (serverSocket == null || !serverSocket.isBound() || serverSocket.isClosed())

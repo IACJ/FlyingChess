@@ -12,7 +12,6 @@ import android.support.v7.app.NotificationCompat;
 import android.widget.RemoteViews;
 
 import com.flashminds.flyingchess.R;
-import com.flashminds.flyingchess.activity.UpdateActivity;
 import com.flashminds.flyingchess.Global;
 
 import java.io.DataInputStream;

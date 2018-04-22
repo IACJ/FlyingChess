@@ -1,5 +1,7 @@
 package com.flashminds.flyingchess.localServer.TCPServer;
 
+import android.util.Log;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.flashminds.flyingchess.dataPack.DataPack;
@@ -20,6 +22,9 @@ public class DataPackTcpSocket {
     protected DataInputStream is = null;
     protected DataOutputStream os = null;
     protected Gson dataPackGson = new GsonBuilder().setDateFormat("yyyy-MM-dd hh:mm:ss").create();
+
+    private static final String TAG = "DataPackTcpSocket";
+    
 
     public DataPackTcpSocket(Socket socket) throws IOException {
         this.socket = socket;
@@ -63,6 +68,7 @@ public class DataPackTcpSocket {
      */
     public synchronized void send(DataPack dataPack) throws IOException {
         try {
+            Log.d(TAG, "send: 消息发送");
             byte[] sendBytes = dataPackGson.toJson(dataPack, DataPack.class).getBytes(Charset.forName("UTF-8"));
             int bytesSize = sendBytes.length;
 

@@ -51,7 +51,6 @@ public class MyUdpSocket {
     public DataPack receive() throws IOException {
         DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
         dSocket.receive(packet);
-        System.out.println(new String(packet.getData()));
         return gson.fromJson(new String(packet.getData()).trim(), DataPack.class);
     }
 

@@ -1,4 +1,4 @@
-package com.flashminds.flyingchess.activity;
+package com.flashminds.flyingchess.__Deprecated;
 
 import android.app.Activity;
 import android.os.Bundle;

@@ -172,9 +172,14 @@ public class SocketManager  {
         private DataPack receive() throws IOException {
             int blockSize;
             blockSize = this.is.readInt();
+
+
             byte[] bytes = new byte[blockSize];
             this.is.readFully(bytes);
             String json = new String(bytes, "UTF-8");
+
+            System.out.println("读取字节数："+blockSize);
+            System.out.println("读取内容："+json);
             return gson.fromJson(json, DataPack.class);
         }
     }
@@ -204,9 +209,13 @@ public class SocketManager  {
                     List<DataPack> dataPackList = new ArrayList<>();
                     this.dataPackQueue.drainTo(dataPackList);
                     for (DataPack dataPack : dataPackList) {
+
                         byte[] sendBytes = gson.toJson(dataPack, DataPack.class).getBytes(Charset.forName("UTF-8"));
                         int bytesSize = sendBytes.length;
+                        System.out.println("发送字节数:"+bytesSize);
+                        System.out.println("发送数据:"+gson.toJson(dataPack, DataPack.class));
                         this.os.writeInt(bytesSize);
+                        this.os.flush();
                         this.os.write(sendBytes);
                         this.os.flush();
                     }

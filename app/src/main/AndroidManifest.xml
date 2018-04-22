@@ -80,7 +80,7 @@
             android:screenOrientation="landscape"
             android:theme="@style/Theme.AppCompat.Light.Dialog.Alert" />
         <activity
-            android:name=".activity.UpdateActivity"
+            android:name=".__Deprecated.UpdateActivity"
             android:screenOrientation="landscape"
             android:theme="@style/Theme.AppCompat.Light.Dialog.Alert" />
         <activity
