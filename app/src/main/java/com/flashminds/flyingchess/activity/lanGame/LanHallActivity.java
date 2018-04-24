@@ -25,6 +25,7 @@ import com.flashminds.flyingchess.dataPack.Target;
 import com.flashminds.flyingchess.Global;
 import com.flashminds.flyingchess.manager.DataManager;
 import com.flashminds.flyingchess.manager.SoundManager;
+import com.flashminds.flyingchess.util.BaseActivity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,7 +35,7 @@ import java.util.LinkedList;
  * Create by IACJ on 2018/4/22
  */
 
-public class LanHallActivity extends AppCompatActivity implements Target {
+public class LanHallActivity extends BaseActivity implements Target {
     Button createButton, joinButton, backButton;
     ListView roomListView;
     LinearLayout onlineLayout;

@@ -22,6 +22,7 @@ import com.flashminds.flyingchess.dataPack.DataPack;
 import com.flashminds.flyingchess.R;
 import com.flashminds.flyingchess.manager.SoundManager;
 import com.flashminds.flyingchess.dataPack.Target;
+import com.flashminds.flyingchess.util.BaseActivity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,7 +32,7 @@ import java.util.LinkedList;
  * Edited by IACJ on 2018/4/18
  */
 
-public class GameInfoActivity extends AppCompatActivity implements Target {
+public class GameInfoActivity extends BaseActivity implements Target {
     Button createButton, joinButton, backButton;
     ListView roomListView;
     LinearLayout onlineLayout;

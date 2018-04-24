@@ -9,13 +9,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.flashminds.flyingchess.R;
+import com.flashminds.flyingchess.util.BaseActivity;
 
 /**
  * Created by IACJ on 2018/4/1.
  *
  * 在开始游戏前，先向用户请求所有权限。
  */
-public class RequestPermissionActivity extends AppCompatActivity {
+public class RequestPermissionActivity extends BaseActivity {
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
     private static String[] PERMISSIONS_STORAGE = {
             "android.permission.READ_EXTERNAL_STORAGE",

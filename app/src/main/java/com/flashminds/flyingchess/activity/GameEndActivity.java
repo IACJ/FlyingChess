@@ -11,12 +11,13 @@ import android.widget.TextView;
 import com.flashminds.flyingchess.Global;
 import com.flashminds.flyingchess.R;
 import com.flashminds.flyingchess.manager.SoundManager;
+import com.flashminds.flyingchess.util.BaseActivity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 
-public class GameEndActivity extends Activity {
+public class GameEndActivity extends BaseActivity {
     Button con;
     TextView winner;
     SimpleAdapter playerListAdapter;

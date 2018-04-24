@@ -19,6 +19,7 @@ import com.flashminds.flyingchess.dataPack.DataPack;
 import com.flashminds.flyingchess.R;
 import com.flashminds.flyingchess.manager.SoundManager;
 import com.flashminds.flyingchess.dataPack.Target;
+import com.flashminds.flyingchess.util.BaseActivity;
 
 import java.util.ArrayList;
 import java.util.Timer;
@@ -29,7 +30,7 @@ import java.util.TimerTask;
  *
  * 主界面，选择Local、Lan、Wan模式。
  */
-public class ChooseModeActivity extends AppCompatActivity implements Target {
+public class ChooseModeActivity extends BaseActivity implements Target {
     Button btnLocal,btnLan,local, lan, wlan;
     boolean exit;
     Timer closeTimer;

@@ -13,8 +13,9 @@ import com.flashminds.flyingchess.activity.GameInfoActivity;
 import com.flashminds.flyingchess.dataPack.DataPack;
 import com.flashminds.flyingchess.Global;
 import com.flashminds.flyingchess.manager.DataManager;
+import com.flashminds.flyingchess.util.BaseActivity;
 
-public class LanPauseActivity extends Activity {
+public class LanPauseActivity extends BaseActivity {
     Button resume, robot, exit;
 
     @Override

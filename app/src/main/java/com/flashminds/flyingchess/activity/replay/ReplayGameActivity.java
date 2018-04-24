@@ -21,11 +21,12 @@ import com.flashminds.flyingchess.entity.ChessBoard;
 import com.flashminds.flyingchess.Global;
 import com.flashminds.flyingchess.manager.ReplayGameManager;
 import com.flashminds.flyingchess.manager.SoundManager;
+import com.flashminds.flyingchess.util.BaseActivity;
 
 /**
  * Created by IACJ on 2018/4/9.
  */
-public class ReplayGameActivity extends AppCompatActivity {
+public class ReplayGameActivity extends BaseActivity {
     Button pauseButton;
     Button throwDiceButton;
     Button[][] plane = new Button[4][4];

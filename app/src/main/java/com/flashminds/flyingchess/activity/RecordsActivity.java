@@ -17,6 +17,7 @@ import com.flashminds.flyingchess.activity.replay.ReplayGameActivity;
 import com.flashminds.flyingchess.Global;
 import com.flashminds.flyingchess.R;
 import com.flashminds.flyingchess.manager.SoundManager;
+import com.flashminds.flyingchess.util.BaseActivity;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -26,7 +27,7 @@ import java.util.ArrayList;
  *
  * 弹出式窗口，管理回放记录。
  */
-public class RecordsActivity extends AppCompatActivity {
+public class RecordsActivity extends BaseActivity {
     ListView recordList;
     ArrayList<String> records;
     ArrayAdapter<String> recordsAdapter;

@@ -44,8 +44,7 @@ public class DataPackTcpSocket {
         byte[] bytes = new byte[blockSize];
         this.is.readFully(bytes);
 
-        Log.d(TAG, "receive: 字节数："+blockSize);
-        Log.d(TAG, "receive: 数据："+new String(bytes, "UTF-8"));
+        Log.d(TAG, "receive:接收"+blockSize+new String(bytes, "UTF-8"));
 
         return dataPackGson.fromJson(new String(bytes, "UTF-8"), DataPack.class);
     }
@@ -66,8 +65,8 @@ public class DataPackTcpSocket {
             this.os.write(sendBytes);
             this.os.flush();
 
-            Log.d(TAG, "send: 字节数："+bytesSize);
-            Log.d(TAG, "send: 数据："+dataPackGson.toJson(dataPack, DataPack.class));
+
+            Log.d(TAG, "send:发送"+bytesSize+dataPackGson.toJson(dataPack, DataPack.class));
 
         } catch (SocketException e) {
             e.printStackTrace();

@@ -10,11 +10,12 @@ import android.widget.Button;
 import com.flashminds.flyingchess.R;
 import com.flashminds.flyingchess.activity.ChooseModeActivity;
 import com.flashminds.flyingchess.Global;
+import com.flashminds.flyingchess.util.BaseActivity;
 
 /**
  * Created by IACJ on 2018/4/9.
  */
-public class LocalPauseActivity extends Activity {
+public class LocalPauseActivity extends BaseActivity {
     Button resume, robot, exit;
 
     @Override

@@ -11,8 +11,9 @@ import com.flashminds.flyingchess.Global;
 import com.flashminds.flyingchess.manager.DataManager;
 import com.flashminds.flyingchess.dataPack.DataPack;
 import com.flashminds.flyingchess.R;
+import com.flashminds.flyingchess.util.BaseActivity;
 
-public class PauseActivity extends Activity {
+public class PauseActivity extends BaseActivity {
     Button resume, robot, exit;
 
     @Override

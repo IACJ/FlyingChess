@@ -20,6 +20,7 @@ import com.flashminds.flyingchess.R;
 import com.flashminds.flyingchess.entity.Role;
 import com.flashminds.flyingchess.manager.SoundManager;
 import com.flashminds.flyingchess.dataPack.Target;
+import com.flashminds.flyingchess.util.BaseActivity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,7 +30,7 @@ import java.util.LinkedList;
  *
  * 开始游戏前的房间设定
  */
-public class RoomActivity extends AppCompatActivity implements Target {
+public class RoomActivity extends BaseActivity implements Target {
     Button startButton, backButton, site[], addRobotButton[];
     int[] siteState;// -1 none   0 robot    1 people
     ListView idlePlayerView;

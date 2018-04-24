@@ -18,6 +18,7 @@ import com.flashminds.flyingchess.Global;
 import com.flashminds.flyingchess.entity.Role;
 import com.flashminds.flyingchess.manager.DataManager;
 import com.flashminds.flyingchess.manager.SoundManager;
+import com.flashminds.flyingchess.util.BaseActivity;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -27,7 +28,7 @@ import java.util.LinkedList;
  *
  * 开始 Local 游戏前的房间设定
  */
-public class LocalRoomActivity extends AppCompatActivity {
+public class LocalRoomActivity extends BaseActivity {
     Button startButton, backButton;
     Button[] site = new Button[4];
     Button[] addRobotButton = new Button[4];

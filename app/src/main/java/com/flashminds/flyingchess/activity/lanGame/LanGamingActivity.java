@@ -29,13 +29,14 @@ import com.flashminds.flyingchess.entity.ChessBoard;
 import com.flashminds.flyingchess.Global;
 import com.flashminds.flyingchess.manager.DataManager;
 import com.flashminds.flyingchess.manager.SoundManager;
+import com.flashminds.flyingchess.util.BaseActivity;
 
 import java.util.ArrayList;
 
 /**
  * Edited by IACJ on 2018/4/22.
  */
-public class LanGamingActivity extends AppCompatActivity {
+public class LanGamingActivity extends BaseActivity {
     Button pauseButton;
     Button throwDiceButton;
     Button[][] plane;

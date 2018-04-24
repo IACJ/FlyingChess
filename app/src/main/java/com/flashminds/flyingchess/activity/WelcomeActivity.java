@@ -12,6 +12,7 @@ import android.view.WindowManager;
 
 import com.flashminds.flyingchess.Global;
 import com.flashminds.flyingchess.R;
+import com.flashminds.flyingchess.util.BaseActivity;
 
 import java.io.IOException;
 import java.util.Timer;
@@ -22,7 +23,7 @@ import java.util.TimerTask;
  *
  * 播放欢迎动画，然后跳转到ChooseModeActivity。
  */
-public class WelcomeActivity extends AppCompatActivity {
+public class WelcomeActivity extends BaseActivity {
     SurfaceView sv;
     MediaPlayer mediaPlayer;
 

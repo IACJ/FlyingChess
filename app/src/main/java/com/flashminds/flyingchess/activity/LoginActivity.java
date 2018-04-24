@@ -18,9 +18,10 @@ import com.flashminds.flyingchess.Global;
 import com.flashminds.flyingchess.R;
 import com.flashminds.flyingchess.manager.SoundManager;
 import com.flashminds.flyingchess.dataPack.Target;
+import com.flashminds.flyingchess.util.BaseActivity;
 
 
-public class LoginActivity extends AppCompatActivity implements Target {
+public class LoginActivity extends BaseActivity implements Target {
     Button login, home, register;
     EditText _myName, _pw, _pw2;
     TextInputLayout myName, pw, pw2;
