@@ -35,8 +35,10 @@ import java.util.LinkedList;
  * 开始游戏前的房间设定
  */
 public class LanRoomActivity extends BaseActivity implements Target {
-    Button startButton, backButton, site[], addRobotButton[];
-    int[] siteState;// -1 none   0 robot    1 people
+    Button startButton, backButton;
+    Button site[]  = new Button[4];
+    Button addRobotButton[] = new Button[4];
+    int[] siteState = new int[4];;// -1 none   0 robot    1 people
     ListView idlePlayerView;
     LinkedList<HashMap<String, String>> idlePlayerListData;
     SimpleAdapter idlePlayerListAdapter;
@@ -53,41 +55,34 @@ public class LanRoomActivity extends BaseActivity implements Target {
         //init
         startButton = (Button) findViewById(R.id.start);
         backButton = (Button) findViewById(R.id.back);
-        site = new Button[4];
         site[0] = (Button) findViewById(R.id.R);
         site[1] = (Button) findViewById(R.id.G);
         site[2] = (Button) findViewById(R.id.B);
         site[3] = (Button) findViewById(R.id.Y);
-        addRobotButton = new Button[4];
         addRobotButton[0] = (Button) findViewById(R.id.jr);
         addRobotButton[1] = (Button) findViewById(R.id.jg);
         addRobotButton[2] = (Button) findViewById(R.id.jb);
         addRobotButton[3] = (Button) findViewById(R.id.jy);
-        siteState = new int[4];
         idlePlayerView = (ListView) findViewById(R.id.playerInRoom);
         idlePlayerListData = new LinkedList<>();
         idlePlayerListAdapter = new SimpleAdapter(getApplicationContext(), idlePlayerListData, R.layout.content_player_list_item, new String[]{"name", "score"}, new int[]{R.id.nameInRoom, R.id.scoreInRoom});
         idlePlayerView.setAdapter(idlePlayerListAdapter);
         title = (TextView) findViewById(R.id.title);
-        //trigger
+
+        // 按钮事件
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Global.soundManager.playSound(SoundManager.BUTTON);
                 if (idlePlayerListData.size() > 1)
-                    Toast.makeText(getApplicationContext(), "some one is not ready!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "有人未准备好!", Toast.LENGTH_SHORT).show();
                 else {
-                    Global.replayManager.startRecord();
-                    if (Global.dataManager.getGameMode() != DataManager.GM_LOCAL) {
                         if (Global.dataManager.getHostId().compareTo(Global.dataManager.getMyId()) != 0) {
-                            Toast.makeText(getApplicationContext(), "wait for room host", Toast.LENGTH_SHORT).show();
-                            return;
+                            Toast.makeText(getApplicationContext(), "请等待房主开始游戏~", Toast.LENGTH_SHORT).show();
+                        }else{
+                            Global.replayManager.startRecord();
+                            Global.socketManager.send(DataPack.R_GAME_START, Global.dataManager.getMyId(), Global.dataManager.getRoomId());
                         }
-                        Global.socketManager.send(DataPack.R_GAME_START, Global.dataManager.getMyId(), Global.dataManager.getRoomId());
-                    } else if (Global.dataManager.getGameMode() == DataManager.GM_LOCAL) {
-                        Intent intent = new Intent(getApplicationContext(), ChessBoardActivity.class);
-                        startActivity(intent);
-                    }
                 }
             }
         });
@@ -95,17 +90,15 @@ public class LanRoomActivity extends BaseActivity implements Target {
             @Override
             public void onClick(View v) {
                 Global.soundManager.playSound(SoundManager.BUTTON);
-                if (Global.dataManager.getGameMode() != DataManager.GM_LOCAL) {
-                    Global.socketManager.send(DataPack.R_ROOM_EXIT, Global.dataManager.getMyId(), Global.dataManager.getRoomId(), Global.playersData.get(Global.dataManager.getMyId()).color);
 
-                    if (Global.dataManager.getGameMode() == DataManager.GM_LAN) {
-                        Global.localServer.stopHost();
-                    }
-                    startActivity(new Intent(getApplicationContext(), LanHallActivity.class));
+                Global.socketManager.send(DataPack.R_ROOM_EXIT, Global.dataManager.getMyId(), Global.dataManager.getRoomId(), Global.playersData.get(Global.dataManager.getMyId()).color);
 
-                } else if (Global.dataManager.getGameMode() == DataManager.GM_LOCAL) {
-                    startActivity(new Intent(getApplicationContext(), ChooseModeActivity.class));
+                if (Global.dataManager.getGameMode() == DataManager.GM_LAN) {
+                    Global.localServer.stopHost();
                 }
+                LanRoomActivity.this.finish();
+
+
             }
         });
 
@@ -183,8 +176,8 @@ public class LanRoomActivity extends BaseActivity implements Target {
         siteState[2] = -1;
         siteState[3] = -1;
         HashMap<String, String> map = new HashMap<>();
-        map.put("name", "Name");
-        map.put("score", "Score");
+        map.put("name", "昵称");
+        map.put("score", "得分");
         idlePlayerListData.addLast(map);
         Global.playersData.clear();
         Bundle bundle = getIntent().getExtras();
@@ -203,7 +196,7 @@ public class LanRoomActivity extends BaseActivity implements Target {
             int color = Integer.valueOf(players.get(i + 3));
             if (Integer.valueOf(players.get(i)) < 0) {//机器人
                 siteState[color] = 0;
-                site[color].setText("ROBOT");
+                site[color].setText("AI");
                 addRobotButton[color].setText("-");
             } else {//玩家
                 if (color == -1) {
@@ -219,7 +212,7 @@ public class LanRoomActivity extends BaseActivity implements Target {
             i += 4;
         }
         idlePlayerListAdapter.notifyDataSetChanged();
-        ////////////setting
+        //////////// 字体设置
         title.setTypeface(Global.getFont());
         for (int i = 0; i < 4; i++) {
             site[i].setTypeface(Global.getFont());
@@ -244,7 +237,14 @@ public class LanRoomActivity extends BaseActivity implements Target {
     public boolean dispatchKeyEvent(KeyEvent event) {
         if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {//返回按钮
             if (event.getAction() == KeyEvent.ACTION_DOWN && event.getRepeatCount() == 0) {
-                exit();
+
+                Global.socketManager.send(DataPack.R_ROOM_EXIT, Global.dataManager.getMyId(), Global.dataManager.getRoomId(), Global.playersData.get(Global.dataManager.getMyId()).color);
+
+                if (Global.dataManager.getGameMode() == DataManager.GM_LAN) {
+                    Global.localServer.stopHost();
+                }
+                LanRoomActivity.this.finish();
+
             }
             return true;
         }
@@ -290,7 +290,7 @@ public class LanRoomActivity extends BaseActivity implements Target {
                             site[i].post(new Runnable() {
                                 @Override
                                 public void run() {
-                                    site[tmp].setText("JOIN");
+                                    site[tmp].setText("坐下");
                                     siteState[tmp] = -1;
                                 }
                             });
@@ -309,7 +309,7 @@ public class LanRoomActivity extends BaseActivity implements Target {
                         site[0].post(new Runnable() {
                             @Override
                             public void run() {
-                                site[np].setText("ROBOT");
+                                site[np].setText("AI");
                                 addRobotButton[np].setText("-");
                             }
                         });
@@ -319,7 +319,7 @@ public class LanRoomActivity extends BaseActivity implements Target {
                         site[0].post(new Runnable() {
                             @Override
                             public void run() {
-                                site[-id - 1].setText("JOIN");
+                                site[-id - 1].setText("坐下");
                                 addRobotButton[-id - 1].setText("+");
                             }
                         });
@@ -338,7 +338,7 @@ public class LanRoomActivity extends BaseActivity implements Target {
                             site[0].post(new Runnable() {
                                 @Override
                                 public void run() {
-                                    site[tmp].setText("JOIN");
+                                    site[tmp].setText("坐下");
                                     siteState[tmp] = -1;
                                 }
                             });
@@ -371,7 +371,7 @@ public class LanRoomActivity extends BaseActivity implements Target {
                 idlePlayerView.post(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(getApplicationContext(), "position select failed!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "座位已被占!", Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -439,16 +439,6 @@ public class LanRoomActivity extends BaseActivity implements Target {
     }
 
     private void exit() {
-        Global.socketManager.send(DataPack.R_ROOM_EXIT, Global.dataManager.getMyId(), Global.dataManager.getRoomId(), Global.playersData.get(Global.dataManager.getMyId()).color);
-        if (Global.dataManager.getGameMode() != DataManager.GM_LOCAL) {
-            Intent intent = new Intent(getApplicationContext(), GameInfoActivity.class);
-            startActivity(intent);
-            if (Global.dataManager.getGameMode() == DataManager.GM_LAN) {
-                Global.localServer.stopHost();
-            }
-        } else if (Global.dataManager.getGameMode() == DataManager.GM_LOCAL) {
-            Intent intent = new Intent(getApplicationContext(), ChooseModeActivity.class);
-            startActivity(intent);
-        }
+
     }
 }

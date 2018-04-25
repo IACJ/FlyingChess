@@ -37,7 +37,8 @@ public class SocketManager  {
 
     HashMap<Integer, Target> targets= new HashMap<>();
 
-
+    private static final String TAG = "SocketManager";
+    
     public void connectToLocalServer() {
         new Thread(new Runnable() {
             @Override
@@ -133,11 +134,23 @@ public class SocketManager  {
 
     public void registerActivity(int datapackCommond, Target target) {
         targets.put(datapackCommond, target);
+
+    }
+
+    public void showRegistedActivities(){
+        System.out.println("打印已注册的活动");
+        for (int key:targets.keySet()) {
+            System.out.println(key+" "+ targets.get(key).getClass().getSimpleName());
+        }
+        System.out.println("打印结束");
     }
 
     protected void processDataPack(DataPack dataPack) {
         if (targets.containsKey(dataPack.getCommand())) {
             targets.get(dataPack.getCommand()).processDataPack(dataPack);
+            Log.v(TAG, "processDataPack: 处理:"+dataPack);
+        }else{
+            Log.e(TAG, "processDataPack: 数据包未被处理"+dataPack);
         }
     }
 
@@ -170,9 +183,8 @@ public class SocketManager  {
                     byte[] bytes = new byte[blockSize];
                     this.dis.readFully(bytes);
                     String json = new String(bytes, "UTF-8");
-                    Log.d(TAG, "receive: 读取字节数："+blockSize+",读取内容："+json);
-
                     DataPack dataPack = gson.fromJson(json, DataPack.class);
+                    Log.v(TAG, "接收："+dataPack);
                     Global.socketManager.processDataPack(dataPack);
                 } catch (EOFException e){
                     connected = false;
@@ -214,7 +226,7 @@ public class SocketManager  {
                         byte[] sendBytes = gson.toJson(dataPack, DataPack.class).getBytes(Charset.forName("UTF-8"));
                         int bytesSize = sendBytes.length;
 
-                        Log.d(TAG, "run: 发送字节数:"+bytesSize+",发送数据:"+gson.toJson(dataPack, DataPack.class));
+                        Log.v(TAG, "发送："+dataPack);
                         
                         this.dos.writeInt(bytesSize);
                         this.dos.write(sendBytes);

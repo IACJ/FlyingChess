@@ -131,15 +131,8 @@ public class LanHallActivity extends BaseActivity implements Target {
         joinButton.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/comici.ttf"));
         createButton.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/comici.ttf"));
 
-        Global.localServer.startListen();
-        Global.socketManager.registerActivity(DataPack.A_ROOM_LOOKUP, this);
-        Global.socketManager.registerActivity(DataPack.A_ROOM_CREATE, this);
-        Global.socketManager.registerActivity(DataPack.A_ROOM_ENTER, this);
 
-        if (Global.dataManager.getGameMode() == DataManager.GM_LAN) {
-            Global.localServer.registerMsg(this);
-        }
-        new Thread(worker).start();
+
 
 
     }
@@ -148,6 +141,18 @@ public class LanHallActivity extends BaseActivity implements Target {
     public void onStart() {
         super.onStart();
         Global.soundManager.resumeMusic(SoundManager.BACKGROUND);
+
+
+        Global.socketManager.registerActivity(DataPack.A_ROOM_LOOKUP, this);
+        Global.socketManager.registerActivity(DataPack.A_ROOM_CREATE, this);
+        Global.socketManager.registerActivity(DataPack.A_ROOM_ENTER, this);
+
+        Global.localServer.startListen();
+        Global.localServer.registerMsg(this);
+
+        new Thread(worker).start();
+
+//        Global.socketManager.showRegistedActivities();
     }
 
     @Override
@@ -231,7 +236,10 @@ public class LanHallActivity extends BaseActivity implements Target {
                 break;
             }
             case DataPack.A_ROOM_ENTER :{
+                Log.d(TAG, "processDataPack: 收到并处理A_ROOM_ENTER");
+
                 if (dataPack.isSuccessful()) {
+
                     Global.localServer.stopListen();
 
                     Global.dataManager.setMyId(dataPack.getMessage(0));
@@ -270,7 +278,7 @@ public class LanHallActivity extends BaseActivity implements Target {
             while (running){
                 try {
                     Global.localServer.updateRoomListImmediately();
-                    Thread.sleep(3000);
+                    Thread.sleep(10000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

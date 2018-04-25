@@ -77,7 +77,7 @@ public class TCPServer {
 //            e.printStackTrace();
 //        }
 
-        Log.d(TAG, "stop: TCPServer关闭！！");
+        Log.d(TAG, "stop: TCPServer 关闭");
         Room room = this.selfRoom;
         this.isRunning = false;
         this.selfRoom = null;

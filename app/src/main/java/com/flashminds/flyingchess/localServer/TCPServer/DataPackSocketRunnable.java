@@ -75,7 +75,6 @@ public class DataPackSocketRunnable implements Runnable {
                     msgList.add(String.valueOf(player.getId()));
                     msgList.addAll(DataPackUtil.getRoomPlayerInfoMessage(parent.getSelfRoom()));
 
-                    System.out.println("进入房间 R_LOGIN 发送！");
                     socket.send(new DataPack(DataPack.A_ROOM_ENTER, true, msgList));
                     return;
                 }

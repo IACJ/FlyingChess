@@ -1,6 +1,7 @@
 package com.flashminds.flyingchess.localServer;
 
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
 import com.flashminds.flyingchess.dataPack.DataPack;
 import com.flashminds.flyingchess.localServer.TCPServer.GameObjects.Room;
@@ -20,6 +21,8 @@ public class LocalServer {
 
     private Target target;
 
+    private static final String TAG = "LocalServer";
+
     public LocalServer(AppCompatActivity activity) {
         udpServer = new UDPServer(this, activity);
         tcpServer = new TCPServer(this);
@@ -35,6 +38,7 @@ public class LocalServer {
     }
 
     public void onDataPackReceived(DataPack dataPack) {
+        Log.v(TAG, "onDataPackReceived: 请求处理数据包："+target.getClass().getSimpleName()+"-->"+dataPack);
         target.processDataPack(dataPack);
     }
 

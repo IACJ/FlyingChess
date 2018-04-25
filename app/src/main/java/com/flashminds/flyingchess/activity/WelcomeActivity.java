@@ -79,6 +79,7 @@ public class WelcomeActivity extends BaseActivity {
                 sv = null;
                 Intent intent = new Intent(getApplicationContext(), ChooseModeActivity.class);
                 startActivity(intent);//switch activity
+                WelcomeActivity.this.finish();
             }
         });
 
@@ -91,6 +92,7 @@ public class WelcomeActivity extends BaseActivity {
                     sv = null;
                     Intent intent = new Intent(getApplicationContext(), ChooseModeActivity.class);
                     startActivity(intent);//switch activity
+                    WelcomeActivity.this.finish();
                 }
             }
         }, 11500);

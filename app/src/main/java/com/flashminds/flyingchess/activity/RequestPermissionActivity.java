@@ -49,6 +49,7 @@ public class RequestPermissionActivity extends BaseActivity {
                     && grantResults[2] == PackageManager.PERMISSION_GRANTED ) {
                 Intent intent = new Intent(RequestPermissionActivity.this, WelcomeActivity.class);
                 startActivity(intent);
+                this.finish();
             }else{
                 verifyStoragePermissions(RequestPermissionActivity.this);
             }

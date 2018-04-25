@@ -6,6 +6,8 @@ import java.util.List;
 
 /**
  * Created by Ryan on 16/4/8.
+ *
+ * Edited by IACJ on 2018/4/25
  */
 public class DataPack {
     /**
@@ -147,5 +149,15 @@ public class DataPack {
 
     public String getMessage(int index) {
         return this.msgList.get(index);
+    }
+
+    @Override
+    public String toString() {
+        return "DataPack{" +
+                "command=" + command +
+                ", date=" + date +
+                ", isSuccessful=" + isSuccessful +
+                ", msgList=" + msgList +
+                '}';
     }
 }
