@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -18,7 +17,6 @@ import com.flashminds.flyingchess.Global;
 import com.flashminds.flyingchess.R;
 import com.flashminds.flyingchess.manager.SoundManager;
 import com.flashminds.flyingchess.dataPack.Target;
-import com.flashminds.flyingchess.util.BaseActivity;
 
 
 public class LoginActivity extends BaseActivity implements Target {

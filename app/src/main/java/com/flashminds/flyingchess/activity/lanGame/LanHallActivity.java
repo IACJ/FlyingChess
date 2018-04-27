@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -25,7 +24,7 @@ import com.flashminds.flyingchess.dataPack.Target;
 import com.flashminds.flyingchess.Global;
 import com.flashminds.flyingchess.manager.DataManager;
 import com.flashminds.flyingchess.manager.SoundManager;
-import com.flashminds.flyingchess.util.BaseActivity;
+import com.flashminds.flyingchess.activity.BaseActivity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -95,7 +94,6 @@ public class LanHallActivity extends BaseActivity implements Target {
                         try{
                             Global.localServer.startHost();
                             Global.socketManager.connectToLocalServer();
-                            Global.delay(100);
                             Global.socketManager.send(DataPack.R_LOGIN, new Build().MODEL, "123");
                         }catch (Exception e){
                             e.printStackTrace();
@@ -249,11 +247,8 @@ public class LanHallActivity extends BaseActivity implements Target {
                 break;
             }
             case DataPack.A_ROOM_ENTER :{
-                Log.d(TAG, "processDataPack: 收到并处理A_ROOM_ENTER");
 
                 if (dataPack.isSuccessful()) {
-
-
                     Global.dataManager.setMyId(dataPack.getMessage(0));
                     Global.dataManager.setRoomId(roomId);
                     Intent intent = new Intent(getApplicationContext(), LanRoomActivity.class);

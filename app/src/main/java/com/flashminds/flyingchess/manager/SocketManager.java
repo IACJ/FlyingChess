@@ -41,17 +41,15 @@ public class SocketManager  {
     
     public void connectToLocalServer() {
         try {
-            System.out.println("日啊");
+            connected = true;
             sock = new Socket(InetAddress.getLocalHost(), 6666);
 //            sock.setSoTimeout(2000);
-//            sock.setTcpNoDelay(true);
+            sock.setTcpNoDelay(true);
             sock.setSoTimeout(0);//cancle time out
             sw = new SocketWriter(sock.getOutputStream());
             sr = new SocketReader(sock.getInputStream());
             new Thread(sw).start();
             new Thread(sr).start();
-            connected = true;
-            sock.setSoTimeout(0);//cancle time out
         } catch (Exception e) {
             e.printStackTrace();
             connected = false;
@@ -161,7 +159,6 @@ public class SocketManager  {
 
         private Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd hh:mm:ss").create();
         private DataInputStream dis;
-        private boolean connected ;
 
         private static final String TAG = "SocketReader";
 
@@ -172,7 +169,6 @@ public class SocketManager  {
 
         @Override
         public void run() {
-            connected = true;
             while (connected) {
                 try {
                     // 接收一个数据包并处理
@@ -185,6 +181,7 @@ public class SocketManager  {
                     Log.v(TAG, "接收："+dataPack);
                     Global.socketManager.processDataPack(dataPack);
                 } catch (EOFException e){
+                    Log.e(TAG, "run: Socket被强制断开");
                     connected = false;
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -203,7 +200,6 @@ public class SocketManager  {
         private Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd hh:mm:ss").create();
         private LinkedBlockingQueue<DataPack> dataPackQueue = new LinkedBlockingQueue<>();
         private DataOutputStream dos;
-        private boolean connected;
 
         private static final String TAG = "SocketWriter";
 
@@ -214,7 +210,7 @@ public class SocketManager  {
 
         @Override
         public void run() {
-            connected = true;
+
             while (true) {
                 try {
                     // 发送dataPackQueue中的消息
@@ -249,6 +245,8 @@ public class SocketManager  {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+            }else{
+                Log.e(TAG, "send: 已知位置未知错误");
             }
             return connected;
         }

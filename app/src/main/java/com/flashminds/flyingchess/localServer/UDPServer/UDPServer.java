@@ -13,6 +13,7 @@ import com.flashminds.flyingchess.localServer.TCPServer.GameObjects.Room;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.net.InterfaceAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.ArrayList;
@@ -22,6 +23,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -36,7 +38,7 @@ public class UDPServer {
     private BroadcastSender sender = null;
     private BroadcastReceiver receiver = null;
     private LocalServer parent = null;
-    private HashMap<UUID, DataPack> roomMap = new HashMap<>();
+    private ConcurrentHashMap<UUID, DataPack> roomMap = new ConcurrentHashMap<>();
     private ExecutorService executor = Executors.newFixedThreadPool(2);
     private AppCompatActivity activity = null;
 
@@ -49,8 +51,9 @@ public class UDPServer {
 
     public DataPack createRoomInfoListDataPack() {
         List<String> msgList = new LinkedList<>();
-        for (DataPack dataPack : roomMap.values())
+        for (DataPack dataPack : roomMap.values()) {
             msgList.addAll(dataPack.getMessageList().subList(0, 4));
+        }
 
         return new DataPack(DataPack.A_ROOM_LOOKUP, msgList);
     }
@@ -68,16 +71,14 @@ public class UDPServer {
                 break;
             }
             case DataPack.E_ROOM_CREATE_BROADCAST: {
-                if (roomMap.get(id) == null ||
-                        Integer.valueOf(roomMap.get(id).getMessage(2)) != Integer.valueOf(dataPack.getMessage(2)) ||
-                        Integer.valueOf(roomMap.get(id).getMessage(3)) != Integer.valueOf(dataPack.getMessage(3))) {
-                    roomMap.put(id, dataPack);
-                    parent.onDataPackReceived(createRoomInfoListDataPack());
-                }
+                roomMap.put(id, dataPack);
+                parent.onDataPackReceived(createRoomInfoListDataPack());
                 break;
             }
-            default:
-                break;
+            default: {
+                Log.e(TAG, "dataPackReceived: 未知数据包错误");
+            }
+                
         }
     }
 
@@ -86,29 +87,44 @@ public class UDPServer {
     }
 
     public void startBroadcast() {
-//        if (this.sender != null)
-//            this.sender.stop(null);
-
-        Log.d(TAG, "startBroadcast: 开启广播发送");
-        this.sender = new BroadcastSender(this, activity);
-        this.executor.submit(this.sender);
+        if (this.sender == null) {
+            Log.d(TAG, "startBroadcast: 开启广播发送");
+            this.sender = new BroadcastSender(this, activity);
+            this.executor.submit(this.sender);
+        }else {
+            Log.e(TAG, "startBroadcast: 重复开启广播发送");
+        }
+    }
+    public void stopBroadcast(Room room) {
+        if (this.sender != null){
+            Log.d(TAG, "startBroadcast: 关闭广播发送");
+            this.sender.stop(room);
+            this.sender = null;
+        }else{
+            Log.e(TAG, "startBroadcast: 重复关闭广播发送");
+        }
     }
 
     public void startListen() {
-
-        Log.d(TAG, "startListen: 开启广播接收");
-        this.receiver = new BroadcastReceiver(this);
-        this.executor.submit(this.receiver);
-    }
-
-    public void stopBroadcast(Room room) {
-        this.sender.stop(room);
+        if (this.receiver == null){
+            Log.d(TAG, "startListen: 开启广播接收");
+            this.receiver = new BroadcastReceiver(this);
+            this.executor.submit(this.receiver);
+        }else{
+            Log.e(TAG, "startBroadcast: 重复开启广播接收");
+        }
     }
 
     public void stopListen() {
-        this.roomMap.clear();
-        this.receiver.stop();
-        receiver=null;
+        if (this.receiver != null){
+            Log.d(TAG, "startBroadcast: 关闭广播接收");
+            this.roomMap.clear();
+            this.receiver.stop();
+            receiver=null;
+        }else{
+            Log.e(TAG, "startBroadcast: 重复关闭广播接收");
+        }
+
     }
 
     /**
@@ -116,7 +132,6 @@ public class UDPServer {
      *
      * 每个房间对应一个发送者
      */
-
     public class BroadcastSender implements Runnable {
         private MyUdpSocket sendSocket;
         private boolean isRunning = true;
@@ -124,6 +139,7 @@ public class UDPServer {
         private int port = 6667;
         private UDPServer parent = null;
         private DataPack dataPack = null;
+        private String ipBroadcast;
         private List<String> ipSection = null;
 
         private static final String TAG = "BroadcastSender";
@@ -132,16 +148,66 @@ public class UDPServer {
             this.parent = parent;
             try {
                 WifiManager wm = (WifiManager) activity.getSystemService(Context.WIFI_SERVICE);
+
                 localIp = getLocalHostIp();
                 ipSection = getIpSection(localIp, wm.getDhcpInfo().netmask);
+                ipBroadcast = getBroadcast();
                 sendSocket = new MyUdpSocket();
-                Log.d(TAG, "BroadcastSender: localIP为 "+localIp+",  ipSection为 "+ ipSection);
+                Log.v(TAG, "BroadcastSender: localIP为 "+localIp+",ipBroadcast为"+ ipBroadcast +"ipSection为 "+ ipSection);
+                Log.v(TAG, "BroadcastSender: Dhcp信息："+wm.getDhcpInfo());
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
 
-        public String getLocalHostIp() {
+        public void run() {
+            try {
+                while (isRunning) {
+                    if (this.dataPack != null) {
+                        Log.v(TAG, "run: 向"+ipBroadcast+"发送广播"+dataPack);
+                        this.sendSocket.send(this.dataPack, InetAddress.getByName(ipBroadcast), port);
+                    }
+                    Thread.sleep(5000);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+
+        public void stop(Room room) {
+            this.isRunning = false;
+            try {
+                if (room != null) {
+                    List<String> msgList = new ArrayList<>();
+                    msgList.add(room.getId().toString());
+                    this.sendSocket.send(new DataPack(DataPack.E_ROOM_REMOVE_BROADCAST, msgList), InetAddress.getByName(ipBroadcast), port);
+                }
+                sendSocket.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+
+        private void onRoomChanged(Room room) {
+            List<String> msgList = new ArrayList<>();
+            msgList.add(room.getId().toString());
+            msgList.add(room.getName());
+            msgList.add(String.valueOf(room.getAllPlayers().size()));
+            msgList.add(room.isPlaying() == true ? "1" : "0");
+            msgList.add(this.localIp);
+            msgList.add(String.valueOf(port));
+            this.dataPack = new DataPack(DataPack.E_ROOM_CREATE_BROADCAST, msgList);
+        }
+
+
+        /**
+         * 获取本地IP
+         *
+         * @return 本地IP
+         */
+        private String getLocalHostIp() {
             String ipaddress = "";
             try {
                 Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces();
@@ -161,82 +227,30 @@ public class UDPServer {
             return ipaddress;
         }
 
-
-        public void run() {
-            try {
-                while (isRunning) {
-                    if (this.dataPack != null) {
-                        for (String ip : ipSection) {
-                            Log.d(TAG, "run: 向ip地址广播发送dataPack "+ip);
-                            this.sendSocket.send(this.dataPack, InetAddress.getByName(ip), port);
-                        }
-                    }
-                    Thread.sleep(3000);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-
-        public void stop(Room room) {
-            this.isRunning = false;
-            try {
-                if (room != null) {
-                    List<String> msgList = new ArrayList<>();
-                    msgList.add(room.getId().toString());
-                    for (String ip : ipSection)
-                        this.sendSocket.send(new DataPack(DataPack.E_ROOM_REMOVE_BROADCAST, msgList), InetAddress.getByName(ip), port);
-                }
-                sendSocket.close();
-                sendSocket = null;
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-        }
-
-
-        void onRoomChanged(Room room) {
-            List<String> msgList = new ArrayList<>();
-            msgList.add(room.getId().toString());
-            msgList.add(room.getName());
-            msgList.add(String.valueOf(room.getAllPlayers().size()));
-            msgList.add(room.isPlaying() == true ? "1" : "0");
-            msgList.add(this.localIp);
-            msgList.add(String.valueOf(port));
-            this.dataPack = new DataPack(DataPack.E_ROOM_CREATE_BROADCAST, msgList);
-        }
-
-
         /**
-         * Converts an string formatted ip into int, note that this conversion simply
-         * put the dotted format into its corresponding int format, without transforming
-         * into network representation.
+         * 转换 ip 的类型： String -> int
          *
-         * @param ip String formatted ip.
-         * @return Int formatted ip.
+         * @param ip String 类型的 ip.
+         * @return int 类型 ip.
          */
-        public int stringToInt(String ip) {
-            ip.trim();
+        private int stringToInt(String ip) {
+            ip = ip.trim();
 
             String[] dots = ip.split("\\.");
-
-            if (dots.length < 4)
+            if (dots.length < 4) {
                 throw new IllegalArgumentException();
+            }
 
             return (Integer.valueOf(dots[0]) << 24) + (Integer.valueOf(dots[1]) << 16) + (Integer.valueOf(dots[2]) << 8) + Integer.valueOf(dots[3]);
         }
 
         /**
-         * Converts an int formatted ip into string, note that this conversion simply
-         * put the int format into its corresponding dotted ip format, without transforming
-         * from network representation.
+         * 转换 ip 的类型： int -> String
          *
-         * @param ip Int formatted ip.
-         * @return String formatted ip.
+         * @param ip int 类型的 ip.
+         * @return String 类型的 ip.
          */
-        public String intToString(int ip) {
+        private String intToString(int ip) {
             StringBuilder sb = new StringBuilder();
 
             sb.append(String.valueOf((ip >>> 24)));
@@ -253,18 +267,17 @@ public class UDPServer {
         }
 
         /**
-         * Given the string formatted ip and network represented mask,
-         * returns the ip sections (List of string formatted ip).
+         * 得到 ip 网段
          *
-         * @param ip   Any string formatted ip in the section.
-         * @param mask Sub-net mask.
-         * @return List of string formatted ip in the section without
-         * broadcast addresses and itself.
+         * @param ip   网段内的任意 ip
+         * @param mask 子网掩码
+         * @return ip 列表
          */
         public List<String> getIpSection(String ip, Integer mask) {
             List<String> ipSection = new LinkedList<>();
 
             int orderedMask = ((mask & 0xFF000000) >>> 24) | ((mask & 0x00FF0000) >>> 8) | ((mask & 0x0000FF00) << 8) | ((mask & 0x000000FF) << 24);
+
 
             int startIp = stringToInt(ip) & orderedMask;
             for (int i = startIp; i < ((startIp) | (~orderedMask)); i++) {
@@ -277,6 +290,23 @@ public class UDPServer {
             }
             return ipSection;
         }
+
+
+        public  String getBroadcast() throws SocketException {
+            System.setProperty("java.net.preferIPv4Stack", "true");
+            for (Enumeration<NetworkInterface> niEnum = NetworkInterface.getNetworkInterfaces(); niEnum.hasMoreElements();) {
+                NetworkInterface ni = niEnum.nextElement();
+                if (!ni.isLoopback()) {
+                    for (InterfaceAddress interfaceAddress : ni.getInterfaceAddresses()) {
+                        if (interfaceAddress.getBroadcast() != null) {
+                            return interfaceAddress.getBroadcast().toString().substring(1);
+                        }
+                    }
+                }
+            }
+            return null;
+        }
+
     }
 
     /**
@@ -307,18 +337,11 @@ public class UDPServer {
             isRunning = true;
             while (isRunning) {
                 try {
-                    if (this.receiveSocket == null){
-                        Log.e(TAG, "run: 已知位置,未知错误!" );
-                        Global.delay(500);
-                    }
-                       
-
                     DataPack dataPack = this.receiveSocket.receive();
                     parent.dataPackReceived(dataPack);
                 } catch (Exception e) {
-                    System.out.println(e.getMessage());
                     if (e.getMessage().equals("Socket closed") ){
-                        System.out.println("强行关闭socket连接");
+                        Log.d(TAG, "run: 广播接收器Socket被强行关闭");
                     }
                 }
             }

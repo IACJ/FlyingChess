@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
 import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
@@ -12,7 +11,6 @@ import android.view.WindowManager;
 
 import com.flashminds.flyingchess.Global;
 import com.flashminds.flyingchess.R;
-import com.flashminds.flyingchess.util.BaseActivity;
 
 import java.io.IOException;
 import java.util.Timer;

@@ -3,7 +3,6 @@ package com.flashminds.flyingchess.activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -19,7 +18,6 @@ import com.flashminds.flyingchess.dataPack.DataPack;
 import com.flashminds.flyingchess.R;
 import com.flashminds.flyingchess.manager.SoundManager;
 import com.flashminds.flyingchess.dataPack.Target;
-import com.flashminds.flyingchess.util.BaseActivity;
 
 import java.util.ArrayList;
 import java.util.Timer;

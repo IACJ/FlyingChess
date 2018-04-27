@@ -1,4 +1,4 @@
-package com.flashminds.flyingchess.util;
+package com.flashminds.flyingchess.activity;
 
 import android.os.Bundle;
 import android.os.PersistableBundle;

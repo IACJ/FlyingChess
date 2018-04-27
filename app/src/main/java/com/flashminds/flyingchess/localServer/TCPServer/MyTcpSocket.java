@@ -43,10 +43,9 @@ public class MyTcpSocket {
         int blockSize = this.is.readInt();
         byte[] bytes = new byte[blockSize];
         this.is.readFully(bytes);
-
-        Log.v(TAG, "receive:接收"+blockSize+new String(bytes, "UTF-8"));
-
-        return gson.fromJson(new String(bytes, "UTF-8"), DataPack.class);
+        DataPack dataPack = gson.fromJson(new String(bytes, "UTF-8"), DataPack.class);
+        Log.v(TAG, "receive: 接收："+dataPack);
+        return dataPack;
     }
 
     /**
@@ -54,14 +53,12 @@ public class MyTcpSocket {
      */
     public synchronized void send(DataPack dataPack) throws IOException {
         try {
+            Log.v(TAG, "send: 发送："+dataPack);
             byte[] sendBytes = gson.toJson(dataPack, DataPack.class).getBytes(Charset.forName("UTF-8"));
             int bytesSize = sendBytes.length;
-
             this.os.writeInt(bytesSize);
             this.os.write(sendBytes);
             this.os.flush();
-            Log.v(TAG, "send:发送"+bytesSize+ gson.toJson(dataPack, DataPack.class));
-
         } catch (SocketException e) {
             e.printStackTrace();
         }

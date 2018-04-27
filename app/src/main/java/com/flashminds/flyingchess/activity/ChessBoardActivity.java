@@ -8,7 +8,6 @@ import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.view.KeyEvent;
 import android.view.View;
@@ -24,7 +23,6 @@ import com.flashminds.flyingchess.manager.DataManager;
 import com.flashminds.flyingchess.dataPack.DataPack;
 import com.flashminds.flyingchess.R;
 import com.flashminds.flyingchess.manager.SoundManager;
-import com.flashminds.flyingchess.util.BaseActivity;
 
 import java.util.ArrayList;
 

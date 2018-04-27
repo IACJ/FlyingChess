@@ -32,13 +32,13 @@ public class TCPServer {
         Log.d(TAG, "start: TCPServer 打开");
         isRunning = true;
         try {
-            if (serverSocket == null || !serverSocket.isBound() || serverSocket.isClosed())
+            if (serverSocket == null || !serverSocket.isBound() || serverSocket.isClosed()){
                 this.serverSocket = new ServerSocket(6666);
+                serverSocket.setSoTimeout(0);
+            }
 
             this.selfRoom = new Room(new Build().MODEL, this);
             this.onRoomChanged(selfRoom);
-
-            serverSocket.setSoTimeout(0);
 
 
             new Thread(new Runnable() {

@@ -1,6 +1,5 @@
 package com.flashminds.flyingchess.activity;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -11,7 +10,6 @@ import android.widget.TextView;
 import com.flashminds.flyingchess.Global;
 import com.flashminds.flyingchess.R;
 import com.flashminds.flyingchess.manager.SoundManager;
-import com.flashminds.flyingchess.util.BaseActivity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
