@@ -15,6 +15,7 @@ import com.flashminds.flyingchess.localServer.LocalServer;
 import com.flashminds.flyingchess.manager.ActivityManager;
 import com.flashminds.flyingchess.manager.DataManager;
 import com.flashminds.flyingchess.manager.GameManager;
+import com.flashminds.flyingchess.manager.LanGameManager;
 import com.flashminds.flyingchess.manager.LocalGameManager;
 import com.flashminds.flyingchess.manager.ReplayGameManager;
 import com.flashminds.flyingchess.manager.ReplayManager;
@@ -34,6 +35,7 @@ import java.util.HashMap;
 public class Global {
     public static ReplayGameManager replayGameManager;
     public static LocalGameManager localGameManager;
+    public static LanGameManager lanGameManager;
     public static GameManager gameManager;
     public static DataManager dataManager;
     public static ChessBoard chessBoard;

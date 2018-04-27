@@ -261,7 +261,7 @@ public class LanHallActivity extends BaseActivity implements Target {
                     createButton.post(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(getApplicationContext(), "join room failed!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "加入房间失败!", Toast.LENGTH_SHORT).show();
                         }
                     });
                 }

@@ -11,6 +11,8 @@ import com.flashminds.flyingchess.dataPack.DataPack;
 import com.flashminds.flyingchess.localServer.LocalServer;
 import com.flashminds.flyingchess.localServer.TCPServer.GameObjects.Room;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InterfaceAddress;
@@ -95,7 +97,7 @@ public class UDPServer {
             Log.e(TAG, "startBroadcast: 重复开启广播发送");
         }
     }
-    public void stopBroadcast(Room room) {
+    public void stopBroadcast(@NotNull Room room) {
         if (this.sender != null){
             Log.d(TAG, "startBroadcast: 关闭广播发送");
             this.sender.stop(room);

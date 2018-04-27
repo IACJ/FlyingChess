@@ -87,14 +87,14 @@ public class LanRoomActivity extends BaseActivity implements Target {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Global.soundManager.playSound(SoundManager.BUTTON);
+            Global.soundManager.playSound(SoundManager.BUTTON);
 
-                Global.socketManager.send(DataPack.R_ROOM_EXIT, Global.dataManager.getMyId(), Global.dataManager.getRoomId(), Global.playersData.get(Global.dataManager.getMyId()).color);
+            Global.socketManager.send(DataPack.R_ROOM_EXIT, Global.dataManager.getMyId(), Global.dataManager.getRoomId(), Global.playersData.get(Global.dataManager.getMyId()).color);
 
-                if (Global.dataManager.getGameMode() == DataManager.GM_LAN) {
-                    Global.localServer.stopHost();
-                }
-                LanRoomActivity.this.finish();
+            if (Global.dataManager.getGameMode() == DataManager.GM_LAN) {
+                Global.localServer.stopHost();
+            }
+            LanRoomActivity.this.finish();
 
 
             }
@@ -159,15 +159,7 @@ public class LanRoomActivity extends BaseActivity implements Target {
                 addRobot(3);
             }
         });
-        //internet init
-        if (Global.dataManager.getGameMode() != DataManager.GM_LOCAL) {
-            Global.socketManager.registerActivity(DataPack.E_ROOM_POSITION_SELECT, this);
-            Global.socketManager.registerActivity(DataPack.E_GAME_START, this);
-            Global.socketManager.registerActivity(DataPack.A_ROOM_ENTER, this);
-            Global.socketManager.registerActivity(DataPack.E_ROOM_ENTER, this);
-            Global.socketManager.registerActivity(DataPack.A_ROOM_EXIT, this);
-            Global.socketManager.registerActivity(DataPack.E_ROOM_EXIT, this);
-        }
+
         //setting
         siteState[0] = -1;
         siteState[1] = -1;
@@ -223,6 +215,13 @@ public class LanRoomActivity extends BaseActivity implements Target {
     public void onStart() {
         super.onStart();
         Global.soundManager.resumeMusic(SoundManager.BACKGROUND);
+
+        Global.socketManager.registerActivity(DataPack.E_ROOM_POSITION_SELECT, this);
+        Global.socketManager.registerActivity(DataPack.E_GAME_START, this);
+        Global.socketManager.registerActivity(DataPack.A_ROOM_ENTER, this);
+        Global.socketManager.registerActivity(DataPack.E_ROOM_ENTER, this);
+        Global.socketManager.registerActivity(DataPack.A_ROOM_EXIT, this);
+        Global.socketManager.registerActivity(DataPack.E_ROOM_EXIT, this);
     }
 
     @Override
@@ -374,7 +373,7 @@ public class LanRoomActivity extends BaseActivity implements Target {
                 });
             }
         } else if (dataPack.getCommand() == DataPack.E_GAME_START) {
-            Intent intent = new Intent(getApplicationContext(), ChessBoardActivity.class);
+            Intent intent = new Intent(getApplicationContext(), LanGamingActivity.class);
             startActivity(intent);
         }
     }
@@ -436,7 +435,4 @@ public class LanRoomActivity extends BaseActivity implements Target {
         }
     }
 
-    private void exit() {
-
-    }
 }

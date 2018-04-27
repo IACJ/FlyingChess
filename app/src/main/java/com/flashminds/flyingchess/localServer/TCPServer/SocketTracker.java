@@ -1,6 +1,8 @@
 package com.flashminds.flyingchess.localServer.TCPServer;
 
 
+import android.util.Log;
+
 import com.flashminds.flyingchess.dataPack.DataPackUtil;
 import com.flashminds.flyingchess.dataPack.DataPack;
 import com.flashminds.flyingchess.localServer.TCPServer.GameObjects.Player;
@@ -21,6 +23,8 @@ public class SocketTracker implements Runnable {
     private Player selfPlayer = null;
     private MyTcpSocket socket = null;
     private TCPServer parent = null;
+
+    private static final String TAG = "SocketTracker";
 
     public SocketTracker(MyTcpSocket socket, TCPServer server) throws IOException {
         this.socket = socket;
@@ -64,8 +68,12 @@ public class SocketTracker implements Runnable {
                 case DataPack.R_LOGIN: {
                     Player player = Player.createPlayer(dataPack.getMessage(0));
                     // set the host if the player is the owner
-                    if (socket.getInetSocketAddress().getAddress().isLoopbackAddress())
+                    Log.d(TAG, "processDataPack: 用户ip地址："+socket.getInetSocketAddress().getAddress());
+                    if (socket.getInetSocketAddress().getAddress().isLoopbackAddress()){
+                        Log.d(TAG, "属于LoopbackAddress");
                         player.setHost(true);
+                    }
+                        
 
                     parent.getSelfRoom().addPlayer(player);
                     player.setSocket(socket);
@@ -224,10 +232,13 @@ public class SocketTracker implements Runnable {
                     socket.send(new DataPack(DataPack.A_GAME_EXIT, true));
                     return;
                 }
-                default:
-                    return;
+                default:{
+                    Log.e(TAG, "processDataPack: 未知数据包错误" );
+                }
+
             }
         } catch (IndexOutOfBoundsException e) {
+            e.printStackTrace();
         }
     }
 }

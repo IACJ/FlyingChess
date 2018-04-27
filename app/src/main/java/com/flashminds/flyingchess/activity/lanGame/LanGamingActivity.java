@@ -27,6 +27,8 @@ import com.flashminds.flyingchess.dataPack.DataPack;
 import com.flashminds.flyingchess.entity.ChessBoard;
 import com.flashminds.flyingchess.Global;
 import com.flashminds.flyingchess.manager.DataManager;
+import com.flashminds.flyingchess.manager.LanGameManager;
+import com.flashminds.flyingchess.manager.LocalGameManager;
 import com.flashminds.flyingchess.manager.SoundManager;
 import com.flashminds.flyingchess.activity.BaseActivity;
 
@@ -114,7 +116,7 @@ public class LanGamingActivity extends BaseActivity {
         pauseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), PauseActivity.class));
+                startActivity(new Intent(getApplicationContext(), LanPauseActivity.class));
             }
         });
         throwDiceButton.setOnClickListener(new View.OnClickListener() {//throw dice
@@ -158,13 +160,16 @@ public class LanGamingActivity extends BaseActivity {
             xname[Global.playersData.get(key).color].setText(Global.playersData.get(key).name);
             xscore[Global.playersData.get(key).color].setText(Global.playersData.get(key).score);
         }
-//        Global.gameManager.newTurn(this);
+
 
         for (int i = 0; i < 4; i++) {
             xname[i].setTypeface(Global.getFont());
             xscore[i].setTypeface(Global.getFont());
         }
         throwDiceButton.setBackground(Global.d[0]);
+
+        Global.lanGameManager = new LanGameManager();
+        Global.lanGameManager.startGame(this);
     }
 
     @Override
@@ -239,7 +244,6 @@ public class LanGamingActivity extends BaseActivity {
                 }
                 break;
                 case 2://骰子
-                    System.out.println(msg.getData().getInt("dice"));
                     parent.throwDiceButton.setBackground(Global.d[msg.getData().getInt("dice") - 1]);
                     break;
                 case 3://显示消息
