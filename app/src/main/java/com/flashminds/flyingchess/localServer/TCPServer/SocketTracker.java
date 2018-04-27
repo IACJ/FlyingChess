@@ -17,12 +17,12 @@ import java.util.List;
  *
  * Edited by IACJ on 2018/04/22
  */
-public class DataPackSocketRunnable implements Runnable {
+public class SocketTracker implements Runnable {
     private Player selfPlayer = null;
-    private DataPackTcpSocket socket = null;
+    private MyTcpSocket socket = null;
     private TCPServer parent = null;
 
-    public DataPackSocketRunnable(DataPackTcpSocket socket, TCPServer server) throws IOException {
+    public SocketTracker(MyTcpSocket socket, TCPServer server) throws IOException {
         this.socket = socket;
         this.parent = server;
     }
@@ -35,7 +35,7 @@ public class DataPackSocketRunnable implements Runnable {
             }
 
         } catch (Exception e) {
-
+            e.printStackTrace();
         } finally {
             /**
              *  when someone disconnected

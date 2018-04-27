@@ -38,17 +38,25 @@ public class TCPServer {
             this.selfRoom = new Room(new Build().MODEL, this);
             this.onRoomChanged(selfRoom);
 
-            serverSocket.setSoTimeout(1000);
+            serverSocket.setSoTimeout(0);
 
-            while (isRunning) {
-                try {
-                    Socket sock = serverSocket.accept();
-                    Runnable socketRunnable = new DataPackSocketRunnable(new DataPackTcpSocket(sock), this);
-                    this.socketExecutor.submit(socketRunnable);
-                } catch (SocketTimeoutException e) {
 
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    while (isRunning) {
+                        try {
+                            Socket sock = serverSocket.accept();
+                            Runnable socketRunnable = new SocketTracker(new MyTcpSocket(sock), TCPServer.this);
+                            socketExecutor.submit(socketRunnable);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
                 }
-            }
+            }).start();
+
+
 
         } catch (Exception e) {
             e.printStackTrace();

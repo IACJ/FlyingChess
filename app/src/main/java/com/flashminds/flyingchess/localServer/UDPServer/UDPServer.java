@@ -25,6 +25,8 @@ import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import static android.support.v7.widget.StaggeredGridLayoutManager.TAG;
+
 /**
  * Created by BingF on 2016/5/15.
  *
@@ -37,6 +39,8 @@ public class UDPServer {
     private HashMap<UUID, DataPack> roomMap = new HashMap<>();
     private ExecutorService executor = Executors.newFixedThreadPool(2);
     private AppCompatActivity activity = null;
+
+    private static final String TAG = "UDPServer";
 
     public UDPServer(LocalServer parent, AppCompatActivity activity) {
         this.parent = parent;
@@ -85,13 +89,14 @@ public class UDPServer {
 //        if (this.sender != null)
 //            this.sender.stop(null);
 
+        Log.d(TAG, "startBroadcast: 开启广播发送");
         this.sender = new BroadcastSender(this, activity);
         this.executor.submit(this.sender);
     }
 
     public void startListen() {
 
-
+        Log.d(TAG, "startListen: 开启广播接收");
         this.receiver = new BroadcastReceiver(this);
         this.executor.submit(this.receiver);
     }
@@ -106,6 +111,11 @@ public class UDPServer {
         receiver=null;
     }
 
+    /**
+     * 内部类： 房间信息广播发送者
+     *
+     * 每个房间对应一个发送者
+     */
 
     public class BroadcastSender implements Runnable {
         private MyUdpSocket sendSocket;
@@ -270,15 +280,19 @@ public class UDPServer {
     }
 
     /**
-     * 内部类： 广播接收
+     * 内部类： 房间信息广播接收者
+     *
+     * 每个用户在`大厅活动`中获得一个广播接收者
      */
 
     public class BroadcastReceiver implements Runnable {
         private MyUdpSocket receiveSocket = null;
         private UDPServer parent = null;
 
-        private boolean isRunning = true;
+        private boolean isRunning = false;
         private final static int port = 6667;
+
+        private static final String TAG = "BroadcastReceiver";
 
         public BroadcastReceiver(UDPServer parent) {
             try {
@@ -290,10 +304,14 @@ public class UDPServer {
         }
 
         public void run() {
+            isRunning = true;
             while (isRunning) {
                 try {
-                    if (this.receiveSocket == null)
+                    if (this.receiveSocket == null){
+                        Log.e(TAG, "run: 已知位置,未知错误!" );
                         Global.delay(500);
+                    }
+                       
 
                     DataPack dataPack = this.receiveSocket.receive();
                     parent.dataPackReceived(dataPack);
@@ -310,7 +328,6 @@ public class UDPServer {
             isRunning = false;
             try {
                 receiveSocket.close();
-                receiveSocket = null;
             } catch (IOException e) {
                 e.printStackTrace();
             }

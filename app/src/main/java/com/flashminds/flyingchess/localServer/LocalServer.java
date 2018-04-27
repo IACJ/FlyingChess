@@ -54,9 +54,8 @@ public class LocalServer {
         onDataPackReceived(udpServer.createRoomInfoListDataPack());
     }
 
-    public String startListen() {
+    public void startListen() {
         udpServer.startListen();
-        return UUID.randomUUID().toString();
     }
 
     public void stopListen(){
@@ -65,12 +64,7 @@ public class LocalServer {
 
     public void startHost() {
         udpServer.startBroadcast();
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                tcpServer.start();
-            }
-        }).start();
+        tcpServer.start();
     }
 
     public void stopHost() {

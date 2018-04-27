@@ -19,16 +19,16 @@ import java.nio.charset.Charset;
  *
  * Edited by IACJ on 2018/4/22
  */
-public class DataPackTcpSocket {
+public class MyTcpSocket {
     protected Socket socket = null;
     protected DataInputStream is = null;
     protected DataOutputStream os = null;
-    protected Gson dataPackGson = new GsonBuilder().setDateFormat("yyyy-MM-dd hh:mm:ss").create();
+    protected Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd hh:mm:ss").create();
 
-    private static final String TAG = "DataPackTcpSocket";
+    private static final String TAG = "MyTcpSocket";
     
 
-    public DataPackTcpSocket(Socket socket) throws IOException {
+    public MyTcpSocket(Socket socket) throws IOException {
         this.socket = socket;
         this.socket.setTcpNoDelay(true);
         this.socket.setKeepAlive(true);
@@ -46,27 +46,21 @@ public class DataPackTcpSocket {
 
         Log.v(TAG, "receive:接收"+blockSize+new String(bytes, "UTF-8"));
 
-        return dataPackGson.fromJson(new String(bytes, "UTF-8"), DataPack.class);
+        return gson.fromJson(new String(bytes, "UTF-8"), DataPack.class);
     }
-
-
 
     /**
      * 发送 DataPack
      */
     public synchronized void send(DataPack dataPack) throws IOException {
         try {
-
-            byte[] sendBytes = dataPackGson.toJson(dataPack, DataPack.class).getBytes(Charset.forName("UTF-8"));
+            byte[] sendBytes = gson.toJson(dataPack, DataPack.class).getBytes(Charset.forName("UTF-8"));
             int bytesSize = sendBytes.length;
 
             this.os.writeInt(bytesSize);
-            this.os.flush();
             this.os.write(sendBytes);
             this.os.flush();
-
-
-            Log.v(TAG, "send:发送"+bytesSize+dataPackGson.toJson(dataPack, DataPack.class));
+            Log.v(TAG, "send:发送"+bytesSize+ gson.toJson(dataPack, DataPack.class));
 
         } catch (SocketException e) {
             e.printStackTrace();

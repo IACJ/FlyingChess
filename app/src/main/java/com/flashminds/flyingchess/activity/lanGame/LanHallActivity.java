@@ -89,10 +89,21 @@ public class LanHallActivity extends BaseActivity implements Target {
             public void onClick(View v) {
                 Global.soundManager.playSound(SoundManager.BUTTON);
 
-                Global.localServer.startHost();
-                Global.socketManager.connectToLocalServer();
-                Global.delay(500);
-                Global.socketManager.send(DataPack.R_LOGIN, new Build().MODEL, "123");
+                new Thread() {
+                    @Override
+                    public void run() {
+                        try{
+                            Global.localServer.startHost();
+                            Global.socketManager.connectToLocalServer();
+                            Global.delay(100);
+                            Global.socketManager.send(DataPack.R_LOGIN, new Build().MODEL, "123");
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
+                    }
+                }.start();
+
+
             }
         });
 
@@ -152,13 +163,15 @@ public class LanHallActivity extends BaseActivity implements Target {
 
         new Thread(worker).start();
 
-//        Global.socketManager.showRegistedActivities();
     }
 
     @Override
     public void onStop() {
         super.onStop();
         Global.soundManager.pauseMusic();
+
+        worker.stop();
+        Global.localServer.stopListen();
     }
 
     @Override
@@ -240,7 +253,6 @@ public class LanHallActivity extends BaseActivity implements Target {
 
                 if (dataPack.isSuccessful()) {
 
-                    Global.localServer.stopListen();
 
                     Global.dataManager.setMyId(dataPack.getMessage(0));
                     Global.dataManager.setRoomId(roomId);

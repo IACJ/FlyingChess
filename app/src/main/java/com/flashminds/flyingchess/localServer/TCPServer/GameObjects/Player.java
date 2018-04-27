@@ -1,7 +1,7 @@
 package com.flashminds.flyingchess.localServer.TCPServer.GameObjects;
 
 
-import com.flashminds.flyingchess.localServer.TCPServer.DataPackTcpSocket;
+import com.flashminds.flyingchess.localServer.TCPServer.MyTcpSocket;
 
 /**
  * Created by Ryan on 16/4/27.
@@ -9,7 +9,7 @@ import com.flashminds.flyingchess.localServer.TCPServer.DataPackTcpSocket;
 public class Player {
     private boolean isHost = false;
     private int id = 0;
-    private DataPackTcpSocket socket = null;
+    private MyTcpSocket socket = null;
     private int status = 0;
     private String userName = null;
     private Room room = null;
@@ -53,11 +53,11 @@ public class Player {
         this.isHost = isHost;
     }
 
-    public void setSocket(DataPackTcpSocket socket) {
+    public void setSocket(MyTcpSocket socket) {
         this.socket = socket;
     }
 
-    public DataPackTcpSocket getSocket() {
+    public MyTcpSocket getSocket() {
         return this.socket;
     }
 

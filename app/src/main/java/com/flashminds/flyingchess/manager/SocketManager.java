@@ -40,25 +40,22 @@ public class SocketManager  {
     private static final String TAG = "SocketManager";
     
     public void connectToLocalServer() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    sock = new Socket(InetAddress.getLocalHost(), 6666);
-                    sock.setSoTimeout(2000);
-                    sock.setTcpNoDelay(true);
-                    sw = new SocketWriter(sock.getOutputStream());
-                    sr = new SocketReader(sock.getInputStream());
-                    new Thread(sw).start();
-                    new Thread(sr).start();
-                    connected = true;
-                    sock.setSoTimeout(0);//cancle time out
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    connected = false;
-                }
-            }
-        }).start();
+        try {
+            System.out.println("日啊");
+            sock = new Socket(InetAddress.getLocalHost(), 6666);
+//            sock.setSoTimeout(2000);
+//            sock.setTcpNoDelay(true);
+            sock.setSoTimeout(0);//cancle time out
+            sw = new SocketWriter(sock.getOutputStream());
+            sr = new SocketReader(sock.getInputStream());
+            new Thread(sw).start();
+            new Thread(sr).start();
+            connected = true;
+            sock.setSoTimeout(0);//cancle time out
+        } catch (Exception e) {
+            e.printStackTrace();
+            connected = false;
+        }
     }
 
     public void connectLanServer(final String ip) {
@@ -66,6 +63,7 @@ public class SocketManager  {
             @Override
             public void run() {
                 try {
+                    connected = true;
                     sock = new Socket(InetAddress.getByName(ip), 6666);
                     sock.setSoTimeout(2000);
                     sock.setTcpNoDelay(true);
@@ -73,7 +71,7 @@ public class SocketManager  {
                     sr = new SocketReader(sock.getInputStream());
                     new Thread(sw).start();
                     new Thread(sr).start();
-                    connected = true;
+
                     sock.setSoTimeout(0);//cancle time out
                 } catch (Exception e) {
                     e.printStackTrace();
