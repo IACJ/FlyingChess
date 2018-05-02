@@ -140,7 +140,7 @@ public class LocalGamingActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         //ui setting
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_chess_board);
+        setContentView(R.layout.activity_gaming);
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);//Activity切换动画
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         Global.activityManager.add(this);

@@ -21,14 +21,12 @@ import com.flashminds.flyingchess.R;
 import com.flashminds.flyingchess.activity.ChooseModeActivity;
 import com.flashminds.flyingchess.activity.GameEndActivity;
 import com.flashminds.flyingchess.activity.GameInfoActivity;
-import com.flashminds.flyingchess.activity.PauseActivity;
 import com.flashminds.flyingchess.activity.RoomActivity;
 import com.flashminds.flyingchess.dataPack.DataPack;
 import com.flashminds.flyingchess.entity.ChessBoard;
 import com.flashminds.flyingchess.Global;
 import com.flashminds.flyingchess.manager.DataManager;
 import com.flashminds.flyingchess.manager.LanGameManager;
-import com.flashminds.flyingchess.manager.LocalGameManager;
 import com.flashminds.flyingchess.manager.SoundManager;
 import com.flashminds.flyingchess.activity.BaseActivity;
 
@@ -57,7 +55,7 @@ public class LanGamingActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         //ui setting
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_chess_board);
+        setContentView(R.layout.activity_gaming);
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);//Activity切换动画
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         Global.activityManager.add(this);

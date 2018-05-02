@@ -142,7 +142,6 @@ public class UDPServer {
         private UDPServer parent = null;
         private DataPack dataPack = null;
         private String ipBroadcast;
-        private List<String> ipSection = null;
 
         private static final String TAG = "BroadcastSender";
 
@@ -152,10 +151,10 @@ public class UDPServer {
                 WifiManager wm = (WifiManager) activity.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
 
                 localIp = getLocalHostIp();
-                ipSection = getIpSection(localIp, wm.getDhcpInfo().netmask);
+
                 ipBroadcast = getBroadcast();
                 sendSocket = new MyUdpSocket();
-                Log.v(TAG, "BroadcastSender: localIP为 "+localIp+",ipBroadcast为"+ ipBroadcast +"ipSection为 "+ ipSection);
+                Log.v(TAG, "BroadcastSender: localIP为 "+localIp+",ipBroadcast为"+ ipBroadcast);
                 Log.v(TAG, "BroadcastSender: Dhcp信息："+wm.getDhcpInfo());
             } catch (Exception e) {
                 e.printStackTrace();
@@ -197,7 +196,7 @@ public class UDPServer {
             msgList.add(room.getId().toString());
             msgList.add(room.getName());
             msgList.add(String.valueOf(room.getAllPlayers().size()));
-            msgList.add(room.isPlaying() == true ? "1" : "0");
+            msgList.add(room.isPlaying() ? "1" : "0");
             msgList.add(this.localIp);
             msgList.add(String.valueOf(port));
             this.dataPack = new DataPack(DataPack.E_ROOM_CREATE_BROADCAST, msgList);
@@ -229,71 +228,6 @@ public class UDPServer {
             return ipaddress;
         }
 
-        /**
-         * 转换 ip 的类型： String -> int
-         *
-         * @param ip String 类型的 ip.
-         * @return int 类型 ip.
-         */
-        private int stringToInt(String ip) {
-            ip = ip.trim();
-
-            String[] dots = ip.split("\\.");
-            if (dots.length < 4) {
-                throw new IllegalArgumentException();
-            }
-
-            return (Integer.valueOf(dots[0]) << 24) + (Integer.valueOf(dots[1]) << 16) + (Integer.valueOf(dots[2]) << 8) + Integer.valueOf(dots[3]);
-        }
-
-        /**
-         * 转换 ip 的类型： int -> String
-         *
-         * @param ip int 类型的 ip.
-         * @return String 类型的 ip.
-         */
-        private String intToString(int ip) {
-            StringBuilder sb = new StringBuilder();
-
-            sb.append(String.valueOf((ip >>> 24)));
-            sb.append(".");
-
-            sb.append(String.valueOf((ip & 0x00FFFFFF) >>> 16));
-            sb.append(".");
-
-            sb.append(String.valueOf((ip & 0x0000FFFF) >>> 8));
-            sb.append(".");
-
-            sb.append(String.valueOf((ip & 0x000000FF)));
-            return sb.toString();
-        }
-
-        /**
-         * 得到 ip 网段
-         *
-         * @param ip   网段内的任意 ip
-         * @param mask 子网掩码
-         * @return ip 列表
-         */
-        public List<String> getIpSection(String ip, Integer mask) {
-            List<String> ipSection = new LinkedList<>();
-
-            int orderedMask = ((mask & 0xFF000000) >>> 24) | ((mask & 0x00FF0000) >>> 8) | ((mask & 0x0000FF00) << 8) | ((mask & 0x000000FF) << 24);
-
-
-            int startIp = stringToInt(ip) & orderedMask;
-            for (int i = startIp; i < ((startIp) | (~orderedMask)); i++) {
-
-                String ipStr = intToString(i);
-                if (ipStr.equals(ip) || ipStr.contains("255"))
-                    continue;
-
-                ipSection.add(ipStr);
-            }
-            return ipSection;
-        }
-
-
         public  String getBroadcast() throws SocketException {
             System.setProperty("java.net.preferIPv4Stack", "true");
             for (Enumeration<NetworkInterface> niEnum = NetworkInterface.getNetworkInterfaces(); niEnum.hasMoreElements();) {
@@ -316,7 +250,6 @@ public class UDPServer {
      *
      * 每个用户在`大厅活动`中获得一个广播接收者
      */
-
     public class BroadcastReceiver implements Runnable {
         private MyUdpSocket receiveSocket = null;
         private UDPServer parent = null;

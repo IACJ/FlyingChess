@@ -50,7 +50,7 @@ public class ChessBoardActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         //ui setting
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_chess_board);
+        setContentView(R.layout.activity_gaming);
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);//Activity切换动画
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         Global.activityManager.add(this);
@@ -155,7 +155,7 @@ public class ChessBoardActivity extends BaseActivity {
             xname[Global.playersData.get(key).color].setText(Global.playersData.get(key).name);
             xscore[Global.playersData.get(key).color].setText(Global.playersData.get(key).score);
         }
-        Global.gameManager.newTurn(this);
+//        Global.gameManager.newTurn(this);
 
         for (int i = 0; i < 4; i++) {
             xname[i].setTypeface(Global.getFont());

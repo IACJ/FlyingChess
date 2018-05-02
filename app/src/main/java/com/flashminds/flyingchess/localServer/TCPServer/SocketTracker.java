@@ -71,7 +71,6 @@ public class SocketTracker implements Runnable {
                     if (socket.getInetSocketAddress().getAddress().isLoopbackAddress()){
                         player.setHost(true);
                     }
-                        
 
                     parent.getSelfRoom().addPlayer(player);
                     player.setSocket(socket);

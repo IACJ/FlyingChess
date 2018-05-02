@@ -99,8 +99,8 @@
                 android:layout_weight="1" />
 
             <Button
-                android:id="@+id/join"
-                android:text="加入房间"
+                android:id="@+id/refresh"
+                android:text="刷新列表"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"

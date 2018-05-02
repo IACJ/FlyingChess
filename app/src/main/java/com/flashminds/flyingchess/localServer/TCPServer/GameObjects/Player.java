@@ -33,7 +33,7 @@ public class Player {
     }
 
     public static Player createRobot(int id) {
-        Player player = new Player(id, "Robot");
+        Player player = new Player(id, "AI");
         return player;
     }
 

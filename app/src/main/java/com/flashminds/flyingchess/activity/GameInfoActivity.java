@@ -46,7 +46,7 @@ public class GameInfoActivity extends BaseActivity implements Target {
     protected void onCreate(Bundle savedInstanceState) {
         //ui setting
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_game_info);
+        setContentView(R.layout.activity_hall);
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);//Activity切换动画
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         Global.activityManager.add(this);

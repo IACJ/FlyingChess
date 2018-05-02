@@ -50,7 +50,8 @@ public class LanRoomActivity extends BaseActivity implements Target {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         Global.activityManager.add(this);
         Global.soundManager.playMusic(SoundManager.BACKGROUND);
-        //init
+
+        //查找view
         startButton = (Button) findViewById(R.id.start);
         backButton = (Button) findViewById(R.id.back);
         site[0] = (Button) findViewById(R.id.R);
@@ -210,7 +211,6 @@ public class LanRoomActivity extends BaseActivity implements Target {
 
         Global.socketManager.registerActivity(DataPack.E_ROOM_POSITION_SELECT, this);
         Global.socketManager.registerActivity(DataPack.E_GAME_START, this);
-        Global.socketManager.registerActivity(DataPack.A_ROOM_ENTER, this);
         Global.socketManager.registerActivity(DataPack.E_ROOM_ENTER, this);
         Global.socketManager.registerActivity(DataPack.A_ROOM_EXIT, this);
         Global.socketManager.registerActivity(DataPack.E_ROOM_EXIT, this);

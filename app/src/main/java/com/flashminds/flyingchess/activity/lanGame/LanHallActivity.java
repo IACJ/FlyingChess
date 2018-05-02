@@ -4,21 +4,17 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.flashminds.flyingchess.R;
-import com.flashminds.flyingchess.activity.ChooseModeActivity;
-import com.flashminds.flyingchess.activity.RoomActivity;
 import com.flashminds.flyingchess.dataPack.DataPack;
 import com.flashminds.flyingchess.dataPack.Target;
 import com.flashminds.flyingchess.Global;
@@ -35,16 +31,16 @@ import java.util.LinkedList;
  */
 
 public class LanHallActivity extends BaseActivity implements Target {
-    Button createButton, joinButton, backButton;
+    Button createButton, btnRefresh, backButton;
+    TextView title;
     ListView roomListView;
-    LinearLayout onlineLayout;
     SimpleAdapter roomListAdapter;
     LinkedList<HashMap<String, String>> roomListData;
-    Worker worker;
-    String roomId;
-    int roomIndex;
-    TextView title;
-    LinkedList<String> roomUUID;
+    Worker worker = new Worker();
+    String roomId  = "";
+    int roomIndex = -1;
+
+    LinkedList<String> roomUUID = new LinkedList<>();
 
     private static final String TAG = "LanHallActivity";
 
@@ -52,7 +48,7 @@ public class LanHallActivity extends BaseActivity implements Target {
     protected void onCreate(Bundle savedInstanceState) {
         //ui setting
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_game_info);
+        setContentView(R.layout.activity_hall);
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);//Activity切换动画
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         Global.activityManager.add(this);
@@ -63,7 +59,7 @@ public class LanHallActivity extends BaseActivity implements Target {
         // 查找 View
         createButton = (Button) findViewById(R.id.create);
         backButton = (Button) findViewById(R.id.back);
-        joinButton = (Button) findViewById(R.id.join);
+        btnRefresh = (Button) findViewById(R.id.refresh);
 
         title = (TextView) findViewById(R.id.room_title);
 
@@ -74,13 +70,7 @@ public class LanHallActivity extends BaseActivity implements Target {
         int[] t2 = {R.id.roomName, R.id.roomId, R.id.player, R.id.roomState};
         roomListAdapter = new SimpleAdapter(getApplicationContext(), roomListData, R.layout.content_room_list_item, t, t2);
         roomListView.setAdapter(roomListAdapter);
-        worker = new Worker();
 
-        onlineLayout = (LinearLayout) findViewById(R.id.onlineLayout);
-        roomId = "";
-        roomIndex = -1;
-
-        roomUUID = new LinkedList<>();
 
         // 点击事件
         createButton.setOnClickListener(new View.OnClickListener() {
@@ -94,7 +84,7 @@ public class LanHallActivity extends BaseActivity implements Target {
                         try{
                             Global.localServer.startHost();
                             Global.socketManager.connectToLocalServer();
-                            Global.socketManager.send(DataPack.R_LOGIN, new Build().MODEL, "123");
+                            Global.socketManager.send(DataPack.R_LOGIN, new Build().MODEL);
                         }catch (Exception e){
                             e.printStackTrace();
                         }
@@ -115,29 +105,29 @@ public class LanHallActivity extends BaseActivity implements Target {
         roomListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                roomId = roomListData.get(position).get("id");
-                roomIndex = position;
-                view.setSelected(true);
-            }
-        });
-        joinButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Global.soundManager.playSound(SoundManager.BUTTON);
                 if (roomUUID.size() == 0){
                     Toast.makeText(LanHallActivity.this,"请选择可进入的房间",Toast.LENGTH_SHORT).show();
                     return;
                 }
-
-                Global.socketManager.connectLanServer(Global.localServer.getRoomIp(roomUUID.get(roomIndex)));
+                view.setSelected(true);
+                String roomId = roomUUID.get(position);
+                Global.socketManager.connectLanServer(Global.localServer.getRoomIp(roomId));
                 Global.delay(500);
-                Global.socketManager.send(DataPack.R_LOGIN, new Build().MODEL, "123");
+                Global.socketManager.send(DataPack.R_LOGIN, new Build().MODEL);
+            }
+        });
+        btnRefresh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Global.soundManager.playSound(SoundManager.BUTTON);
+                Global.localServer.updateRoomListImmediately();
+
             }
         });
 
         // 设置字体
         title.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/comici.ttf"));
-        joinButton.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/comici.ttf"));
+        btnRefresh.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/comici.ttf"));
         createButton.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/comici.ttf"));
     }
 
@@ -177,7 +167,7 @@ public class LanHallActivity extends BaseActivity implements Target {
     }
 
     private void goBack() {
-        startActivity(new Intent(getApplicationContext(), ChooseModeActivity.class));
+        finish();
     }
 
     @Override
@@ -199,9 +189,9 @@ public class LanHallActivity extends BaseActivity implements Target {
                         }
                         data.put("player", dataPack.getMessage(i + 2));
                         if (dataPack.getMessage(i + 3).compareTo("0") == 0) {
-                            data.put("state", "waiting");
+                            data.put("state", "等待开始");
                         } else {
-                            data.put("state", "flying");
+                            data.put("state", "游戏中");
                         }
                         roomListData.addLast(data);
                         i += 4;
@@ -215,27 +205,6 @@ public class LanHallActivity extends BaseActivity implements Target {
                 }
                 break;
             }
-            case DataPack.A_ROOM_CREATE : {
-                if (dataPack.isSuccessful()) {
-                    Global.dataManager.setRoomId(dataPack.getMessage(0));
-                    Intent intent = new Intent(getApplicationContext(), RoomActivity.class);
-                    ArrayList<String> msgs = new ArrayList<>();
-                    msgs.add(Global.dataManager.getMyId());
-                    msgs.add(Global.dataManager.getMyName());
-                    msgs.add(Global.dataManager.getOnlineScore());
-                    msgs.add("-1");
-                    intent.putStringArrayListExtra("msgs", msgs);
-                    startActivity(intent);//switch wo chess board activity
-                } else {
-                    createButton.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(getApplicationContext(), "create room failed!", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                }
-                break;
-            }
             case DataPack.A_ROOM_ENTER :{
 
                 if (dataPack.isSuccessful()) {
@@ -243,10 +212,9 @@ public class LanHallActivity extends BaseActivity implements Target {
                     Global.dataManager.setRoomId(roomId);
                     Intent intent = new Intent(getApplicationContext(), LanRoomActivity.class);
                     ArrayList<String> msgs = new ArrayList<>(dataPack.getMessageList());
-
                     msgs.remove(0);
                     intent.putStringArrayListExtra("msgs", msgs);
-                    startActivity(intent);//switch wo chess board activity
+                    startActivity(intent);
                 } else {
                     createButton.post(new Runnable() {
                         @Override
@@ -268,10 +236,11 @@ public class LanHallActivity extends BaseActivity implements Target {
         }
     }
     class Worker implements Runnable {
-        private boolean running = true;
+        private boolean running;
 
         @Override
         public void run() {
+            running = true;
             while (running){
                 try {
                     Global.localServer.updateRoomListImmediately();
