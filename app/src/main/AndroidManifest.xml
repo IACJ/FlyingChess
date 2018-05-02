@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.flashminds.flyingchess">
+    package="com.scut.flyingchess">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -23,7 +23,7 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:name=".activity.RequestPermissionActivity"
+            android:name="com.scut.flyingchess.activity.RequestPermissionActivity"
             android:screenOrientation="landscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -32,70 +32,70 @@
         </activity>
 
         <activity
-            android:name=".activity.WelcomeActivity"
+            android:name="com.scut.flyingchess.activity.WelcomeActivity"
             android:screenOrientation="landscape">
         </activity>
         <activity
-            android:name=".activity.ChooseModeActivity"
+            android:name="com.scut.flyingchess.activity.ChooseModeActivity"
             android:screenOrientation="landscape" />
 
         <activity
-            android:name=".activity.localGame.LocalRoomActivity"
+            android:name="com.scut.flyingchess.activity.localGame.LocalRoomActivity"
             android:screenOrientation="landscape" />
         <activity
-            android:name=".activity.localGame.LocalGamingActivity"
+            android:name="com.scut.flyingchess.activity.localGame.LocalGamingActivity"
             android:screenOrientation="landscape" />
         <activity
-            android:name=".activity.localGame.LocalPauseActivity"
+            android:name="com.scut.flyingchess.activity.localGame.LocalPauseActivity"
             android:screenOrientation="landscape"
             android:theme="@style/Theme.AppCompat.Light.Dialog.Alert"/>
 
         <activity
-            android:name=".activity.replay.ReplayGameActivity"
+            android:name="com.scut.flyingchess.activity.replay.ReplayGameActivity"
             android:screenOrientation="landscape" />
 
         <activity
-            android:name=".activity.lanGame.LanHallActivity"
+            android:name="com.scut.flyingchess.activity.lanGame.LanHallActivity"
             android:screenOrientation="landscape" />
         <activity
-            android:name=".activity.lanGame.LanRoomActivity"
+            android:name="com.scut.flyingchess.activity.lanGame.LanRoomActivity"
             android:screenOrientation="landscape" />
         <activity
-            android:name=".activity.lanGame.LanGamingActivity"
+            android:name="com.scut.flyingchess.activity.lanGame.LanGamingActivity"
             android:screenOrientation="landscape" />
         <activity
-            android:name=".activity.lanGame.LanPauseActivity"
+            android:name="com.scut.flyingchess.activity.lanGame.LanPauseActivity"
             android:screenOrientation="landscape"
             android:theme="@style/Theme.AppCompat.Light.Dialog.Alert"/>
 
 
 
         <activity
-            android:name=".activity.LoginActivity"
+            android:name="com.scut.flyingchess.activity.LoginActivity"
             android:screenOrientation="landscape" />
         <activity
-            android:name=".activity.GameInfoActivity"
+            android:name="com.scut.flyingchess.activity.GameInfoActivity"
             android:screenOrientation="landscape" />
         <activity
-            android:name=".activity.ChessBoardActivity"
+            android:name="com.scut.flyingchess.activity.ChessBoardActivity"
             android:screenOrientation="landscape" />
         <activity
-            android:name=".activity.PauseActivity"
+            android:name="com.scut.flyingchess.activity.PauseActivity"
             android:screenOrientation="landscape"
             android:theme="@style/Theme.AppCompat.Light.Dialog.Alert" />
         <activity
-            android:name=".activity.RoomActivity"
+            android:name="com.scut.flyingchess.activity.RoomActivity"
             android:screenOrientation="landscape" />
         <activity
-            android:name=".activity.GameEndActivity"
+            android:name="com.scut.flyingchess.activity.GameEndActivity"
             android:screenOrientation="landscape"
             android:theme="@style/Theme.AppCompat.Light.Dialog.Alert" />
         <activity
-            android:name=".__Deprecated.UpdateActivity"
+            android:name="com.scut.flyingchess.__Deprecated.UpdateActivity"
             android:screenOrientation="landscape"
             android:theme="@style/Theme.AppCompat.Light.Dialog.Alert" />
         <activity
-            android:name=".activity.RecordsActivity"
+            android:name="com.scut.flyingchess.activity.RecordsActivity"
             android:screenOrientation="landscape"
             android:theme="@style/Theme.AppCompat.Light.Dialog.Alert" />
     </application>
