@@ -37,7 +37,8 @@
         </activity>
         <activity
             android:name="com.scut.flyingchess.activity.ChooseModeActivity"
-            android:screenOrientation="landscape" />
+            android:screenOrientation="landscape"
+            android:launchMode="singleTask"/>
 
         <activity
             android:name="com.scut.flyingchess.activity.localGame.LocalRoomActivity"

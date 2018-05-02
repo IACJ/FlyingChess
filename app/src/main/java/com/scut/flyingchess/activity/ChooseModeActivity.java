@@ -1,13 +1,18 @@
 package com.scut.flyingchess.activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
 import android.widget.Toast;
 
 import com.scut.flyingchess.activity.lanGame.LanHallActivity;
@@ -32,10 +37,17 @@ public class ChooseModeActivity extends BaseActivity implements Target {
     Button btnLocal,btnLan,local, lan, wlan;
     boolean exit;
     Timer closeTimer;
-    ImageView bk, bk2;
+    ImageView bk2;
     ImageView waitImage;
     Button waitBackground;
     Button records;
+
+    Button confirmName;//确认昵称按钮
+    EditText userName; //用户输入框
+    Boolean hasInputName = false;
+    SharedPreferences pref;
+    SharedPreferences.Editor editor;
+    View popupWindow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,11 +67,14 @@ public class ChooseModeActivity extends BaseActivity implements Target {
         exit = false;
         closeTimer = new Timer();
         exit = false;
-        bk = (ImageView) findViewById(R.id.backgroud);
         bk2 = (ImageView) findViewById(R.id.backgroud2);
         waitImage = (ImageView) findViewById(R.id.wait);
         waitBackground = (Button) findViewById(R.id.waitbackground);
         records = (Button) findViewById(R.id.records);
+
+        pref = getSharedPreferences("data",MODE_PRIVATE);
+        editor = pref.edit();
+        hasInputName = pref.getBoolean("hasInputName",false);
 
         // 按钮事件
         btnLocal.setOnClickListener(new View.OnClickListener(){
@@ -74,7 +89,41 @@ public class ChooseModeActivity extends BaseActivity implements Target {
             @Override
             public void onClick(View v) {
                 Global.soundManager.playSound(SoundManager.BUTTON);
-                startActivity( new Intent(getApplicationContext(), LanHallActivity.class));
+                hasInputName = pref.getBoolean("hasInputName",false);
+                if(!hasInputName){
+                    //设置弹窗
+                    popupWindow = LayoutInflater.from(getBaseContext()).inflate(R.layout.popwindow,null);
+                    PopupWindow popWindow = new PopupWindow(popupWindow,700,400);
+                    popWindow.setFocusable(true);
+                    popWindow.setOutsideTouchable(false);
+                    //设置弹窗位于lan button上方
+                    popWindow.showAsDropDown(btnLan,(btnLan.getWidth() - 700)/2,-btnLan.getHeight()-400);
+                    confirmName = (Button) popupWindow.findViewById(R.id.confirmName) ;
+                    userName = (EditText) popupWindow.findViewById(R.id.userName);
+                    confirmName.setOnClickListener(new View.OnClickListener(){
+                        @Override
+                        public void onClick(View v){
+                            String text = String.valueOf(userName.getText());
+                            Log.v("ssss",String.valueOf(text.length()));
+                            if(text.length() > 10){
+                                Toast.makeText(ChooseModeActivity.this,"请输入10个以内的昵称",Toast.LENGTH_SHORT).show();
+                            }else{
+                                if(text.length() == 0){
+                                    Toast.makeText(ChooseModeActivity.this,"请输入您的昵称",Toast.LENGTH_SHORT).show();
+                                }else{
+                                    //保存昵称
+                                    editor.putBoolean("hasInputName",true);
+                                    editor.commit();
+                                    startActivity( new Intent(getApplicationContext(), LanHallActivity.class));
+                                    ChooseModeActivity.this.popupWindow.setVisibility(View.INVISIBLE);
+                                }
+                            }
+                        }
+                    });
+                }
+                else{
+                    startActivity( new Intent(getApplicationContext(), LanHallActivity.class));
+                }
             }
         });
 
@@ -121,6 +170,7 @@ public class ChooseModeActivity extends BaseActivity implements Target {
                 records.setVisibility(View.INVISIBLE);
                 waitImage.setVisibility(View.VISIBLE);
                 btnLocal.setVisibility(View.INVISIBLE);
+                btnLan.setVisibility(View.INVISIBLE);
                 waitBackground.setVisibility(View.VISIBLE);
                 Global.startWaitAnimation(waitImage);
                 clean();
@@ -138,7 +188,6 @@ public class ChooseModeActivity extends BaseActivity implements Target {
         // 动态设置V iew UI
         waitImage.setVisibility(View.INVISIBLE);
         waitBackground.setVisibility(View.INVISIBLE);
-        bk.setImageBitmap(Global.getBitmap(R.raw.choosemodebk));
         bk2.setImageBitmap(Global.getBitmap(R.raw.cloud));
         lan.setTypeface(Global.getFont());
         wlan.setTypeface(Global.getFont());
@@ -155,21 +204,28 @@ public class ChooseModeActivity extends BaseActivity implements Target {
                 Global.dataManager.setGameMode(DataManager.GM_WLAN);
                 Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                 startActivity(intent);
+
             } else {
                 wlan.post(new Runnable() {
                     @Override
                     public void run() {
                         Toast.makeText(getApplicationContext(), "连接服务器失败！", Toast.LENGTH_SHORT).show();
-                        btnLocal.setVisibility(View.VISIBLE);
-                        local.setVisibility(View.VISIBLE);
-                        lan.setVisibility(View.VISIBLE);
-                        wlan.setVisibility(View.VISIBLE);
-                        records.setVisibility(View.VISIBLE);
-                        waitBackground.setVisibility(View.INVISIBLE);
-                        waitImage.setVisibility(View.INVISIBLE);
                     }
                 });
             }
+            wlan.post(new Runnable() {
+                @Override
+                public void run() {
+                    btnLocal.setVisibility(View.VISIBLE);
+                    btnLan.setVisibility(View.VISIBLE);
+                    local.setVisibility(View.VISIBLE);
+                    lan.setVisibility(View.VISIBLE);
+                    wlan.setVisibility(View.VISIBLE);
+                    records.setVisibility(View.VISIBLE);
+                    waitBackground.setVisibility(View.INVISIBLE);
+                    waitImage.setVisibility(View.INVISIBLE);
+                }
+            });
             Global.stopWaitAnimation();
         }
     }

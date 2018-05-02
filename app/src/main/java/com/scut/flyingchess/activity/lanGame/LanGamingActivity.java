@@ -43,6 +43,7 @@ public class LanGamingActivity extends BaseActivity {
     TextView xt[] = new TextView[4];
     TextView xname[] = new TextView[4];
     TextView xscore[] = new TextView[4];
+    TextView message;
 
     int boardWidth;
     public Handler handler;
@@ -104,6 +105,8 @@ public class LanGamingActivity extends BaseActivity {
         xscore[1] = (TextView) findViewById(R.id.gscore);
         xscore[2] = (TextView) findViewById(R.id.bscore);
         xscore[3] = (TextView) findViewById(R.id.yscore);
+
+        message = (TextView) findViewById(R.id.message);
 
         //set data
         DisplayMetrics dm = new DisplayMetrics();
@@ -170,6 +173,7 @@ public class LanGamingActivity extends BaseActivity {
         }
         throwDiceButton.setBackground(Global.d[0]);
 
+        Global.dataManager.giveUp(false);
         Global.lanGameManager = new LanGameManager();
         Global.lanGameManager.startGame(this);
     }
@@ -203,7 +207,7 @@ public class LanGamingActivity extends BaseActivity {
         Global.gameManager.gameOver();
 
         startActivity(new Intent(getApplicationContext(), ChooseModeActivity.class));
-        if (Global.dataManager.getGameMode() == DataManager.GM_LAN) {
+        if (Global.dataManager.getHostId().equals(Global.dataManager.getMyId())) {
             Global.localServer.stopHost();
         }
 
@@ -237,10 +241,27 @@ public class LanGamingActivity extends BaseActivity {
                     int color = msg.getData().getInt("color");
                     int whichPlane = msg.getData().getInt("whichPlane");
                     int pos = msg.getData().getInt("pos");
+
+                    switch(color){
+                        case 0:
+                            message.setText("红色飞机移动中" );
+                            break;
+                        case 1:
+                            message.setText("绿色飞机移动中" );
+                            break;
+                        case 2:
+                            message.setText("蓝色飞机移动中" );
+                            break;
+                        case 3:
+                            message.setText("黄色飞机移动中" );
+                            break;
+                    }
                     parent.animMoveTo(parent.plane[color][whichPlane], Global.chessBoard.map[color][pos][0], Global.chessBoard.map[color][pos][1]);
                 }
                 break;
                 case 2://骰子
+                    int currentDice = msg.getData().getInt("dice");
+                    message.setText("骰子数是:" + currentDice );
                     parent.throwDiceButton.setBackground(Global.d[msg.getData().getInt("dice") - 1]);
                     break;
                 case 3://显示消息
@@ -277,6 +298,21 @@ public class LanGamingActivity extends BaseActivity {
                         parent.xt[i].setText(" ");
                     }
                     parent.xt[msg.getData().getInt("color")].setText(">");
+
+                    switch(msg.getData().getInt("color")){
+                        case 0:
+                            message.setText("红色飞机回合");
+                            break;
+                        case 1:
+                            message.setText("绿色飞机回合");
+                            break;
+                        case 2:
+                            message.setText("蓝色飞机回合");
+                            break;
+                        case 3:
+                            message.setText("黄色飞机回合" );
+                            break;
+                    }
                 }
                 break;
                 default:

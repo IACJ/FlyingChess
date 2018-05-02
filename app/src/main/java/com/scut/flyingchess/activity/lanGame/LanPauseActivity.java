@@ -7,6 +7,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 
 import com.scut.flyingchess.R;
+import com.scut.flyingchess.activity.ChooseModeActivity;
 import com.scut.flyingchess.activity.GameInfoActivity;
 import com.scut.flyingchess.Global;
 import com.scut.flyingchess.manager.DataManager;
@@ -22,11 +23,13 @@ public class LanPauseActivity extends BaseActivity {
         setContentView(R.layout.activity_pause);
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);//Activity切换动画
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        //init
+
+        // 查找 View
         resume = (Button) findViewById(R.id.resume);
         robot = (Button) findViewById(R.id.robot);
         exit = (Button) findViewById(R.id.exit);
-        //trigger
+
+        // 按钮事件
         resume.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -54,19 +57,18 @@ public class LanPauseActivity extends BaseActivity {
                 Global.replayManager.clearRecord();
 
                 Global.lanGameManager.gameOver();
-                Global.replayManager.stopReplay();
-
-                startActivity(new Intent(getApplicationContext(), GameInfoActivity.class));
-                if (Global.dataManager.getGameMode() == DataManager.GM_LAN) {
+                startActivity(new Intent(getApplicationContext(), ChooseModeActivity.class));
+                if (Global.dataManager.getHostId().equals(Global.dataManager.getMyId())) {
                     Global.localServer.stopHost();
                 }
 
-                Global.dataManager.giveUp(false);
             }
         });
         if (Global.dataManager.isGiveUp()) {
             robot.setText("取消托管");
         }
+
+        // 设置字体
         resume.setTypeface(Global.getFont());
         robot.setTypeface(Global.getFont());
         exit.setTypeface(Global.getFont());

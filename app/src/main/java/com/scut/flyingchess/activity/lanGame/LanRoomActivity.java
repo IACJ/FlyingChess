@@ -75,7 +75,7 @@ public class LanRoomActivity extends BaseActivity implements Target {
                 if (idlePlayerListData.size() > 1)
                     Toast.makeText(getApplicationContext(), "有人未准备好!", Toast.LENGTH_SHORT).show();
                 else {
-                        if (Global.dataManager.getHostId().compareTo(Global.dataManager.getMyId()) != 0) {
+                        if (!Global.dataManager.getHostId().equals(Global.dataManager.getMyId())) {
                             Toast.makeText(getApplicationContext(), "请等待房主开始游戏~", Toast.LENGTH_SHORT).show();
                         }else{
                             Global.replayManager.startRecord();
@@ -250,7 +250,8 @@ public class LanRoomActivity extends BaseActivity implements Target {
             if (dataPack.getMessageList() != null) {//不是我退出了
                 if (dataPack.getMessage(0).compareTo(Global.dataManager.getHostId()) == 0)//是房主
                 {
-                    Intent intent = new Intent(getApplicationContext(), GameInfoActivity.class);
+                    Toast.makeText(getApplicationContext(), "房主离开了房间!", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(getApplicationContext(), LanHallActivity.class);
                     startActivity(intent);
                 } else {
                     for (HashMap<String, String> map : idlePlayerListData) {
@@ -357,27 +358,13 @@ public class LanRoomActivity extends BaseActivity implements Target {
                 });
             }
         } else if (dataPack.getCommand() == DataPack.E_GAME_START) {
-            Intent intent = new Intent(getApplicationContext(), LanGamingActivity.class);
-            startActivity(intent);
+            startActivity( new Intent(LanRoomActivity.this, LanGamingActivity.class));
         }
     }
 
     private void chooseSite(int color) {
         if (siteState[color] == -1) {
-            if (Global.dataManager.getGameMode() != DataManager.GM_LOCAL) {
-                Global.socketManager.send(DataPack.R_ROOM_POSITION_SELECT, Global.dataManager.getMyId(), Global.dataManager.getRoomId(), Global.playersData.get(Global.dataManager.getMyId()).name, Global.playersData.get(Global.dataManager.getMyId()).score, color);
-            } else if (Global.dataManager.getGameMode() == DataManager.GM_LOCAL) {
-                if (Global.playersData.get(Global.dataManager.getMyId()).color == ChessBoard.COLOR_Z) {
-                    idlePlayerListData.removeLast();
-                    idlePlayerListAdapter.notifyDataSetChanged();
-                } else {
-                    site[Global.playersData.get(Global.dataManager.getMyId()).color].setText("JOIN");
-                    siteState[Global.playersData.get(Global.dataManager.getMyId()).color] = -1;
-                }
-                Global.playersData.get(Global.dataManager.getMyId()).color = color;
-                site[color].setText("ME");
-                siteState[color] = 1;
-            }
+            Global.socketManager.send(DataPack.R_ROOM_POSITION_SELECT, Global.dataManager.getMyId(), Global.dataManager.getRoomId(), Global.playersData.get(Global.dataManager.getMyId()).name, Global.playersData.get(Global.dataManager.getMyId()).score, color);
         } else {
             Toast.makeText(getApplicationContext(), "座位已被占!", Toast.LENGTH_SHORT).show();
         }
@@ -388,31 +375,17 @@ public class LanRoomActivity extends BaseActivity implements Target {
             if (siteState[color] == 1) {
                 Toast.makeText(getApplicationContext(), "添加AI失败!", Toast.LENGTH_SHORT).show();
             } else {
-                if (Global.dataManager.getGameMode() != DataManager.GM_LOCAL) {
-                    LinkedList<String> msgs = new LinkedList<>();
-                    msgs.addLast(String.format("%d", -color - 1));
-                    msgs.addLast(Global.dataManager.getRoomId());
-                    msgs.addLast("AI");
-                    msgs.addLast("0");
-                    if (siteState[color] == -1) {
-                        msgs.addLast(String.format("%d", color));
-                    } else {
-                        msgs.addLast("-1");
-                    }
-                    Global.socketManager.send(new DataPack(DataPack.R_ROOM_POSITION_SELECT, msgs));
-                } else if (Global.dataManager.getGameMode() == DataManager.GM_LOCAL) {
-                    if (siteState[color] == -1) {
-                        site[color].setText("AI");
-                        siteState[color] = 0;
-                        addRobotButton[color].setText("-");
-                        Global.playersData.put(String.format("%d", -color - 1), new Role(String.format("%d", -color - 1), "AI", "0", color, Role.ROBOT, false));
-                    } else {
-                        site[color].setText("JOIN");
-                        siteState[color] = -1;
-                        addRobotButton[color].setText("+");
-                        Global.playersData.remove(String.format("%d", -color - 1));
-                    }
+                LinkedList<String> msgs = new LinkedList<>();
+                msgs.addLast(String.format("%d", -color - 1));
+                msgs.addLast(Global.dataManager.getRoomId());
+                msgs.addLast("AI");
+                msgs.addLast("0");
+                if (siteState[color] == -1) {
+                    msgs.addLast(String.format("%d", color));
+                } else {
+                    msgs.addLast("-1");
                 }
+                Global.socketManager.send(new DataPack(DataPack.R_ROOM_POSITION_SELECT, msgs));
             }
         } else {
             Toast.makeText(getApplicationContext(), "只有房主可以增删AI", Toast.LENGTH_SHORT).show();
@@ -425,7 +398,7 @@ public class LanRoomActivity extends BaseActivity implements Target {
             public void run() {
                 Global.socketManager.send(DataPack.R_ROOM_EXIT, Global.dataManager.getMyId(), Global.dataManager.getRoomId(), Global.playersData.get(Global.dataManager.getMyId()).color);
                 Global.delay(300);
-                if (Global.dataManager.getGameMode() == DataManager.GM_LAN) {
+                if (Global.dataManager.getHostId().equals(Global.dataManager.getMyId())) {
                     Global.localServer.stopHost();
                 }
             }

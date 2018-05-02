@@ -61,13 +61,7 @@ public class LanGameManager implements Target {//game process control
 
             whichPlane = -1;
 
-
-            if (Global.replayManager.isReplay == true) {
-                dice = Global.replayManager.getSavedDice();
-                role.setDice(dice);
-            } else
-                dice = role.roll();
-
+            dice = role.roll();
             Global.replayManager.saveDice(dice);
 
             if (!Global.replayManager.isReplay && Global.dataManager.getGameMode() != DataManager.GM_LOCAL) {
@@ -95,7 +89,7 @@ public class LanGameManager implements Target {//game process control
                 canFly = true;
                 Global.replayManager.saveWhichPlane(whichPlane);
             } else if (role.type == Role.ME) {
-                toast("sad...I can not move");
+                toast("没有棋子可以移动，本回合被跳过。");
 
             }
             if (!Global.replayManager.isReplay && Global.dataManager.getGameMode() != DataManager.GM_LOCAL) {
