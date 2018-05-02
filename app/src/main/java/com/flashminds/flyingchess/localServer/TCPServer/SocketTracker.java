@@ -68,9 +68,7 @@ public class SocketTracker implements Runnable {
                 case DataPack.R_LOGIN: {
                     Player player = Player.createPlayer(dataPack.getMessage(0));
                     // set the host if the player is the owner
-                    Log.d(TAG, "processDataPack: 用户ip地址："+socket.getInetSocketAddress().getAddress());
                     if (socket.getInetSocketAddress().getAddress().isLoopbackAddress()){
-                        Log.d(TAG, "属于LoopbackAddress");
                         player.setHost(true);
                     }
                         
@@ -119,7 +117,7 @@ public class SocketTracker implements Runnable {
                     return;
                 }
                 case DataPack.R_ROOM_EXIT: {
-                    Player player = null;
+                    Player player;
                     int id = Integer.valueOf(dataPack.getMessage(0));
                     if (id < 0 && id >= -4)
                         player = Player.createPlayer("Robot");

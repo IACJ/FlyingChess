@@ -139,18 +139,12 @@ public class LanHallActivity extends BaseActivity implements Target {
         title.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/comici.ttf"));
         joinButton.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/comici.ttf"));
         createButton.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/comici.ttf"));
-
-
-
-
-
     }
 
     @Override
     public void onStart() {
         super.onStart();
         Global.soundManager.resumeMusic(SoundManager.BACKGROUND);
-
 
         Global.socketManager.registerActivity(DataPack.A_ROOM_LOOKUP, this);
         Global.socketManager.registerActivity(DataPack.A_ROOM_CREATE, this);
@@ -160,7 +154,6 @@ public class LanHallActivity extends BaseActivity implements Target {
         Global.localServer.registerMsg(this);
 
         new Thread(worker).start();
-
     }
 
     @Override
@@ -185,7 +178,6 @@ public class LanHallActivity extends BaseActivity implements Target {
 
     private void goBack() {
         startActivity(new Intent(getApplicationContext(), ChooseModeActivity.class));
-        Global.localServer.stop();
     }
 
     @Override
@@ -225,8 +217,6 @@ public class LanHallActivity extends BaseActivity implements Target {
             }
             case DataPack.A_ROOM_CREATE : {
                 if (dataPack.isSuccessful()) {
-
-
                     Global.dataManager.setRoomId(dataPack.getMessage(0));
                     Intent intent = new Intent(getApplicationContext(), RoomActivity.class);
                     ArrayList<String> msgs = new ArrayList<>();
@@ -285,7 +275,7 @@ public class LanHallActivity extends BaseActivity implements Target {
             while (running){
                 try {
                     Global.localServer.updateRoomListImmediately();
-                    Thread.sleep(10000);
+                    Thread.sleep(1000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

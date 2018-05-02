@@ -87,16 +87,8 @@ public class LanRoomActivity extends BaseActivity implements Target {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            Global.soundManager.playSound(SoundManager.BUTTON);
-
-            Global.socketManager.send(DataPack.R_ROOM_EXIT, Global.dataManager.getMyId(), Global.dataManager.getRoomId(), Global.playersData.get(Global.dataManager.getMyId()).color);
-
-            if (Global.dataManager.getGameMode() == DataManager.GM_LAN) {
-                Global.localServer.stopHost();
-            }
-            LanRoomActivity.this.finish();
-
-
+                Global.soundManager.playSound(SoundManager.BUTTON);
+                goBack();
             }
         });
 
@@ -234,14 +226,7 @@ public class LanRoomActivity extends BaseActivity implements Target {
     public boolean dispatchKeyEvent(KeyEvent event) {
         if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {//返回按钮
             if (event.getAction() == KeyEvent.ACTION_DOWN && event.getRepeatCount() == 0) {
-
-                Global.socketManager.send(DataPack.R_ROOM_EXIT, Global.dataManager.getMyId(), Global.dataManager.getRoomId(), Global.playersData.get(Global.dataManager.getMyId()).color);
-
-                if (Global.dataManager.getGameMode() == DataManager.GM_LAN) {
-                    Global.localServer.stopHost();
-                }
-                LanRoomActivity.this.finish();
-
+              goBack();
             }
             return true;
         }
@@ -287,7 +272,7 @@ public class LanRoomActivity extends BaseActivity implements Target {
                             site[i].post(new Runnable() {
                                 @Override
                                 public void run() {
-                                    site[tmp].setText("坐下");
+                                    site[tmp].setText("JOIN");
                                     siteState[tmp] = -1;
                                 }
                             });
@@ -316,7 +301,7 @@ public class LanRoomActivity extends BaseActivity implements Target {
                         site[0].post(new Runnable() {
                             @Override
                             public void run() {
-                                site[-id - 1].setText("坐下");
+                                site[-id - 1].setText("JOIN");
                                 addRobotButton[-id - 1].setText("+");
                             }
                         });
@@ -335,7 +320,7 @@ public class LanRoomActivity extends BaseActivity implements Target {
                             site[0].post(new Runnable() {
                                 @Override
                                 public void run() {
-                                    site[tmp].setText("坐下");
+                                    site[tmp].setText("JOIN");
                                     siteState[tmp] = -1;
                                 }
                             });
@@ -433,6 +418,20 @@ public class LanRoomActivity extends BaseActivity implements Target {
         } else {
             Toast.makeText(getApplicationContext(), "只有房主可以增删AI", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void goBack() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Global.socketManager.send(DataPack.R_ROOM_EXIT, Global.dataManager.getMyId(), Global.dataManager.getRoomId(), Global.playersData.get(Global.dataManager.getMyId()).color);
+                Global.delay(300);
+                if (Global.dataManager.getGameMode() == DataManager.GM_LAN) {
+                    Global.localServer.stopHost();
+                }
+            }
+        }).start();
+        LanRoomActivity.this.finish();
     }
 
 }

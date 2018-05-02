@@ -37,10 +37,10 @@
 
             <TextView
                 android:id="@+id/title"
+                android:text="房间"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="Room"
                 android:layout_marginTop="5sp"
                 android:layout_marginRight="80sp"
                 android:textColor="#6b7d64"

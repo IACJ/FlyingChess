@@ -56,13 +56,13 @@ public class Global {
 
     public static void init(AppCompatActivity activity) {
         Global.activity = activity;
+        soundManager = new SoundManager(activity);
         dataManager = new DataManager();
         socketManager = new SocketManager();
         gameManager = new GameManager();
         chessBoard = new ChessBoard();
         playersData = new HashMap<>();
         activityManager = new ActivityManager(activity);
-        soundManager = new SoundManager(activity);
         replayManager = new ReplayManager();
         localServer = new LocalServer(activity);
         rotateAnimationWorker = new RotateAnimationWorker();

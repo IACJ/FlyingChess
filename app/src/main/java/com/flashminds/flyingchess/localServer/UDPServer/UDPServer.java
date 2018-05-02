@@ -119,12 +119,12 @@ public class UDPServer {
 
     public void stopListen() {
         if (this.receiver != null){
-            Log.d(TAG, "startBroadcast: 关闭广播接收");
+            Log.d(TAG, "stopListen: 关闭广播接收");
             this.roomMap.clear();
             this.receiver.stop();
             receiver=null;
         }else{
-            Log.e(TAG, "startBroadcast: 重复关闭广播接收");
+            Log.e(TAG, "stopListen: 重复关闭广播接收");
         }
 
     }
@@ -149,7 +149,7 @@ public class UDPServer {
         public BroadcastSender(UDPServer parent, final AppCompatActivity activity) {
             this.parent = parent;
             try {
-                WifiManager wm = (WifiManager) activity.getSystemService(Context.WIFI_SERVICE);
+                WifiManager wm = (WifiManager) activity.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
 
                 localIp = getLocalHostIp();
                 ipSection = getIpSection(localIp, wm.getDhcpInfo().netmask);
@@ -169,7 +169,7 @@ public class UDPServer {
                         Log.v(TAG, "run: 向"+ipBroadcast+"发送广播"+dataPack);
                         this.sendSocket.send(this.dataPack, InetAddress.getByName(ipBroadcast), port);
                     }
-                    Thread.sleep(5000);
+                    Thread.sleep(1000);
                 }
             } catch (Exception e) {
                 e.printStackTrace();

@@ -1,6 +1,8 @@
 package com.flashminds.flyingchess.localServer.TCPServer.GameObjects;
 
 
+import android.util.Log;
+
 import com.flashminds.flyingchess.dataPack.DataPack;
 import com.flashminds.flyingchess.dataPack.DataPackUtil;
 import com.flashminds.flyingchess.localServer.TCPServer.TCPServer;
@@ -21,6 +23,8 @@ public class Room {
     private boolean isPlaying = false;
     private Map<Integer, Player> players = null;
     private TCPServer parent = null;
+
+    private static final String TAG = "Room";
 
     public Room(String name, TCPServer parent) {
         this.id = UUID.randomUUID();
@@ -145,7 +149,7 @@ public class Room {
                 try {
                     roomPlayer.getSocket().send(dataPack);
                 } catch (Exception e) {
-
+                    e.printStackTrace();
                 }
             }
         }
@@ -162,6 +166,8 @@ public class Room {
                     }
                 }
             }
+        }else{
+            Log.e(TAG, "broadcastToOthers: 错误！" );
         }
     }
 

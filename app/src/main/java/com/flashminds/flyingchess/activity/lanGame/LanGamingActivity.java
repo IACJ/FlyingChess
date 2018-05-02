@@ -40,13 +40,15 @@ import java.util.ArrayList;
 public class LanGamingActivity extends BaseActivity {
     Button pauseButton;
     Button throwDiceButton;
-    Button[][] plane;
+    Button[][] plane = new Button[4][4];
     int boardWidth;
     public Handler handler;
     ImageView map;
     float dx;
     int n;
-    TextView xt[], xname[], xscore[];
+    TextView xt[] = new TextView[4];
+    TextView xname[] = new TextView[4];
+    TextView xscore[] = new TextView[4];
 
     SensorManager manager;
     ShakeListener listener;
@@ -63,7 +65,7 @@ public class LanGamingActivity extends BaseActivity {
         //init
         pauseButton = (Button) findViewById(R.id.pause);
         throwDiceButton = (Button) findViewById(R.id.dice);
-        plane = new Button[4][4];
+
         plane[0][0] = (Button) findViewById(R.id.R1);
         plane[0][1] = (Button) findViewById(R.id.R2);
         plane[0][2] = (Button) findViewById(R.id.R3);
@@ -87,7 +89,6 @@ public class LanGamingActivity extends BaseActivity {
         handler = new MyHandler(this);
         map = (ImageView) findViewById(R.id.map);
 
-        xt = new TextView[4];
         xname = new TextView[4];
         xscore = new TextView[4];
         xt[0] = (TextView) findViewById(R.id.rt);
@@ -258,66 +259,20 @@ public class LanGamingActivity extends BaseActivity {
                 break;
                 case 5://finished
                 {
-                    if (Global.replayManager.isReplay == false) {
                         Intent intent = new Intent(parent.getApplicationContext(), RoomActivity.class);
                         ArrayList<String> msgs = new ArrayList<>();
-                        if (Global.dataManager.getGameMode() == DataManager.GM_LOCAL) {
-                            if (Global.dataManager.getLastWinner().compareTo(Global.dataManager.getMyId()) == 0) {//更新分数
-                                Global.dataManager.setScore(Global.dataManager.getScore() + 10);
-                                Global.soundManager.playSound(SoundManager.WIN);
-                            } else {
-                                Global.dataManager.setScore(Global.dataManager.getScore() - 5);
-                                //Global.soundManager.playSound(SoundManager.LOSE);
-                            }
 
-                            Global.dataManager.saveData();
-                            msgs.add(Global.dataManager.getMyId());
-                            msgs.add(Global.playersData.get(Global.dataManager.getMyId()).name);
-                            msgs.add(String.valueOf(Global.dataManager.getScore()));
-                            msgs.add("-1");
-                        } else if (Global.dataManager.getGameMode() == DataManager.GM_WLAN) {
-                            for (String key : Global.playersData.keySet()) {//更新玩家的分数
-                                if (Global.playersData.get(key).offline == false) {
-                                    if (Global.playersData.get(key).id.compareTo(Global.dataManager.getLastWinner()) == 0) {
-                                        Global.playersData.get(key).score = String.valueOf(Integer.valueOf(Global.playersData.get(key).score) + 10);
-                                        Global.soundManager.playSound(SoundManager.WIN);
-                                    } else {
-                                        Global.playersData.get(key).score = String.valueOf(Integer.valueOf(Global.playersData.get(key).score) - 5);
-                                        //Global.soundManager.playSound(SoundManager.LOSE);
-                                    }
-                                }
-                            }
-
-                            Global.dataManager.setOnlineScore(Global.playersData.get(Global.dataManager.getMyId()).score);
-
-                            msgs.add(Global.playersData.get(Global.dataManager.getHostId()).id);
-                            msgs.add(Global.playersData.get(Global.dataManager.getHostId()).name);
-                            msgs.add(Global.playersData.get(Global.dataManager.getHostId()).score);
-                            msgs.add("-1");
-                            for (String key : Global.playersData.keySet()) {
-                                Global.playersData.get(key).color = -1;
-                                if (Global.dataManager.getHostId().compareTo(Global.playersData.get(key).id) != 0 && Integer.valueOf(Global.playersData.get(key).id) >= 0 && Global.playersData.get(key).offline == false) {
-                                    msgs.add(Global.playersData.get(key).id);
-                                    msgs.add(Global.playersData.get(key).name);
-                                    msgs.add(Global.playersData.get(key).score);
-                                    msgs.add("-1");
-                                }
-                            }
-                        }
                         intent.putStringArrayListExtra("msgs", msgs);
                         parent.startActivity(intent);
                         Intent intent2 = new Intent(parent.getApplicationContext(), GameEndActivity.class);
                         intent2.putStringArrayListExtra("msgs", msgs);
                         parent.startActivity(intent2);
                         Global.dataManager.giveUp(false);
-                        Global.gameManager.gameOver();
+                        Global.lanGameManager.gameOver();
                         Global.soundManager.playMusic(SoundManager.BACKGROUND);
                         Global.replayManager.closeRecord();
                         Global.replayManager.stopReplay();
-                    } else {
-                        Toast.makeText(parent, "Replay finished!", Toast.LENGTH_SHORT).show();
-                        parent.startActivity(new Intent(parent.getApplicationContext(), ChooseModeActivity.class));
-                    }
+
                     break;
                 }
                 case 6://turn to

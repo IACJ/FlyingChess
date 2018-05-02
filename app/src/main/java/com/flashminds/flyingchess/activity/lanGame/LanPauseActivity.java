@@ -52,23 +52,17 @@ public class LanPauseActivity extends BaseActivity {
         exit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (Global.dataManager.getGameMode() == DataManager.GM_WLAN) {
-                    Global.socketManager.send(DataPack.R_GAME_EXIT, Global.dataManager.getMyId(), Global.dataManager.getRoomId());
-                }
-                if (Global.replayManager.isReplay == false) {
-                    Global.replayManager.closeRecord();
-                    Global.replayManager.clearRecord();
-                }
-                Global.gameManager.gameOver();
+                Global.replayManager.closeRecord();
+                Global.replayManager.clearRecord();
+
+                Global.lanGameManager.gameOver();
                 Global.replayManager.stopReplay();
-                if (Global.dataManager.getGameMode() != DataManager.GM_LOCAL) {
-                    startActivity(new Intent(getApplicationContext(), GameInfoActivity.class));
-                    if (Global.dataManager.getGameMode() == DataManager.GM_LAN) {
-                        Global.localServer.stopHost();
-                    }
-                } else {
-                    startActivity(new Intent(getApplicationContext(), ChooseModeActivity.class));
+
+                startActivity(new Intent(getApplicationContext(), GameInfoActivity.class));
+                if (Global.dataManager.getGameMode() == DataManager.GM_LAN) {
+                    Global.localServer.stopHost();
                 }
+
                 Global.dataManager.giveUp(false);
             }
         });
@@ -80,8 +74,4 @@ public class LanPauseActivity extends BaseActivity {
         exit.setTypeface(Global.getFont());
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-    }
 }
