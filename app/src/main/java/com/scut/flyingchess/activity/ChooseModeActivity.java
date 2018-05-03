@@ -254,7 +254,7 @@ public class ChooseModeActivity extends BaseActivity implements Target {
                     System.exit(0);
                 } else {
                     exit = true;
-                    Toast.makeText(getApplicationContext(), "press again to exit", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "再点一次，退出游戏。", Toast.LENGTH_SHORT).show();
                     closeTimer.schedule(new TimerTask() {
                         @Override
                         public void run() {

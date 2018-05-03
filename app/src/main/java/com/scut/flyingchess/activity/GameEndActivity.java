@@ -41,21 +41,21 @@ public class GameEndActivity extends BaseActivity {
         });
         //settings
         if (Integer.valueOf(Global.dataManager.getLastWinner()) < 0)
-            winner.setText("Robot win the game~");
+            winner.setText("AI 赢得胜利~");
         ArrayList<String> msgs = getIntent().getExtras().getStringArrayList("msgs");
         for (int i = 0; i < msgs.size(); i += 4) {
             HashMap<String, String> map = new HashMap<>();
             map.put("name", msgs.get(i + 1));
             if (Global.dataManager.getLastWinner().compareTo(msgs.get(i)) == 0) {
-                map.put("state", "Win");
+                map.put("state", "胜利！");
                 map.put("action", "+10");
                 winner.setText(msgs.get(i + 1) + " win the game~");
             } else {
-                map.put("state", "Lose");
+                map.put("state", "失败");
                 map.put("action", "-5");
             }
             if (Global.playersData.get(msgs.get(i)).offline) {
-                map.put("state", "offline");
+                map.put("state", "掉线");
                 map.put("action", "0");
             }
             map.put("score", msgs.get(i + 2));

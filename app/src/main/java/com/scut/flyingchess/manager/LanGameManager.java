@@ -39,8 +39,7 @@ public class LanGameManager implements Target {//game process control
     }
 
     public void gameOver() {
-
-        gw.exit();
+        gw.stop();
     }
 
     public void turnTo(int color) {//call by other thread  be careful
@@ -64,39 +63,30 @@ public class LanGameManager implements Target {//game process control
             dice = role.roll();
             Global.replayManager.saveDice(dice);
 
-            if (!Global.replayManager.isReplay && Global.dataManager.getGameMode() != DataManager.GM_LOCAL) {
-                if ((role.offline || role.type == Role.ROBOT) && Global.dataManager.getHostId().compareTo(Global.dataManager.getMyId()) == 0 || role.type == Role.ME) {
-                    Global.socketManager.send(DataPack.R_GAME_PROCEED_DICE, role.id, Global.dataManager.getRoomId(), dice);
 
-                }
+            if ((role.offline || role.type == Role.ROBOT) && Global.dataManager.getHostId().compareTo(Global.dataManager.getMyId()) == 0 || role.type == Role.ME) {
+                Global.socketManager.send(DataPack.R_GAME_PROCEED_DICE, role.id, Global.dataManager.getRoomId(), dice);
             }
+
             Global.soundManager.playSound(SoundManager.DICE);
             diceAnimate(dice);
-            Global.delay(200);
+
             boolean canFly = false;
             if (role.canIMove()) {
-                if (Global.replayManager.isReplay == true) {
-                    whichPlane = Global.replayManager.getSavedWhichPlane();
-                    role.setWhichPlane(whichPlane);
-                    role.move();
-                } else {
-                    do {
-
-                        whichPlane = role.choosePlane();
-
-                    } while (!role.move());
-                }
+                do {
+                    whichPlane = role.choosePlane();
+                } while (!role.move());
                 canFly = true;
                 Global.replayManager.saveWhichPlane(whichPlane);
             } else if (role.type == Role.ME) {
                 toast("没有棋子可以移动，本回合被跳过。");
 
             }
-            if (!Global.replayManager.isReplay && Global.dataManager.getGameMode() != DataManager.GM_LOCAL) {
-                if ((role.offline || role.type != Role.PLAYER) && Global.dataManager.getHostId().compareTo(Global.dataManager.getMyId()) == 0 || role.type == Role.ME) {
-                    Global.socketManager.send(DataPack.R_GAME_PROCEED_PLANE, role.id, Global.dataManager.getRoomId(), whichPlane);
-                }
+
+            if ((role.offline || role.type != Role.PLAYER) && Global.dataManager.getHostId().compareTo(Global.dataManager.getMyId()) == 0 || role.type == Role.ME) {
+                Global.socketManager.send(DataPack.R_GAME_PROCEED_PLANE, role.id, Global.dataManager.getRoomId(), whichPlane);
             }
+
             if (canFly) {
                 flyNow(color, whichPlane);
                 amIWin(role.id, color);
@@ -124,7 +114,7 @@ public class LanGameManager implements Target {//game process control
                     Global.socketManager.send(new DataPack(DataPack.R_GAME_FINISHED, msgs));
                 }
             } else if (id.compareTo(Global.dataManager.getMyId()) == 0) {//我赢了
-                toast("I am the winner!");
+                toast("胜利!");
                 if (Global.dataManager.getGameMode() == DataManager.GM_WLAN) {
                     LinkedList<String> msgs = new LinkedList<>();
                     msgs.addLast(id);
@@ -133,7 +123,7 @@ public class LanGameManager implements Target {//game process control
                     Global.socketManager.send(new DataPack(DataPack.R_GAME_FINISHED, msgs));
                 }
             } else {//player
-                toast("player" + Global.playersData.get(id).name + "is the winner!");
+                toast("player" + Global.playersData.get(id).name + "取得了胜利!");
                 if (Global.dataManager.getGameMode() == DataManager.GM_WLAN && Global.playersData.get(id).offline && Global.dataManager.getHostId().compareTo(Global.dataManager.getMyId()) == 0) {//掉线且我是房主
                     LinkedList<String> msgs = new LinkedList<>();
                     msgs.addLast(id);
@@ -151,15 +141,15 @@ public class LanGameManager implements Target {//game process control
     }
 
     private void diceAnimate(int dice) {
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 6; i++) {
             Message msg = new Message();
             Bundle b = new Bundle();
             b.putInt("dice", Global.chessBoard.getDice().roll());
             msg.setData(b);
-            msg.what = 2;
+            msg.what = 7;
             board.handler.sendMessage(msg);
             try {
-                Thread.sleep(100);
+                Thread.sleep(150);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -170,6 +160,7 @@ public class LanGameManager implements Target {//game process control
         msg.setData(b);
         msg.what = 2;
         board.handler.sendMessage(msg);
+        Global.delay(300);
     }
 
     private void planeAnimate(int color, int pos) {
@@ -337,6 +328,7 @@ public class LanGameManager implements Target {//game process control
             case DataPack.E_GAME_PLAYER_DISCONNECTED:
                 if (dataPack.getMessage(0).compareTo(Global.dataManager.getMyId()) != 0) {//不是我
                     if (dataPack.getMessage(0).compareTo(Global.dataManager.getHostId()) == 0) {//是房主  退出游戏
+                        toast("房主离开了游戏");
                         gameOver();
                         board.startActivity(new Intent(board.getApplicationContext(), GameInfoActivity.class));
                         Global.dataManager.giveUp(false);
@@ -348,27 +340,22 @@ public class LanGameManager implements Target {//game process control
         }
     }
     class GameWorker implements Runnable {
-        private boolean run;
-
-        public GameWorker() {
-            run = true;
-        }
+        private boolean running;
 
         @Override
         public void run() {
-            run = true;
+            running = true;
             int i = 0;
-            while (run) {//control round
-                i = (i % 4);//轮询颜色
+            while (running) {//control round
                 Global.lanGameManager.turnTo(i);
                 if (LanGameManager.this.dice != 6){
-                    i++;
+                    i = (i+1)%4;
                 }
             }
         }
 
-        public void exit() {
-            run = false;
+        public void stop() {
+            running = false;
         }
     }
 }

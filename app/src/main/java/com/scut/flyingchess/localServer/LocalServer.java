@@ -68,8 +68,13 @@ public class LocalServer {
     }
 
     public void stopHost() {
-        Room closedRoom = tcpServer.stop();
-        udpServer.stopBroadcast(closedRoom);
+        try{
+            Room closedRoom = tcpServer.stop();
+            udpServer.stopBroadcast(closedRoom);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
     }
 
     public void stop() {

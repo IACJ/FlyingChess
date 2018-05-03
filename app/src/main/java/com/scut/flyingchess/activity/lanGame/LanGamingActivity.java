@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -259,11 +260,13 @@ public class LanGamingActivity extends BaseActivity {
                     parent.animMoveTo(parent.plane[color][whichPlane], Global.chessBoard.map[color][pos][0], Global.chessBoard.map[color][pos][1]);
                 }
                 break;
-                case 2://骰子
+                case 2: {//骰子
+
                     int currentDice = msg.getData().getInt("dice");
-                    message.setText("骰子数是:" + currentDice );
+                    message.setText("骰子数是:" + currentDice);
                     parent.throwDiceButton.setBackground(Global.d[msg.getData().getInt("dice") - 1]);
                     break;
+                }
                 case 3://显示消息
                     Toast.makeText(parent.getApplicationContext(), msg.getData().getString("msg"), Toast.LENGTH_SHORT).show();
                     break;
@@ -313,8 +316,14 @@ public class LanGamingActivity extends BaseActivity {
                             message.setText("黄色飞机回合" );
                             break;
                     }
+                    break;
                 }
-                break;
+                case 7: { //旋转的骰子
+                    message.setText("掷骰子中……");
+                    parent.throwDiceButton.setBackground(Global.d[msg.getData().getInt("dice") - 1]);
+                    break;
+                }
+
                 default:
                     super.handleMessage(msg);
             }

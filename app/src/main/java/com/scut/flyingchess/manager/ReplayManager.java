@@ -72,10 +72,7 @@ public class ReplayManager {
     }
 
     public void savePlayerNum(int num) {
-        System.out.println("测试：");
-        System.out.println(PATH);
-        System.out.println(isReplay);
-        System.out.println(num);
+
         if (isReplay == false) {
             try {
                 writer.write(num + "\n");

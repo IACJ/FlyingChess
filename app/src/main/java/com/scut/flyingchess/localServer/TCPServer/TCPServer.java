@@ -7,6 +7,7 @@ import android.util.Log;
 import com.scut.flyingchess.localServer.LocalServer;
 import com.scut.flyingchess.localServer.TCPServer.GameObjects.Room;
 
+import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.ExecutorService;
@@ -71,7 +72,7 @@ public class TCPServer {
         parent.setRoomInfoForBroadCast(room);
     }
 
-    public Room stop() {
+    public Room stop() throws IOException {
 //        try {
 //            // send shutdown datapack to ever online users
 //            // and stop the dSocket.
@@ -86,8 +87,11 @@ public class TCPServer {
 
         Log.d(TAG, "stop: TCPServer 关闭");
         Room room = this.selfRoom;
+
         this.isRunning = false;
         this.selfRoom = null;
+        serverSocket.close();
+        serverSocket = null;
         return room;
     }
 }
