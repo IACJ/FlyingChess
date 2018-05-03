@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.scut.flyingchess.activity.lanGame.LanHallActivity;
 import com.scut.flyingchess.activity.localGame.LocalRoomActivity;
 import com.scut.flyingchess.Global;
+import com.scut.flyingchess.activity.wanGame.WanLoginActivity;
 import com.scut.flyingchess.manager.DataManager;
 import com.scut.flyingchess.dataPack.DataPack;
 import com.scut.flyingchess.R;
@@ -202,7 +203,7 @@ public class ChooseModeActivity extends BaseActivity implements Target {
         if (dataPack.getCommand() == DataPack.CONNECTED) {
             if (dataPack.isSuccessful()) {
                 Global.dataManager.setGameMode(DataManager.GM_WLAN);
-                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                Intent intent = new Intent(getApplicationContext(), WanLoginActivity.class);
                 startActivity(intent);
 
             } else {

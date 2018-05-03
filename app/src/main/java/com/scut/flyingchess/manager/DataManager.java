@@ -49,7 +49,7 @@ public class DataManager {//数据存储类
                 data = new Data();
                 data.effectVolume = 255;
                 data.musicVolume = 255;
-                data.ip = "115.159.183.72";
+                data.ip = "172.20.10.3";
                 data.myName = "me";
                 data.password = "x";
                 data.score = 0;

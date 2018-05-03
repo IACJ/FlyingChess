@@ -33,6 +33,7 @@ public class SocketManager  {
     private SocketWriter sw;
     private SocketReader sr;
     private boolean connected = false;
+    private static final String serverIp = "172.20.10.3";
 
     HashMap<Integer, Target> targets= new HashMap<>();
 
@@ -91,7 +92,7 @@ public class SocketManager  {
 //                    sslContext.init(null, trustManagerFactory.getTrustManagers(), null);
 //                    sock = (SSLSocket) sslContext.getSocketFactory().createSocket(Global.dataManager.data.ip, 6666);
                     sock = new Socket();
-                    sock.connect( new InetSocketAddress(Global.dataManager.data.ip,6666),1500);
+                    sock.connect( new InetSocketAddress(serverIp,6666),1500);
 
                     sock.setSoTimeout(1500);
                     sock.setTcpNoDelay(true);

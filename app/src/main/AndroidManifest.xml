@@ -99,6 +99,18 @@
             android:name="com.scut.flyingchess.activity.RecordsActivity"
             android:screenOrientation="landscape"
             android:theme="@style/Theme.AppCompat.Light.Dialog.Alert" />
+        <activity
+            android:name=".activity.wanGame.WanLoginActivity"
+            android:screenOrientation="landscape" />
+        <activity android:name=".activity.wanGame.WanGamingActivity"
+            android:screenOrientation="landscape"/>
+        <activity android:name=".activity.wanGame.WanHallActivity"
+            android:screenOrientation="landscape"/>
+        <activity android:name=".activity.wanGame.WanPauseActivity"
+            android:theme="@style/Theme.AppCompat.Light.Dialog.Alert"
+            android:screenOrientation="landscape"/>
+        <activity android:name=".activity.wanGame.WanRoomActivity"
+            android:screenOrientation="landscape"></activity>
     </application>
 
 </manifest>

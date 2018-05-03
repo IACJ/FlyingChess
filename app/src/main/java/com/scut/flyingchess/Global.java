@@ -20,6 +20,7 @@ import com.scut.flyingchess.manager.ReplayGameManager;
 import com.scut.flyingchess.manager.ReplayManager;
 import com.scut.flyingchess.manager.SocketManager;
 import com.scut.flyingchess.manager.SoundManager;
+import com.scut.flyingchess.manager.WanGameManager;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -34,6 +35,7 @@ public class Global {
     public static ReplayGameManager replayGameManager;
     public static LocalGameManager localGameManager;
     public static LanGameManager lanGameManager;
+    public static WanGameManager wanGameManager;
     public static GameManager gameManager;
     public static DataManager dataManager;
     public static ChessBoard chessBoard;
