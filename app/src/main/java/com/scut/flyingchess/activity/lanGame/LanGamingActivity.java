@@ -254,7 +254,6 @@ public class LanGamingActivity extends BaseActivity {
                     break;
                 }
                 case 2: {//骰子
-
                     int currentDice = msg.getData().getInt("dice");
                     message.setText("骰子数是:" + currentDice);
                     Global.soundManager.playSound(currentDice+100);
@@ -269,8 +268,8 @@ public class LanGamingActivity extends BaseActivity {
                     int color = msg.getData().getInt("color");
                     int whichPlane = msg.getData().getInt("whichPlane");
                     parent.animMoveTo(parent.plane[color][whichPlane], ChessBoard.mapStart[color][whichPlane][0], ChessBoard.mapStart[color][whichPlane][1]);
+                    break;
                 }
-                break;
                 case 5:  {//finished
 
                     Intent intent2 = new Intent(parent.getApplicationContext(), GameEndActivity.class);

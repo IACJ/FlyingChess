@@ -55,7 +55,7 @@ public class ChooseModeActivity extends BaseActivity implements Target {
         setContentView(R.layout.activity_choose_mode);
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);//Activity切换动画
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        Global.soundManager.playMusic(SoundManager.BACKGROUND);
+
         Global.activityManager.add(this);
         // 查找view
         btnLocal = (Button) findViewById(R.id.btn_local);
@@ -179,7 +179,7 @@ public class ChooseModeActivity extends BaseActivity implements Target {
     @Override
     public void onStart() {
         super.onStart();
-        Global.soundManager.resumeMusic(SoundManager.BACKGROUND);
+        Global.soundManager.playMusic(SoundManager.BACKGROUND);
     }
 
     @Override

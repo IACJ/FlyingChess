@@ -49,6 +49,8 @@ public class ReplayPauseActivity extends BaseActivity {
         exit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Global.replayManager.stopReplay();
+                Global.replayGameManager.gameOver();
                 startActivity(new Intent(getApplicationContext(), ChooseModeActivity.class));
             }
         });

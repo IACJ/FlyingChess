@@ -161,18 +161,14 @@ public class WanGameManager implements Target {
     }
 
     private void diceAnimate(int dice) {
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 6; i++) {
             Message msg = new Message();
             Bundle b = new Bundle();
             b.putInt("dice", Global.chessBoard.getDice().roll());
             msg.setData(b);
-            msg.what = 2;
+            msg.what = 7;
             board.handler.sendMessage(msg);
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            Global.delay(150);
         }
         Message msg = new Message();
         Bundle b = new Bundle();
@@ -180,6 +176,7 @@ public class WanGameManager implements Target {
         msg.setData(b);
         msg.what = 2;
         board.handler.sendMessage(msg);
+        Global.delay(600);
     }
 
     private void planeAnimate(int color, int pos) {

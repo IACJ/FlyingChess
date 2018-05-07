@@ -54,6 +54,10 @@
         <activity
             android:name="com.scut.flyingchess.activity.replay.ReplayGameActivity"
             android:screenOrientation="landscape" />
+        <activity
+            android:name="com.scut.flyingchess.activity.replay.ReplayPauseActivity"
+            android:screenOrientation="landscape"
+            android:theme="@style/Theme.AppCompat.Light.Dialog.Alert"/>
 
         <activity
             android:name="com.scut.flyingchess.activity.lanGame.LanHallActivity"

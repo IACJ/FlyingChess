@@ -268,8 +268,8 @@ public class WanGamingActivity extends BaseActivity {
                     int color = msg.getData().getInt("color");
                     int whichPlane = msg.getData().getInt("whichPlane");
                     parent.animMoveTo(parent.plane[color][whichPlane], ChessBoard.mapStart[color][whichPlane][0], ChessBoard.mapStart[color][whichPlane][1]);
+                    break;
                 }
-                break;
                 case 5: {//finished
 
                     if (Global.replayManager.isReplay == false) {
@@ -320,15 +320,32 @@ public class WanGamingActivity extends BaseActivity {
                     }
                     break;
                 }
-                case 6://turn to
-                {
-                    Log.d("TAG"," "+msg.getData().getInt("color"));
+                case 6: {//turn to
                     for (int i = 0; i < 4; i++) {
                         parent.xt[i].setText(" ");
                     }
                     parent.xt[msg.getData().getInt("color")].setText(">");
+                    switch(msg.getData().getInt("color")){
+                        case 0:
+                            message.setText("请红方掷骰子");
+                            break;
+                        case 1:
+                            message.setText("请绿方掷骰子");
+                            break;
+                        case 2:
+                            message.setText("请蓝方掷骰子");
+                            break;
+                        case 3:
+                            message.setText("请黄方掷骰子" );
+                            break;
+                    }
+                    break;
                 }
-                break;
+                case 7: { //旋转的骰子
+                    message.setText("掷骰子中……");
+                    parent.throwDiceButton.setBackground(Global.d[msg.getData().getInt("dice") - 1]);
+                    break;
+                }
                 default:
                     super.handleMessage(msg);
             }
