@@ -222,22 +222,20 @@ public class LanGamingActivity extends BaseActivity {
         plane.animate().translationY(y * dx);
     }
 
-    class MyHandler extends Handler {
+    private class MyHandler extends Handler {
         LanGamingActivity parent;
 
-        public MyHandler(LanGamingActivity parent) {
+        MyHandler(LanGamingActivity parent) {
             this.parent = parent;
         }
 
         @Override
         public void handleMessage(Message msg) {//事件回调
             switch (msg.what) {
-                case 1://飞机
-                {
+                case 1:{//飞机
                     int color = msg.getData().getInt("color");
                     int whichPlane = msg.getData().getInt("whichPlane");
                     int pos = msg.getData().getInt("pos");
-
                     switch(color){
                         case 0:
                             message.setText("红色飞机移动中" );
@@ -253,8 +251,8 @@ public class LanGamingActivity extends BaseActivity {
                             break;
                     }
                     parent.animMoveTo(parent.plane[color][whichPlane], Global.chessBoard.map[color][pos][0], Global.chessBoard.map[color][pos][1]);
+                    break;
                 }
-                break;
                 case 2: {//骰子
 
                     int currentDice = msg.getData().getInt("dice");
@@ -270,7 +268,7 @@ public class LanGamingActivity extends BaseActivity {
                 case 4:  {// crash
                     int color = msg.getData().getInt("color");
                     int whichPlane = msg.getData().getInt("whichPlane");
-                    parent.animMoveTo(parent.plane[color][whichPlane], Global.chessBoard.mapStart[color][whichPlane][0], Global.chessBoard.mapStart[color][whichPlane][1]);
+                    parent.animMoveTo(parent.plane[color][whichPlane], ChessBoard.mapStart[color][whichPlane][0], ChessBoard.mapStart[color][whichPlane][1]);
                 }
                 break;
                 case 5:  {//finished
