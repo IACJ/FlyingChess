@@ -254,6 +254,7 @@ public class WanGamingActivity extends BaseActivity {
                     if (Global.replayManager.isReplay == false) {
                         Intent intent = new Intent(parent.getApplicationContext(), WanRoomActivity.class);
                         ArrayList<String> msgs = new ArrayList<>();
+                        ArrayList<String> msgs2 = new ArrayList<>();
 
                         for (String key : Global.playersData.keySet()) {//更新玩家的分数
                             if (Global.playersData.get(key).offline == false) {
@@ -270,23 +271,29 @@ public class WanGamingActivity extends BaseActivity {
                         Global.dataManager.setOnlineScore(Global.playersData.get(Global.dataManager.getMyId()).score);
                         msgs.add(Global.playersData.get(Global.dataManager.getHostId()).id);
                         msgs.add(Global.playersData.get(Global.dataManager.getHostId()).name);
-                        msgs.add(Global.playersData.get(Global.dataManager.getHostId()).score);
                         msgs.add("-1");
+                        msgs2.add(Global.playersData.get(Global.dataManager.getHostId()).id);
+                        msgs2.add(Global.playersData.get(Global.dataManager.getHostId()).name);
+                        msgs2.add(Global.playersData.get(Global.dataManager.getHostId()).score);
+                        msgs2.add("-1");
                         for (String key : Global.playersData.keySet()) {
                             Global.playersData.get(key).color = -1;
                             if (Global.dataManager.getHostId().compareTo(Global.playersData.get(key).id) != 0 && Integer.valueOf(Global.playersData.get(key).id) >= 0 && Global.playersData.get(key).offline == false) {
                                 msgs.add(Global.playersData.get(key).id);
                                 msgs.add(Global.playersData.get(key).name);
-                                msgs.add(Global.playersData.get(key).score);
+                                //msgs.add(Global.playersData.get(key).score);
                                 msgs.add("-1");
+                                msgs2.add(Global.playersData.get(Global.dataManager.getHostId()).id);
+                                msgs2.add(Global.playersData.get(Global.dataManager.getHostId()).name);
+                                msgs2.add(Global.playersData.get(Global.dataManager.getHostId()).score);
+                                msgs2.add("-1");
                             }
                         }
-
 
                         intent.putStringArrayListExtra("msgs", msgs);
                         parent.startActivity(intent);
                         Intent intent2 = new Intent(parent.getApplicationContext(), GameEndActivity.class);
-                        intent2.putStringArrayListExtra("msgs", msgs);
+                        intent2.putStringArrayListExtra("msgs", msgs2);
                         parent.startActivity(intent2);
                         Global.dataManager.giveUp(false);
                         Global.wanGameManager.gameOver();

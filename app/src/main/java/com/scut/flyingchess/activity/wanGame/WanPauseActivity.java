@@ -61,9 +61,7 @@ public class WanPauseActivity extends BaseActivity {
                 }
                 Global.wanGameManager.gameOver();
                 Global.replayManager.stopReplay();
-                    startActivity(new Intent(getApplicationContext(), WanHallActivity.class));
-
-
+                startActivity(new Intent(getApplicationContext(), WanHallActivity.class));
                 Global.dataManager.giveUp(false);
             }
         });

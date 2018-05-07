@@ -1,6 +1,7 @@
 package com.scut.flyingchess.entity;
 
 import com.scut.flyingchess.Global;
+import com.scut.flyingchess.dataPack.DataPack;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -91,6 +92,18 @@ public class Role {
         if (Global.dataManager.getMyId().compareTo(id) == 0) {//ME
             if (canRoll && !Global.dataManager.isGiveUp()) {
                 this.dice = Global.chessBoard.getDice().roll();
+                isDiceValid = true;
+            }
+        } else {
+            this.dice = dice;
+            waitForDice = false;
+        }
+    }
+
+    public void setDiceValid2(int dice) {
+        if (Global.dataManager.getMyId().compareTo(id) == 0) {//ME
+            if (canRoll && !Global.dataManager.isGiveUp()) {
+                this.dice = dice;
                 isDiceValid = true;
             }
         } else {
