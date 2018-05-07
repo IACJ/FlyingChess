@@ -205,7 +205,7 @@ public class LocalRoomActivity extends BaseActivity {
             site[color].setText("AI");
             siteState[color] = 0;
             addRobotButton[color].setText("-");
-            Global.playersData.put(String.format("%d", -color - 1), new Role(String.format("%d", -color - 1), "AI", "0", color, Role.ROBOT, false));
+            Global.playersData.put(String.format("%d", -color - 1), new Role(String.format("%d", -color - 1), "AI", "0", color, Role.AI, false));
         } else if (siteState[color] == -0) {
             site[color].setText("JOIN");
             siteState[color] = -1;

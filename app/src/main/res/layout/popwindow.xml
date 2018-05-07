@@ -1,28 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/pop_window"
-    android:layout_width="700px"
-    android:layout_height="300px"
+    android:layout_width="450dp"
+    android:layout_height="250dp"
     android:background="@drawable/popup_radius"
     android:orientation="vertical"
     android:weightSum="1"
+
     >
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#52B5F3"
-        android:text="请输入你的昵称"
+        android:background="#50A0F0"
+        android:text="输入昵称"
         android:textAlignment="center"
-        android:textColor="#FAFAF6" />
+        android:textColor="#FAFAF6"
+        />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="请输入你的昵称:"
+        android:textSize="25sp"
+        android:layout_margin="10dp"
+        android:textAlignment="center"
+        />
 
     <EditText
+        android:background="@drawable/textview_border"
         android:id="@+id/userName"
-        android:layout_width="348dp"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:singleLine="true"
+        android:maxLines="1"
         android:layout_weight="1.04"
         android:textAlignment="center"
-        android:textColor="#52B5F3"/>
+        android:textColor="#52B5F3"
+        android:layout_margin="10dp"/>
 
     <Button
         android:id="@+id/confirmName"

@@ -12,13 +12,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.scut.flyingchess.R;
-import com.scut.flyingchess.activity.GameInfoActivity;
 import com.scut.flyingchess.dataPack.DataPack;
 import com.scut.flyingchess.dataPack.Target;
-import com.scut.flyingchess.entity.ChessBoard;
 import com.scut.flyingchess.Global;
 import com.scut.flyingchess.entity.Role;
-import com.scut.flyingchess.manager.DataManager;
 import com.scut.flyingchess.manager.SoundManager;
 import com.scut.flyingchess.activity.BaseActivity;
 
@@ -168,7 +165,7 @@ public class LanRoomActivity extends BaseActivity implements Target {
         Global.dataManager.setHostId(players.get(0));
         Global.playersData.put(players.get(0), new Role(players.get(0), players.get(1), players.get(2), Integer.valueOf(players.get(3)), Role.PLAYER, true));
         for (int i = 4; i < players.size(); ) {
-            int type = (Integer.valueOf(players.get(i)) < 0) ? Role.ROBOT : Role.PLAYER;
+            int type = (Integer.valueOf(players.get(i)) < 0) ? Role.AI : Role.PLAYER;
             Global.playersData.put(players.get(i), new Role(players.get(i), players.get(i + 1), players.get(i + 2), Integer.valueOf(players.get(i + 3)), type, false));
             i += 4;
         }
@@ -295,7 +292,7 @@ public class LanRoomActivity extends BaseActivity implements Target {
                                 addRobotButton[np].setText("-");
                             }
                         });
-                        Global.playersData.put(dataPack.getMessage(0), new Role(dataPack.getMessage(0), "ROBOT", "0", np, Role.ROBOT, false));
+                        Global.playersData.put(dataPack.getMessage(0), new Role(dataPack.getMessage(0), "AI", "0", np, Role.AI, false));
                     } else {
                         siteState[-id - 1] = -1;
                         site[0].post(new Runnable() {

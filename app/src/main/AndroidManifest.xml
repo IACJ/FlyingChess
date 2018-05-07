@@ -57,7 +57,8 @@
 
         <activity
             android:name="com.scut.flyingchess.activity.lanGame.LanHallActivity"
-            android:screenOrientation="landscape" />
+            android:screenOrientation="landscape"
+            android:launchMode="singleTask" />
         <activity
             android:name="com.scut.flyingchess.activity.lanGame.LanRoomActivity"
             android:screenOrientation="landscape" />
@@ -105,7 +106,8 @@
         <activity android:name=".activity.wanGame.WanGamingActivity"
             android:screenOrientation="landscape"/>
         <activity android:name=".activity.wanGame.WanHallActivity"
-            android:screenOrientation="landscape"/>
+            android:screenOrientation="landscape"
+            android:launchMode="singleTask"/>
         <activity android:name=".activity.wanGame.WanPauseActivity"
             android:theme="@style/Theme.AppCompat.Light.Dialog.Alert"
             android:screenOrientation="landscape"/>

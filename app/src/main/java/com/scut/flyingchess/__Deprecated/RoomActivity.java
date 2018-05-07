@@ -188,7 +188,7 @@ public class RoomActivity extends BaseActivity implements Target {
         Global.dataManager.setHostId(players.get(0));
         Global.playersData.put(players.get(0), new Role(players.get(0), players.get(1), players.get(2), Integer.valueOf(players.get(3)), Role.PLAYER, true));
         for (int i = 4; i < players.size(); ) {
-            int type = (Integer.valueOf(players.get(i)) < 0) ? Role.ROBOT : Role.PLAYER;
+            int type = (Integer.valueOf(players.get(i)) < 0) ? Role.AI : Role.PLAYER;
             Global.playersData.put(players.get(i), new Role(players.get(i), players.get(i + 1), players.get(i + 2), Integer.valueOf(players.get(i + 3)), type, false));
             i += 4;
         }
@@ -198,7 +198,7 @@ public class RoomActivity extends BaseActivity implements Target {
             int color = Integer.valueOf(players.get(i + 3));
             if (Integer.valueOf(players.get(i)) < 0) {//机器人
                 siteState[color] = 0;
-                site[color].setText("ROBOT");
+                site[color].setText("AI");
                 addRobotButton[color].setText("-");
             } else {//玩家
                 if (color == -1) {
@@ -304,11 +304,11 @@ public class RoomActivity extends BaseActivity implements Target {
                         site[0].post(new Runnable() {
                             @Override
                             public void run() {
-                                site[np].setText("ROBOT");
+                                site[np].setText("AI");
                                 addRobotButton[np].setText("-");
                             }
                         });
-                        Global.playersData.put(dataPack.getMessage(0), new Role(dataPack.getMessage(0), "ROBOT", "0", np, Role.ROBOT, false));
+                        Global.playersData.put(dataPack.getMessage(0), new Role(dataPack.getMessage(0), "AI", "0", np, Role.AI, false));
                     } else {
                         siteState[-id - 1] = -1;
                         site[0].post(new Runnable() {
@@ -419,7 +419,7 @@ public class RoomActivity extends BaseActivity implements Target {
                         site[color].setText("AI");
                         siteState[color] = 0;
                         addRobotButton[color].setText("-");
-                        Global.playersData.put(String.format("%d", -color - 1), new Role(String.format("%d", -color - 1), "AI", "0", color, Role.ROBOT, false));
+                        Global.playersData.put(String.format("%d", -color - 1), new Role(String.format("%d", -color - 1), "AI", "0", color, Role.AI, false));
                     } else {
                         site[color].setText("JOIN");
                         siteState[color] = -1;

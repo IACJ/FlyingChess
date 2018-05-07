@@ -22,6 +22,7 @@ public class DataManager {//数据存储类
     private int gameMode;//游戏模式
     private String lastWinner;
     private boolean giveUp;
+    private String LanName;
 
     Data data;
 
@@ -168,6 +169,14 @@ public class DataManager {//数据存储类
 
     public void setHostId(String hostId) {
         this.hostId = hostId;
+    }
+
+    public String getLanName() {
+        return LanName;
+    }
+
+    public void setLanName(String lanName) {
+        LanName = lanName;
     }
 
     //////////////////////////////////

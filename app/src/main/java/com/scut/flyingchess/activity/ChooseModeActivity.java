@@ -91,14 +91,15 @@ public class ChooseModeActivity extends BaseActivity implements Target {
             public void onClick(View v) {
                 Global.soundManager.playSound(SoundManager.BUTTON);
                 hasInputName = pref.getBoolean("hasInputName",false);
-                if(!hasInputName){
+//                if(!hasInputName){
+                if (true) {
                     //设置弹窗
                     popupWindow = LayoutInflater.from(getBaseContext()).inflate(R.layout.popwindow,null);
-                    PopupWindow popWindow = new PopupWindow(popupWindow,700,400);
+                    PopupWindow popWindow = new PopupWindow(popupWindow,900,500);
                     popWindow.setFocusable(true);
                     popWindow.setOutsideTouchable(false);
                     //设置弹窗位于lan button上方
-                    popWindow.showAsDropDown(btnLan,(btnLan.getWidth() - 700)/2,-btnLan.getHeight()-400);
+                    popWindow.showAsDropDown(btnLan,(btnLan.getWidth() - 900)/2,-btnLan.getHeight()-500);
                     confirmName = (Button) popupWindow.findViewById(R.id.confirmName) ;
                     userName = (EditText) popupWindow.findViewById(R.id.userName);
                     confirmName.setOnClickListener(new View.OnClickListener(){
@@ -106,6 +107,7 @@ public class ChooseModeActivity extends BaseActivity implements Target {
                         public void onClick(View v){
                             String text = String.valueOf(userName.getText());
                             Log.v("ssss",String.valueOf(text.length()));
+                            Global.dataManager.setLanName(text);
                             if(text.length() > 10){
                                 Toast.makeText(ChooseModeActivity.this,"请输入10个以内的昵称",Toast.LENGTH_SHORT).show();
                             }else{

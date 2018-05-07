@@ -9,7 +9,7 @@ import java.util.Random;
  * Created by karthur on 2016/5/10.
  */
 public class Role {
-    public final static int ROBOT = 0;
+    public final static int AI = 0;
     public final static int PLAYER = 1;
     public final static int ME = 2;
 
@@ -17,7 +17,7 @@ public class Role {
     public String name;
     public String score;
     public int color;
-    public int type;//0 ROBOT 1 PLAYER 2 ME
+    public int type;//0 AI 1 PLAYER 2 ME
     public boolean isHost;
     public boolean offline;
 
@@ -151,7 +151,7 @@ public class Role {
 
                 break;
             }
-            case ROBOT: {
+            case AI: {
                 if (Global.dataManager.getMyId().compareTo(Global.dataManager.getHostId()) == 0) {//我是房主
                     dice = AIDice();
                 } else {
@@ -199,7 +199,7 @@ public class Role {
 
                 break;
             }
-            case ROBOT: {
+            case AI: {
                 if (Global.dataManager.getMyId().compareTo(Global.dataManager.getHostId()) == 0) {//我是房主
                     whichPlane = AIChoosePlane();
                 } else {
