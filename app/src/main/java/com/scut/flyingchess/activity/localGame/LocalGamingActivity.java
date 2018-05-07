@@ -335,6 +335,11 @@ public class LocalGamingActivity extends BaseActivity {
                     }
                     break;
                 }
+                case 7: { //旋转的骰子
+                    message.setText("掷骰子中……");
+                    parent.throwDiceButton.setBackground(Global.d[msg.getData().getInt("dice") - 1]);
+                    break;
+                }
 
                 default:
                     super.handleMessage(msg);

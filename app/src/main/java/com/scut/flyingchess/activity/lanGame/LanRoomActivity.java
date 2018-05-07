@@ -75,7 +75,6 @@ public class LanRoomActivity extends BaseActivity implements Target {
                         if (!Global.dataManager.getHostId().equals(Global.dataManager.getMyId())) {
                             Toast.makeText(getApplicationContext(), "请等待房主开始游戏~", Toast.LENGTH_SHORT).show();
                         }else{
-                            Global.replayManager.startRecord();
                             Global.socketManager.send(DataPack.R_GAME_START, Global.dataManager.getMyId(), Global.dataManager.getRoomId());
                         }
                 }
@@ -355,6 +354,7 @@ public class LanRoomActivity extends BaseActivity implements Target {
                 });
             }
         } else if (dataPack.getCommand() == DataPack.E_GAME_START) {
+            Global.replayManager.startRecord();
             startActivity( new Intent(LanRoomActivity.this, LanGamingActivity.class));
         }
     }

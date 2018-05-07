@@ -47,7 +47,7 @@ public class ReplayGameActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         //ui setting
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_gaming);
+        setContentView(R.layout.activity_replay_game);
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);//Activity切换动画
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         Global.activityManager.add(this);
@@ -91,6 +91,10 @@ public class ReplayGameActivity extends BaseActivity {
         xscore[1] = (TextView) findViewById(R.id.gscore);
         xscore[2] = (TextView) findViewById(R.id.bscore);
         xscore[3] = (TextView) findViewById(R.id.yscore);
+
+        normalReplay = (Button) findViewById(R.id.normal_speed);
+        speed15  = (Button) findViewById(R.id.Speed_1_5);
+        speed20  = (Button) findViewById(R.id.Speed_2_0);
 
         handler = new ReplayGameHandler(this);
 
@@ -270,8 +274,13 @@ public class ReplayGameActivity extends BaseActivity {
                         parent.xt[i].setText(" ");
                     }
                     parent.xt[msg.getData().getInt("color")].setText(">");
+                    break;
                 }
-                break;
+                case 7: { //旋转的骰子
+                    message.setText("掷骰子中……");
+                    parent.throwDiceButton.setBackground(Global.d[msg.getData().getInt("dice") - 1]);
+                    break;
+                }
                 default:
                     super.handleMessage(msg);
             }
