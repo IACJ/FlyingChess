@@ -36,7 +36,7 @@ import java.util.TimerTask;
  */
 public class ChooseModeActivity extends BaseActivity implements Target {
     Button btnLocal, btnLan, btnWan, btnRecord;
-    boolean exit;
+    boolean exit= false;
     Timer closeTimer;
     ImageView bk2;
     ImageView waitImage;
@@ -44,7 +44,6 @@ public class ChooseModeActivity extends BaseActivity implements Target {
 
     Button confirmName;//确认昵称按钮
     EditText userName; //用户输入框
-    Boolean hasInputName = false;
     SharedPreferences pref;
     SharedPreferences.Editor editor;
     View popupWindow;
@@ -62,7 +61,6 @@ public class ChooseModeActivity extends BaseActivity implements Target {
         btnLocal = (Button) findViewById(R.id.btn_local);
         btnLan = (Button) findViewById(R.id.btn_lan);
         btnWan = (Button) findViewById(R.id.btn_wan);
-        exit = false;
         closeTimer = new Timer();
         bk2 = (ImageView) findViewById(R.id.backgroud2);
         waitImage = (ImageView) findViewById(R.id.wait);
@@ -71,7 +69,6 @@ public class ChooseModeActivity extends BaseActivity implements Target {
 
         pref = getSharedPreferences("data",MODE_PRIVATE);
         editor = pref.edit();
-        hasInputName = pref.getBoolean("hasInputName",false);
 
         // 按钮事件
         btnLocal.setOnClickListener(new View.OnClickListener(){
@@ -86,43 +83,33 @@ public class ChooseModeActivity extends BaseActivity implements Target {
             @Override
             public void onClick(View v) {
                 Global.soundManager.playSound(SoundManager.BUTTON);
-                hasInputName = pref.getBoolean("hasInputName",false);
-//                if(!hasInputName){
-                if (true) {
-                    //设置弹窗
-                    popupWindow = LayoutInflater.from(getBaseContext()).inflate(R.layout.popwindow,null);
-                    PopupWindow popWindow = new PopupWindow(popupWindow,900,500);
-                    popWindow.setFocusable(true);
-                    popWindow.setOutsideTouchable(false);
-                    //设置弹窗位于lan button上方
-                    popWindow.showAsDropDown(btnLan,(btnLan.getWidth() - 900)/2,-btnLan.getHeight()-500);
-                    confirmName = (Button) popupWindow.findViewById(R.id.confirmName) ;
-                    userName = (EditText) popupWindow.findViewById(R.id.userName);
-                    confirmName.setOnClickListener(new View.OnClickListener(){
-                        @Override
-                        public void onClick(View v){
-                            String text = String.valueOf(userName.getText());
-                            Log.v("ssss",String.valueOf(text.length()));
-                            Global.dataManager.setLanName(text);
-                            if(text.length() > 10){
-                                Toast.makeText(ChooseModeActivity.this,"请输入10个以内的昵称",Toast.LENGTH_SHORT).show();
+                //设置弹窗
+                popupWindow = LayoutInflater.from(getBaseContext()).inflate(R.layout.popwindow,null);
+                PopupWindow popWindow = new PopupWindow(popupWindow,900,500);
+                popWindow.setFocusable(true);
+                popWindow.setOutsideTouchable(false);
+                //设置弹窗位于lan button上方
+                popWindow.showAsDropDown(btnLan,(btnLan.getWidth() - 900)/2,-btnLan.getHeight()-500);
+                confirmName = (Button) popupWindow.findViewById(R.id.confirmName) ;
+                userName = (EditText) popupWindow.findViewById(R.id.userName);
+                confirmName.setOnClickListener(new View.OnClickListener(){
+                    @Override
+                    public void onClick(View v){
+                        String text = String.valueOf(userName.getText());
+
+                        if(text.length() > 10){
+                            Toast.makeText(ChooseModeActivity.this,"请输入10个以内的昵称",Toast.LENGTH_SHORT).show();
+                        }else{
+                            if(text.length() == 0){
+                                Toast.makeText(ChooseModeActivity.this,"请输入您的昵称",Toast.LENGTH_SHORT).show();
                             }else{
-                                if(text.length() == 0){
-                                    Toast.makeText(ChooseModeActivity.this,"请输入您的昵称",Toast.LENGTH_SHORT).show();
-                                }else{
-                                    //保存昵称
-                                    editor.putBoolean("hasInputName",true);
-                                    editor.commit();
-                                    startActivity( new Intent(getApplicationContext(), LanHallActivity.class));
-                                    ChooseModeActivity.this.popupWindow.setVisibility(View.INVISIBLE);
-                                }
+                                Global.dataManager.setLanName(text);
+                                startActivity( new Intent(getApplicationContext(), LanHallActivity.class));
+                                ChooseModeActivity.this.popupWindow.setVisibility(View.INVISIBLE);
                             }
                         }
-                    });
-                }
-                else{
-                    startActivity( new Intent(getApplicationContext(), LanHallActivity.class));
-                }
+                    }
+                });
             }
         });
 
@@ -158,7 +145,6 @@ public class ChooseModeActivity extends BaseActivity implements Target {
 
         //注册响应远程事件
         Global.socketManager.registerActivity(DataPack.CONNECTED, this);
-        //        Global.updateManager.checkUpdate();
     }
     @Override
     public void processDataPack(DataPack dataPack) {
@@ -167,7 +153,6 @@ public class ChooseModeActivity extends BaseActivity implements Target {
                 Global.dataManager.setGameMode(DataManager.GM_WLAN);
                 Intent intent = new Intent(getApplicationContext(), WanLoginActivity.class);
                 startActivity(intent);
-
             } else {
                 btnWan.post(new Runnable() {
                     @Override

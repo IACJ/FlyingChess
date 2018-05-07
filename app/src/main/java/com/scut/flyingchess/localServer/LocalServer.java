@@ -16,8 +16,8 @@ import java.util.UUID;
  * Created by BingF on 2016/5/15.
  */
 public class LocalServer {
-    private UDPServer udpServer = null;
-    private TCPServer tcpServer = null;
+    private UDPServer udpServer;
+    private TCPServer tcpServer;
 
     private Target target;
 

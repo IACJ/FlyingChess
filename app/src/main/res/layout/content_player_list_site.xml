@@ -41,10 +41,11 @@
 
                 <Button
                     android:id="@+id/R"
+                    android:text="JOIN"
+                    android:textAllCaps="false"
                     android:background="@drawable/button_red_join"
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
-                    android:text="join"
                     android:layout_weight="1"
                     android:textSize="30sp"
                     android:textColor="#b13535" />
@@ -71,10 +72,11 @@
 
                 <Button
                     android:id="@+id/G"
+                    android:text="JOIN"
+                    android:textAllCaps="false"
                     android:background="@drawable/button_green_join"
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
-                    android:text="join"
                     android:textSize="30sp"
                     android:layout_weight="1"
                     android:textColor="#0f804f" />
@@ -101,11 +103,11 @@
 
                 <Button
                     android:id="@+id/B"
+                    android:text="JOIN"
+                    android:textAllCaps="false"
                     android:background="@drawable/button_blue_join"
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
-                    android:text="join"
-
                     android:textSize="30sp"
                     android:layout_weight="1"
                     android:textColor="#253e84" />
@@ -133,10 +135,11 @@
 
                 <Button
                     android:id="@+id/Y"
+                    android:text="JOIN"
+                    android:textAllCaps="false"
                     android:background="@drawable/button_yellow_join"
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
-                    android:text="join"
                     android:textSize="30sp"
                     android:layout_weight="1"
                     android:textColor="#9c9332" />
