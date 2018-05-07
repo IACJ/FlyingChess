@@ -6,7 +6,7 @@ android {
     buildToolsVersion '25.0.2'
 
     defaultConfig {
-        applicationId "com.flashminds.flyingchess"
+        applicationId "com.scut.flyingchess"
         minSdkVersion 21
         targetSdkVersion 23
         versionCode 4

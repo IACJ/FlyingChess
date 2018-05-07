@@ -20,7 +20,6 @@ import android.widget.Toast;
 import com.scut.flyingchess.R;
 import com.scut.flyingchess.activity.ChooseModeActivity;
 import com.scut.flyingchess.activity.GameEndActivity;
-import com.scut.flyingchess.activity.RoomActivity;
 import com.scut.flyingchess.entity.ChessBoard;
 import com.scut.flyingchess.Global;
 import com.scut.flyingchess.manager.LocalGameManager;
@@ -287,7 +286,7 @@ public class LocalGamingActivity extends BaseActivity {
                 }
                 break;
                 case 5:  { //finished
-                    Intent intent = new Intent(parent.getApplicationContext(), RoomActivity.class);
+                    Intent intent = new Intent(parent.getApplicationContext(), LocalRoomActivity.class);
 
                     if (Global.dataManager.getLastWinner().compareTo(Global.dataManager.getMyId()) == 0) {//更新分数
                         Global.dataManager.setScore(Global.dataManager.getScore() + 10);

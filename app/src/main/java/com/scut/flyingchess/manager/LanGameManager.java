@@ -5,8 +5,8 @@ import android.os.Bundle;
 import android.os.Message;
 
 import com.scut.flyingchess.Global;
-import com.scut.flyingchess.activity.GameInfoActivity;
 import com.scut.flyingchess.activity.lanGame.LanGamingActivity;
+import com.scut.flyingchess.activity.lanGame.LanHallActivity;
 import com.scut.flyingchess.dataPack.DataPack;
 import com.scut.flyingchess.dataPack.Target;
 import com.scut.flyingchess.entity.Role;
@@ -331,7 +331,7 @@ public class LanGameManager implements Target {//game process control
                     if (dataPack.getMessage(0).compareTo(Global.dataManager.getHostId()) == 0) {//是房主  退出游戏
                         toast("房主离开了游戏");
                         gameOver();
-                        board.startActivity(new Intent(board.getApplicationContext(), GameInfoActivity.class));
+                        board.startActivity(new Intent(board.getApplicationContext(), LanHallActivity.class));
                         Global.dataManager.giveUp(false);
                     } else {//由电脑托管
                         Global.playersData.get(dataPack.getMessage(0)).offline = true;

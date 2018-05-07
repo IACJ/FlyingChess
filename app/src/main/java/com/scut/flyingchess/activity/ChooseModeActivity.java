@@ -35,13 +35,12 @@ import java.util.TimerTask;
  * 主界面，选择Local、Lan、Wan模式。
  */
 public class ChooseModeActivity extends BaseActivity implements Target {
-    Button btnLocal,btnLan,local, lan, wlan;
+    Button btnLocal, btnLan, btnWan, btnRecord;
     boolean exit;
     Timer closeTimer;
     ImageView bk2;
     ImageView waitImage;
     Button waitBackground;
-    Button records;
 
     Button confirmName;//确认昵称按钮
     EditText userName; //用户输入框
@@ -62,16 +61,13 @@ public class ChooseModeActivity extends BaseActivity implements Target {
         // 查找view
         btnLocal = (Button) findViewById(R.id.btn_local);
         btnLan = (Button) findViewById(R.id.btn_lan);
-        local = (Button) findViewById(R.id.button2);
-        lan = (Button) findViewById(R.id.button3);
-        wlan = (Button) findViewById(R.id.button4);
+        btnWan = (Button) findViewById(R.id.btn_wan);
         exit = false;
         closeTimer = new Timer();
-        exit = false;
         bk2 = (ImageView) findViewById(R.id.backgroud2);
         waitImage = (ImageView) findViewById(R.id.wait);
         waitBackground = (Button) findViewById(R.id.waitbackground);
-        records = (Button) findViewById(R.id.records);
+        btnRecord = (Button) findViewById(R.id.records);
 
         pref = getSharedPreferences("data",MODE_PRIVATE);
         editor = pref.edit();
@@ -130,47 +126,13 @@ public class ChooseModeActivity extends BaseActivity implements Target {
             }
         });
 
-
-        local.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {//choose local game
-                Global.soundManager.playSound(SoundManager.BUTTON);
-                Global.dataManager.setGameMode(DataManager.GM_LOCAL);//set game mode
-
-                Intent intent = new Intent(getApplicationContext(), RoomActivity.class);
-                ArrayList<String> msgs = new ArrayList<>();
-                Global.dataManager.setMyId("0");
-                msgs.add("0");
-                msgs.add("ME");
-                msgs.add(String.valueOf(Global.dataManager.getScore()));
-                msgs.add("-1");
-                intent.putStringArrayListExtra("msgs", msgs);
-                startActivity(intent);//switch wo chess board activity
-                clean();
-            }
-        });
-        lan.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Global.soundManager.playSound(SoundManager.BUTTON);
-
-                Global.dataManager.setGameMode(DataManager.GM_LAN);
-                Global.dataManager.setMyName(new Build().MODEL);
-                Global.localServer.startListen();
-                Intent intent = new Intent(getApplicationContext(), GameInfoActivity.class);
-                startActivity(intent);
-                clean();
-            }
-        });
-        wlan.setOnClickListener(new View.OnClickListener() {
+        btnWan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Global.soundManager.playSound(SoundManager.BUTTON);
                 Global.socketManager.connectToRemoteServer();
-                local.setVisibility(View.INVISIBLE);
-                lan.setVisibility(View.INVISIBLE);
-                wlan.setVisibility(View.INVISIBLE);
-                records.setVisibility(View.INVISIBLE);
+                btnWan.setVisibility(View.INVISIBLE);
+                btnRecord.setVisibility(View.INVISIBLE);
                 waitImage.setVisibility(View.VISIBLE);
                 btnLocal.setVisibility(View.INVISIBLE);
                 btnLan.setVisibility(View.INVISIBLE);
@@ -179,7 +141,7 @@ public class ChooseModeActivity extends BaseActivity implements Target {
                 clean();
             }
         });
-        records.setOnClickListener(new View.OnClickListener() {
+        btnRecord.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getApplicationContext(), RecordsActivity.class));
@@ -192,9 +154,7 @@ public class ChooseModeActivity extends BaseActivity implements Target {
         waitImage.setVisibility(View.INVISIBLE);
         waitBackground.setVisibility(View.INVISIBLE);
         bk2.setImageBitmap(Global.getBitmap(R.raw.cloud));
-        lan.setTypeface(Global.getFont());
-        wlan.setTypeface(Global.getFont());
-        local.setTypeface(Global.getFont());
+        btnWan.setTypeface(Global.getFont());
 
         //注册响应远程事件
         Global.socketManager.registerActivity(DataPack.CONNECTED, this);
@@ -209,22 +169,20 @@ public class ChooseModeActivity extends BaseActivity implements Target {
                 startActivity(intent);
 
             } else {
-                wlan.post(new Runnable() {
+                btnWan.post(new Runnable() {
                     @Override
                     public void run() {
                         Toast.makeText(getApplicationContext(), "连接服务器失败！", Toast.LENGTH_SHORT).show();
                     }
                 });
             }
-            wlan.post(new Runnable() {
+            btnWan.post(new Runnable() {
                 @Override
                 public void run() {
                     btnLocal.setVisibility(View.VISIBLE);
                     btnLan.setVisibility(View.VISIBLE);
-                    local.setVisibility(View.VISIBLE);
-                    lan.setVisibility(View.VISIBLE);
-                    wlan.setVisibility(View.VISIBLE);
-                    records.setVisibility(View.VISIBLE);
+                    btnWan.setVisibility(View.VISIBLE);
+                    btnRecord.setVisibility(View.VISIBLE);
                     waitBackground.setVisibility(View.INVISIBLE);
                     waitImage.setVisibility(View.INVISIBLE);
                 }
@@ -270,6 +228,4 @@ public class ChooseModeActivity extends BaseActivity implements Target {
         }
         return super.dispatchKeyEvent(event);
     }
-
-
 }

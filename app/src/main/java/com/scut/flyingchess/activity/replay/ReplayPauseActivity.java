@@ -8,10 +8,7 @@ import android.widget.Button;
 
 import com.scut.flyingchess.R;
 import com.scut.flyingchess.activity.ChooseModeActivity;
-import com.scut.flyingchess.activity.GameInfoActivity;
-import com.scut.flyingchess.dataPack.DataPack;
 import com.scut.flyingchess.Global;
-import com.scut.flyingchess.manager.DataManager;
 import com.scut.flyingchess.activity.BaseActivity;
 
 public class ReplayPauseActivity extends BaseActivity {
@@ -40,10 +37,10 @@ public class ReplayPauseActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 if (!Global.dataManager.isGiveUp()) {
-                    robot.setText("Cancel auto");
+                    robot.setText("取消托管");
                     Global.dataManager.giveUp(true);
                 } else {
-                    robot.setText("Auto");
+                    robot.setText("托管");
                     Global.dataManager.giveUp(false);
                 }
             }
@@ -52,36 +49,15 @@ public class ReplayPauseActivity extends BaseActivity {
         exit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (Global.dataManager.getGameMode() == DataManager.GM_WLAN) {
-                    Global.socketManager.send(DataPack.R_GAME_EXIT, Global.dataManager.getMyId(), Global.dataManager.getRoomId());
-                }
-                if (Global.replayManager.isReplay == false) {
-                    Global.replayManager.closeRecord();
-                    Global.replayManager.clearRecord();
-                }
-                Global.replayGameManager.gameOver();
-                Global.replayManager.stopReplay();
-                if (Global.dataManager.getGameMode() != DataManager.GM_LOCAL) {
-                    startActivity(new Intent(getApplicationContext(), GameInfoActivity.class));
-                    if (Global.dataManager.getGameMode() == DataManager.GM_LAN) {
-                        Global.localServer.stopHost();
-                    }
-                } else {
-                    startActivity(new Intent(getApplicationContext(), ChooseModeActivity.class));
-                }
-                Global.dataManager.giveUp(false);
+                startActivity(new Intent(getApplicationContext(), ChooseModeActivity.class));
             }
         });
         if (Global.dataManager.isGiveUp()) {
-            robot.setText("Cancel auto");
+            robot.setText("取消托管");
         }
+        robot.setVisibility(View.INVISIBLE);
         resume.setTypeface(Global.getFont());
         robot.setTypeface(Global.getFont());
         exit.setTypeface(Global.getFont());
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
     }
 }

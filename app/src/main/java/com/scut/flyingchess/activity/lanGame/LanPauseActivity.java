@@ -8,9 +8,7 @@ import android.widget.Button;
 
 import com.scut.flyingchess.R;
 import com.scut.flyingchess.activity.ChooseModeActivity;
-import com.scut.flyingchess.activity.GameInfoActivity;
 import com.scut.flyingchess.Global;
-import com.scut.flyingchess.manager.DataManager;
 import com.scut.flyingchess.activity.BaseActivity;
 
 public class LanPauseActivity extends BaseActivity {

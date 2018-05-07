@@ -15,7 +15,6 @@ import android.widget.Toast;
 
 import com.scut.flyingchess.R;
 import com.scut.flyingchess.activity.ChooseModeActivity;
-import com.scut.flyingchess.activity.PauseActivity;
 import com.scut.flyingchess.entity.ChessBoard;
 import com.scut.flyingchess.Global;
 import com.scut.flyingchess.manager.ReplayGameManager;
@@ -98,7 +97,7 @@ public class ReplayGameActivity extends BaseActivity {
         pauseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), PauseActivity.class));
+                startActivity(new Intent(getApplicationContext(), ReplayPauseActivity.class));
             }
         });
 

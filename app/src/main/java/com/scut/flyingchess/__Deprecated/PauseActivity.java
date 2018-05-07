@@ -58,7 +58,7 @@ public class PauseActivity extends BaseActivity {
                     Global.replayManager.closeRecord();
                     Global.replayManager.clearRecord();
                 }
-                Global.gameManager.gameOver();
+//                Global.gameManager.gameOver();
                 Global.replayManager.stopReplay();
                 if (Global.dataManager.getGameMode() != DataManager.GM_LOCAL) {
                     startActivity(new Intent(getApplicationContext(), GameInfoActivity.class));
