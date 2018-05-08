@@ -10,6 +10,7 @@
     android:background="@drawable/mainpage">
 
 
+
     <Button
         android:id="@+id/btn_local"
         android:background="@drawable/button_local"

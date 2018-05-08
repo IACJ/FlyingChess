@@ -3,6 +3,7 @@ package com.scut.flyingchess.manager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
+import android.util.Log;
 
 
 import com.scut.flyingchess.Global;
@@ -63,8 +64,7 @@ public class WanGameManager implements Target {
 
             whichPlane = -1;
 
-
-            if (Global.replayManager.isReplay == true) {
+            if (Global.replayManager.isReplay) {
                 dice = Global.replayManager.getSavedDice();
                 role.setDice(dice);
             } else
@@ -74,18 +74,20 @@ public class WanGameManager implements Target {
 
             Global.replayManager.saveDice(dice);
 
+
             if (!Global.replayManager.isReplay) {
                 if ((role.offline || role.type == Role.AI) && Global.dataManager.getHostId().compareTo(Global.dataManager.getMyId()) == 0 || role.type == Role.ME) {
                     Global.socketManager.send(DataPack.R_GAME_PROCEED_DICE, role.id, Global.dataManager.getRoomId(), dice);
-
                 }
             }
+
+            //Global.replayManager.saveDice(dice);
             Global.soundManager.playSound(SoundManager.DICE);
             diceAnimate(dice);
             Global.delay(200);
             boolean canFly = false;
             if (role.canIMove()) {
-                if (Global.replayManager.isReplay == true) {
+                if (Global.replayManager.isReplay) {
                     whichPlane = Global.replayManager.getSavedWhichPlane();
                     role.setWhichPlane(whichPlane);
                     role.move();
@@ -328,10 +330,11 @@ public class WanGameManager implements Target {
                 finished = true;
                 break;
             case DataPack.E_GAME_PROCEED_DICE:
-                if ((Integer.valueOf(dataPack.getMessage(0)) < 0 || Global.playersData.get(dataPack.getMessage(0)).offline) && Global.dataManager.getMyId().compareTo(Global.dataManager.getHostId()) != 0 || Global.playersData.get(dataPack.getMessage(0)).type == Role.PLAYER) {//机器人且我不是房主  或者 是玩家且没有掉线 或者 是玩家且掉线当我不是房主
+                //if ((Integer.valueOf(dataPack.getMessage(0)) < 0 || Global.playersData.get(dataPack.getMessage(0)).offline) && Global.dataManager.getMyId().compareTo(Global.dataManager.getHostId()) != 0 || Global.playersData.get(dataPack.getMessage(0)).type == Role.PLAYER) {//机器人且我不是房主  或者 是玩家且没有掉线 或者 是玩家且掉线当我不是房主
+                    //dice = Integer.valueOf(dataPack.getMessage(2));
                     Global.playersData.get(dataPack.getMessage(0)).setDiceValid(Integer.valueOf(dataPack.getMessage(2)));
                     //Global.logManager.p("processDataPack:","dice:",dataPack.getMessage(2));
-                }
+                //}
                 break;
             case DataPack.E_GAME_PROCEED_PLANE:
                 if ((Integer.valueOf(dataPack.getMessage(0)) < 0 || Global.playersData.get(dataPack.getMessage(0)).offline) && Global.dataManager.getMyId().compareTo(Global.dataManager.getHostId()) != 0 || Global.playersData.get(dataPack.getMessage(0)).type == Role.PLAYER) {//机器人且我不是房主  或者 是玩家且没有掉线 或者 是玩家且掉线当我不是房主
