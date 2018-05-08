@@ -79,7 +79,6 @@ public class LocalRoomActivity extends BaseActivity {
             public void onClick(View v) {
                 Global.soundManager.playSound(SoundManager.BUTTON);
                 if (idlePlayerListData.size() == 1){
-                    Global.replayManager.startRecord();
                     Intent intent = new Intent(getApplicationContext(), LocalGamingActivity.class);
                     startActivity(intent);
                 } else {

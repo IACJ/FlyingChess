@@ -105,10 +105,6 @@ public class LanHallActivity extends BaseActivity implements Target {
         roomListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (roomUUID.size() == 0){
-                    Toast.makeText(LanHallActivity.this,"请选择可进入的房间",Toast.LENGTH_SHORT).show();
-                    return;
-                }
                 view.setSelected(true);
                 String roomId = roomUUID.get(position);
                 Global.socketManager.connectLanServer(Global.localServer.getRoomIp(roomId));
@@ -121,7 +117,6 @@ public class LanHallActivity extends BaseActivity implements Target {
             public void onClick(View v) {
                 Global.soundManager.playSound(SoundManager.BUTTON);
                 Global.localServer.updateRoomListImmediately();
-
             }
         });
 

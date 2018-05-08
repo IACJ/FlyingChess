@@ -101,7 +101,7 @@ public class WanGameManager implements Target {
                 canFly = true;
                 Global.replayManager.saveWhichPlane(whichPlane);
             } else if (role.type == Role.ME) {
-                toast("sad...I can not move");
+                toast("本回合不能移动~");
 
             }
             if (!Global.replayManager.isReplay ) {

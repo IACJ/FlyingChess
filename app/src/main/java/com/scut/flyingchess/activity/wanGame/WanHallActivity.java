@@ -3,7 +3,6 @@ package com.scut.flyingchess.activity.wanGame;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -30,7 +29,7 @@ import java.util.LinkedList;
 
 public class WanHallActivity extends BaseActivity implements Target {
 
-    Button createButton, joinButton, backButton;
+    Button createButton, btnRefresh, backButton;
     ListView roomListView;
     LinearLayout onlineLayout;
     SimpleAdapter roomListAdapter;
@@ -40,6 +39,8 @@ public class WanHallActivity extends BaseActivity implements Target {
     int roomIndex;
     TextView title;
     LinkedList<String> roomUUID;
+
+    private static final String TAG = "WanHallActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +55,7 @@ public class WanHallActivity extends BaseActivity implements Target {
         // 查找 View
         createButton = (Button) findViewById(R.id.create);
         backButton = (Button) findViewById(R.id.back);
-        joinButton = (Button) findViewById(R.id.refresh);
+        btnRefresh = (Button) findViewById(R.id.refresh);
         roomListView = (ListView) findViewById(R.id.roomList);
 
         roomListData = new LinkedList<>();
@@ -92,16 +93,6 @@ public class WanHallActivity extends BaseActivity implements Target {
                 roomId = roomListData.get(position).get("id");
                 roomIndex = position;
                 view.setSelected(true);
-            }
-        });
-        joinButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Global.soundManager.playSound(SoundManager.BUTTON);
-                if (roomUUID.size() == 0){
-                    Toast.makeText(WanHallActivity.this,"未选择可进入的房间",Toast.LENGTH_SHORT).show();
-                    return;
-                }
                 boolean find = false;
                 synchronized (roomListData) {
                     for (HashMap<String, String> map : roomListData) {
@@ -114,11 +105,15 @@ public class WanHallActivity extends BaseActivity implements Target {
                         }
                     }
                     if (!find)
-                        Toast.makeText(getApplicationContext(), "join room failed", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "加入房间失败！", Toast.LENGTH_SHORT).show();
                 }
-
-
-
+            }
+        });
+        btnRefresh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Global.soundManager.playSound(SoundManager.BUTTON);
+                Global.localServer.updateRoomListImmediately();
             }
         });
         //network init
@@ -130,7 +125,7 @@ public class WanHallActivity extends BaseActivity implements Target {
 
 
         title.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/comici.ttf"));
-        joinButton.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/comici.ttf"));
+        btnRefresh.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/comici.ttf"));
         createButton.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/comici.ttf"));
     }
 

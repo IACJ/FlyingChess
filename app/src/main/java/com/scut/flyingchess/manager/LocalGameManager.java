@@ -41,6 +41,7 @@ public class LocalGameManager {//game process control
     }
 
     public void startGame(LocalGamingActivity board) {//call by activity when game start
+        Global.replayManager.startRecord();
         Global.chessBoard.init();
         this.board = board;
         finished = false;

@@ -180,6 +180,7 @@ public class LocalGamingActivity extends BaseActivity {
         }
         throwDiceButton.setBackground(Global.d[0]);
 
+        Global.dataManager.giveUp(false);
         Global.localGameManager = new LocalGameManager();
         Global.localGameManager.startGame(this);
     }
