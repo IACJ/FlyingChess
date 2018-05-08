@@ -15,7 +15,6 @@ import android.widget.Toast;
 
 import com.scut.flyingchess.R;
 import com.scut.flyingchess.activity.ChooseModeActivity;
-import com.scut.flyingchess.activity.PauseActivity;
 import com.scut.flyingchess.entity.ChessBoard;
 import com.scut.flyingchess.Global;
 import com.scut.flyingchess.manager.ReplayGameManager;
@@ -34,6 +33,11 @@ public class ReplayGameActivity extends BaseActivity {
     TextView[] xscore = new TextView[4];
     ImageView map;
 
+    TextView message;
+    Button normalReplay;//正常回放速度按钮
+    Button speed15; //1.5倍速度按钮
+    Button speed20; //2倍速度按钮
+
     int boardWidth;
     public Handler handler;
     float dx;
@@ -43,7 +47,7 @@ public class ReplayGameActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         //ui setting
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_gaming);
+        setContentView(R.layout.activity_replay_game);
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);//Activity切换动画
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         Global.activityManager.add(this);
@@ -53,6 +57,10 @@ public class ReplayGameActivity extends BaseActivity {
         pauseButton = (Button) findViewById(R.id.pause);
         throwDiceButton = (Button) findViewById(R.id.dice);
         map = (ImageView) findViewById(R.id.map);
+        message = (TextView) findViewById(R.id.message);
+        normalReplay = (Button) findViewById(R.id.normal_speed);
+        speed15  = (Button) findViewById(R.id.Speed_1_5);
+        speed20  = (Button) findViewById(R.id.Speed_2_0);
 
         plane[0][0] = (Button) findViewById(R.id.R1);
         plane[0][1] = (Button) findViewById(R.id.R2);
@@ -84,6 +92,10 @@ public class ReplayGameActivity extends BaseActivity {
         xscore[2] = (TextView) findViewById(R.id.bscore);
         xscore[3] = (TextView) findViewById(R.id.yscore);
 
+        normalReplay = (Button) findViewById(R.id.normal_speed);
+        speed15  = (Button) findViewById(R.id.Speed_1_5);
+        speed20  = (Button) findViewById(R.id.Speed_2_0);
+
         handler = new ReplayGameHandler(this);
 
         // 绘制棋盘
@@ -98,7 +110,38 @@ public class ReplayGameActivity extends BaseActivity {
         pauseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), PauseActivity.class));
+                startActivity(new Intent(getApplicationContext(), ReplayPauseActivity.class));
+            }
+        });
+
+        //回放倍速修改
+        normalReplay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Global.diceAnimateSleepTime  = 100;
+                Global.planeAnimateSleepTime = 500;
+                Global.delayTime = 200;
+                Toast.makeText(ReplayGameActivity.this,"正常倍速回放中",Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        speed15.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Global.diceAnimateSleepTime  = 75;
+                Global.planeAnimateSleepTime = 375;
+                Global.delayTime = 150;
+                Toast.makeText(ReplayGameActivity.this,"1.5倍速回放中",Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        speed20.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Global.diceAnimateSleepTime  = 50;
+                Global.planeAnimateSleepTime = 250;
+                Global.delayTime = 100;
+                Toast.makeText(ReplayGameActivity.this,"2倍速回放中",Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -184,50 +227,69 @@ public class ReplayGameActivity extends BaseActivity {
         @Override
         public void handleMessage(Message msg) {//事件回调
             switch (msg.what) {
-                case 1://飞机
-                {
+                case 1:{//飞机
                     int color = msg.getData().getInt("color");
                     int whichPlane = msg.getData().getInt("whichPlane");
                     int pos = msg.getData().getInt("pos");
+                    switch(color){
+                        case 0:
+                            message.setText("红色飞机移动中" );
+                            break;
+                        case 1:
+                            message.setText("绿色飞机移动中" );
+                            break;
+                        case 2:
+                            message.setText("蓝色飞机移动中" );
+                            break;
+                        case 3:
+                            message.setText("黄色飞机移动中" );
+                            break;
+                    }
                     parent.animMoveTo(parent.plane[color][whichPlane], Global.chessBoard.map[color][pos][0], Global.chessBoard.map[color][pos][1]);
                 }
                 break;
-                case 2://骰子
+                case 2: {//骰子
+                    int currentDice = msg.getData().getInt("dice");
+                    message.setText("骰子数是:" + currentDice);
+                    Global.soundManager.playSound(currentDice+100);
                     parent.throwDiceButton.setBackground(Global.d[msg.getData().getInt("dice") - 1]);
                     break;
+                }
                 case 3://显示消息
                     Toast.makeText(parent.getApplicationContext(), msg.getData().getString("msg"), Toast.LENGTH_SHORT).show();
                     break;
-                case 4: // crash
-                {
+                case 4: { // crash
                     int color = msg.getData().getInt("color");
                     int whichPlane = msg.getData().getInt("whichPlane");
                     parent.animMoveTo(parent.plane[color][whichPlane], Global.chessBoard.mapStart[color][whichPlane][0], Global.chessBoard.mapStart[color][whichPlane][1]);
                 }
                 break;
-                case 5://finished
-                {
+                case 5: {//finished
                     Toast.makeText(parent, "回放结束!", Toast.LENGTH_LONG).show();
                     parent.startActivity(new Intent(parent.getApplicationContext(), ChooseModeActivity.class));
                     break;
                 }
-                case 6://turn to
-                {
+                case 6: {//turn to
                     for (int i = 0; i < 4; i++) {
                         parent.xt[i].setText(" ");
                     }
                     parent.xt[msg.getData().getInt("color")].setText(">");
+                    break;
                 }
-                break;
+                case 7: { //旋转的骰子
+                    message.setText("掷骰子中……");
+                    parent.throwDiceButton.setBackground(Global.d[msg.getData().getInt("dice") - 1]);
+                    break;
+                }
                 default:
                     super.handleMessage(msg);
             }
         }
     }
-    class myOnClickListener implements View.OnClickListener {
+    private class myOnClickListener implements View.OnClickListener {
         int color, which;
 
-        public myOnClickListener(int color, int which) {
+        myOnClickListener(int color, int which) {
             this.color = color;
             this.which = which;
         }

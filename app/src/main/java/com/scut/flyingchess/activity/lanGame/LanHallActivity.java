@@ -84,7 +84,7 @@ public class LanHallActivity extends BaseActivity implements Target {
                         try{
                             Global.localServer.startHost();
                             Global.socketManager.connectToLocalServer();
-                            Global.socketManager.send(DataPack.R_LOGIN, new Build().MODEL);
+                            Global.socketManager.send(DataPack.R_LOGIN,  Global.dataManager.getLanName());
                         }catch (Exception e){
                             e.printStackTrace();
                         }
@@ -113,7 +113,7 @@ public class LanHallActivity extends BaseActivity implements Target {
                 String roomId = roomUUID.get(position);
                 Global.socketManager.connectLanServer(Global.localServer.getRoomIp(roomId));
                 Global.delay(500);
-                Global.socketManager.send(DataPack.R_LOGIN, new Build().MODEL);
+                Global.socketManager.send(DataPack.R_LOGIN, Global.dataManager.getLanName());
             }
         });
         btnRefresh.setOnClickListener(new View.OnClickListener() {

@@ -2,7 +2,6 @@ package com.scut.flyingchess.activity.wanGame;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -178,7 +177,7 @@ public class WanRoomActivity extends BaseActivity implements Target {
         Global.playersData.put(players.get(0), new Role(players.get(0), players.get(1), "0", Integer.valueOf(players.get(2)), Role.PLAYER, true));
         for (int i = 3; i < players.size(); ) {
             System.out.println(players.get(i) + " " + players.get(i+1) + " " + players.get(i+2));
-            int type = (Integer.valueOf(players.get(i)) < 0) ? Role.ROBOT : Role.PLAYER;
+            int type = (Integer.valueOf(players.get(i)) < 0) ? Role.AI : Role.PLAYER;
             Global.playersData.put(players.get(i), new Role(players.get(i), players.get(i + 1), "0", Integer.valueOf(players.get(i + 2)), type, false));
             i += 3;
         }
@@ -188,7 +187,7 @@ public class WanRoomActivity extends BaseActivity implements Target {
             int color = Integer.valueOf(players.get(i + 2));
             if (Integer.valueOf(players.get(i)) < 0) {//机器人
                 siteState[color] = 0;
-                site[color].setText("ROBOT");
+                site[color].setText("AI");
                 addRobotButton[color].setText("-");
             } else {//玩家
                 if (color == -1) {
@@ -297,11 +296,11 @@ public class WanRoomActivity extends BaseActivity implements Target {
                         site[0].post(new Runnable() {
                             @Override
                             public void run() {
-                                site[np].setText("ROBOT");
+                                site[np].setText("AI");
                                 addRobotButton[np].setText("-");
                             }
                         });
-                        Global.playersData.put(dataPack.getMessage(0), new Role(dataPack.getMessage(0), "ROBOT", "0", np, Role.ROBOT, false));
+                        Global.playersData.put(dataPack.getMessage(0), new Role(dataPack.getMessage(0), "AI", "0", np, Role.AI, false));
                     } else {
                         siteState[-id - 1] = -1;
                         site[0].post(new Runnable() {

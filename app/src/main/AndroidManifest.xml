@@ -54,10 +54,15 @@
         <activity
             android:name="com.scut.flyingchess.activity.replay.ReplayGameActivity"
             android:screenOrientation="landscape" />
+        <activity
+            android:name="com.scut.flyingchess.activity.replay.ReplayPauseActivity"
+            android:screenOrientation="landscape"
+            android:theme="@style/Theme.AppCompat.Light.Dialog.Alert"/>
 
         <activity
             android:name="com.scut.flyingchess.activity.lanGame.LanHallActivity"
-            android:screenOrientation="landscape" />
+            android:screenOrientation="landscape"
+            android:launchMode="singleTask" />
         <activity
             android:name="com.scut.flyingchess.activity.lanGame.LanRoomActivity"
             android:screenOrientation="landscape" />
@@ -70,23 +75,6 @@
             android:theme="@style/Theme.AppCompat.Light.Dialog.Alert"/>
 
 
-
-        <activity
-            android:name="com.scut.flyingchess.activity.LoginActivity"
-            android:screenOrientation="landscape" />
-        <activity
-            android:name="com.scut.flyingchess.activity.GameInfoActivity"
-            android:screenOrientation="landscape" />
-        <activity
-            android:name="com.scut.flyingchess.activity.ChessBoardActivity"
-            android:screenOrientation="landscape" />
-        <activity
-            android:name="com.scut.flyingchess.activity.PauseActivity"
-            android:screenOrientation="landscape"
-            android:theme="@style/Theme.AppCompat.Light.Dialog.Alert" />
-        <activity
-            android:name="com.scut.flyingchess.activity.RoomActivity"
-            android:screenOrientation="landscape" />
         <activity
             android:name="com.scut.flyingchess.activity.GameEndActivity"
             android:screenOrientation="landscape"
@@ -105,7 +93,8 @@
         <activity android:name=".activity.wanGame.WanGamingActivity"
             android:screenOrientation="landscape"/>
         <activity android:name=".activity.wanGame.WanHallActivity"
-            android:screenOrientation="landscape"/>
+            android:screenOrientation="landscape"
+            android:launchMode="singleTask"/>
         <activity android:name=".activity.wanGame.WanPauseActivity"
             android:theme="@style/Theme.AppCompat.Light.Dialog.Alert"
             android:screenOrientation="landscape"/>

@@ -20,7 +20,6 @@ import android.widget.Toast;
 import com.scut.flyingchess.R;
 import com.scut.flyingchess.activity.ChooseModeActivity;
 import com.scut.flyingchess.activity.GameEndActivity;
-import com.scut.flyingchess.activity.RoomActivity;
 import com.scut.flyingchess.entity.ChessBoard;
 import com.scut.flyingchess.Global;
 import com.scut.flyingchess.manager.LocalGameManager;
@@ -50,125 +49,8 @@ public class LocalGamingActivity extends BaseActivity {
     float dx;
     int n;
 
-    class LocalGamingOnClickListener implements View.OnClickListener {
-        int color, which;
-        public LocalGamingOnClickListener(int color, int which) {
-            this.color = color;
-            this.which = which;
-        }
-        @Override
-        public void onClick(View v) {
-            if (Global.playersData.get(Global.dataManager.getMyId()).color == color)
-                Global.playersData.get(Global.dataManager.getMyId()).setPlaneValid(which);
-        }
-    }
-    class LocalGamingHandler extends Handler {
-        LocalGamingActivity parent;
 
-        public LocalGamingHandler(LocalGamingActivity parent) {
-            this.parent = parent;
-        }
 
-        @Override
-        public void handleMessage(Message msg) {//事件回调
-            switch (msg.what) {
-                case 1: { //飞机
-
-                    int color = msg.getData().getInt("color");
-                    int whichPlane = msg.getData().getInt("whichPlane");
-                    int pos = msg.getData().getInt("pos");
-
-                    switch(color){
-                        case 0:
-                            message.setText("红色飞机移动中" );
-                            break;
-                        case 1:
-                            message.setText("绿色飞机移动中" );
-                            break;
-                        case 2:
-                            message.setText("蓝色飞机移动中" );
-                            break;
-                        case 3:
-                            message.setText("黄色飞机移动中" );
-                            break;
-                    }
-                    parent.animMoveTo(parent.plane[color][whichPlane], Global.chessBoard.map[color][pos][0], Global.chessBoard.map[color][pos][1]);
-                }
-                break;
-                case 2: { //骰子
-                    int currentDice = msg.getData().getInt("dice");
-                    message.setText("骰子数是:" + currentDice );
-                    parent.throwDiceButton.setBackground(Global.d[msg.getData().getInt("dice") - 1]);
-                }
-                    break;
-                case 3: { //显示消息
-                    Toast.makeText(parent.getApplicationContext(), msg.getData().getString("msg"), Toast.LENGTH_SHORT).show();
-                }
-                    break;
-                case 4:  { // crash
-                    int color = msg.getData().getInt("color");
-                    int whichPlane = msg.getData().getInt("whichPlane");
-                    parent.animMoveTo(parent.plane[color][whichPlane], Global.chessBoard.mapStart[color][whichPlane][0], Global.chessBoard.mapStart[color][whichPlane][1]);
-                }
-                break;
-                case 5:  { //finished
-                    Intent intent = new Intent(parent.getApplicationContext(), RoomActivity.class);
-
-                    if (Global.dataManager.getLastWinner().compareTo(Global.dataManager.getMyId()) == 0) {//更新分数
-                        Global.dataManager.setScore(Global.dataManager.getScore() + 10);
-                        Global.soundManager.playSound(SoundManager.WIN);
-                    } else {
-                        Global.dataManager.setScore(Global.dataManager.getScore() - 5);
-                        Global.soundManager.playSound(SoundManager.LOSE);
-                    }
-                    Global.dataManager.saveData();
-
-                    ArrayList<String> msgs = new ArrayList<>();
-                    msgs.add(Global.dataManager.getMyId());
-                    msgs.add(Global.playersData.get(Global.dataManager.getMyId()).name);
-                    msgs.add(String.valueOf(Global.dataManager.getScore()));
-                    msgs.add("-1");
-                    intent.putStringArrayListExtra("msgs", msgs);
-                    parent.startActivity(intent);
-
-                    Intent intent2 = new Intent(parent.getApplicationContext(), GameEndActivity.class);
-                    intent2.putStringArrayListExtra("msgs", msgs);
-                    parent.startActivity(intent2);
-                    Global.localGameManager.gameOver();
-
-                    Global.dataManager.giveUp(false);
-                    Global.replayManager.closeRecord();
-                    break;
-                }
-                case 6://turn to
-                {
-                    for (int i = 0; i < 4; i++) {
-                        parent.xt[i].setText(" ");
-                    }
-                    parent.xt[msg.getData().getInt("color")].setText(">");
-
-                    switch(msg.getData().getInt("color")){
-                        case 0:
-                            message.setText("红色飞机回合");
-                            break;
-                        case 1:
-                            message.setText("绿色飞机回合");
-                            break;
-                        case 2:
-                            message.setText("蓝色飞机回合");
-                            break;
-                        case 3:
-                            message.setText("黄色飞机回合" );
-                            break;
-                    }
-
-                }
-                break;
-                default:
-                    super.handleMessage(msg);
-            }
-        }
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -352,6 +234,134 @@ public class LocalGamingActivity extends BaseActivity {
         public void onAccuracyChanged(Sensor sensor, int i) {
         }
     }
+
+    private class LocalGamingHandler extends Handler {
+        LocalGamingActivity parent;
+
+        LocalGamingHandler(LocalGamingActivity parent) {
+            this.parent = parent;
+        }
+
+        @Override
+        public void handleMessage(Message msg) {//事件回调
+            switch (msg.what) {
+                case 1: { //飞机
+
+                    int color = msg.getData().getInt("color");
+                    int whichPlane = msg.getData().getInt("whichPlane");
+                    int pos = msg.getData().getInt("pos");
+
+                    switch(color){
+                        case 0:
+                            message.setText("红色飞机移动中" );
+                            break;
+                        case 1:
+                            message.setText("绿色飞机移动中" );
+                            break;
+                        case 2:
+                            message.setText("蓝色飞机移动中" );
+                            break;
+                        case 3:
+                            message.setText("黄色飞机移动中" );
+                            break;
+                    }
+                    parent.animMoveTo(parent.plane[color][whichPlane], Global.chessBoard.map[color][pos][0], Global.chessBoard.map[color][pos][1]);
+                }
+                break;
+                case 2: { //骰子
+                    int currentDice = msg.getData().getInt("dice");
+                    message.setText("骰子数是:" + currentDice );
+                    Global.soundManager.playSound(currentDice+100);
+                    parent.throwDiceButton.setBackground(Global.d[msg.getData().getInt("dice") - 1]);
+                }
+                break;
+                case 3: { //显示消息
+                    Toast.makeText(parent.getApplicationContext(), msg.getData().getString("msg"), Toast.LENGTH_SHORT).show();
+                }
+                break;
+                case 4:  { // crash
+                    int color = msg.getData().getInt("color");
+                    int whichPlane = msg.getData().getInt("whichPlane");
+                    parent.animMoveTo(parent.plane[color][whichPlane], Global.chessBoard.mapStart[color][whichPlane][0], Global.chessBoard.mapStart[color][whichPlane][1]);
+                }
+                break;
+                case 5:  { //finished
+                    Intent intent = new Intent(parent.getApplicationContext(), LocalRoomActivity.class);
+
+                    if (Global.dataManager.getLastWinner().compareTo(Global.dataManager.getMyId()) == 0) {//更新分数
+                        Global.dataManager.setScore(Global.dataManager.getScore() + 10);
+                        Global.soundManager.playSound(SoundManager.WIN);
+                    } else {
+                        Global.dataManager.setScore(Global.dataManager.getScore() - 5);
+                        Global.soundManager.playSound(SoundManager.LOSE);
+                    }
+                    Global.dataManager.saveData();
+
+                    ArrayList<String> msgs = new ArrayList<>();
+                    msgs.add(Global.dataManager.getMyId());
+                    msgs.add(Global.playersData.get(Global.dataManager.getMyId()).name);
+                    msgs.add(String.valueOf(Global.dataManager.getScore()));
+                    msgs.add("-1");
+                    intent.putStringArrayListExtra("msgs", msgs);
+                    parent.startActivity(intent);
+
+                    Intent intent2 = new Intent(parent.getApplicationContext(), GameEndActivity.class);
+                    intent2.putStringArrayListExtra("msgs", msgs);
+                    parent.startActivity(intent2);
+                    Global.localGameManager.gameOver();
+
+                    Global.dataManager.giveUp(false);
+                    Global.replayManager.closeRecord();
+                    break;
+                }
+                case 6: {//turn to
+                    for (int i = 0; i < 4; i++) {
+                        parent.xt[i].setText(" ");
+                    }
+                    parent.xt[msg.getData().getInt("color")].setText(">");
+                    switch(msg.getData().getInt("color")){
+                        case 0:
+                            message.setText("请红方掷骰子");
+                            break;
+                        case 1:
+                            message.setText("请绿方掷骰子");
+                            break;
+                        case 2:
+                            message.setText("请蓝方掷骰子");
+                            break;
+                        case 3:
+                            message.setText("请黄方掷骰子" );
+                            break;
+                    }
+                    break;
+                }
+                case 7: { //旋转的骰子
+                    message.setText("掷骰子中……");
+                    parent.throwDiceButton.setBackground(Global.d[msg.getData().getInt("dice") - 1]);
+                    break;
+                }
+
+                default:
+                    super.handleMessage(msg);
+            }
+        }
+    }
+
+    private class LocalGamingOnClickListener implements View.OnClickListener {
+        int color, which;
+        LocalGamingOnClickListener(int color, int which) {
+            this.color = color;
+            this.which = which;
+        }
+        @Override
+        public void onClick(View v) {
+            if (Global.playersData.get(Global.dataManager.getMyId()).color == color)
+                Global.playersData.get(Global.dataManager.getMyId()).setPlaneValid(which);
+        }
+    }
+
+
+
 }
 
 

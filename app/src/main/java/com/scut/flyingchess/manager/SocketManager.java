@@ -33,9 +33,7 @@ public class SocketManager  {
     private SocketWriter sw;
     private SocketReader sr;
     private boolean connected = false;
-//    private static final String serverIp = "172.20.10.3";
-    private static final String serverIp = "125.216.245.22";
-
+    private static final String serverIp = "139.199.71.40";
 
     HashMap<Integer, Target> targets= new HashMap<>();
 

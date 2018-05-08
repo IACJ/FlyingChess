@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -21,12 +20,8 @@ import android.widget.Toast;
 import com.scut.flyingchess.R;
 import com.scut.flyingchess.activity.ChooseModeActivity;
 import com.scut.flyingchess.activity.GameEndActivity;
-import com.scut.flyingchess.activity.GameInfoActivity;
-import com.scut.flyingchess.activity.RoomActivity;
-import com.scut.flyingchess.dataPack.DataPack;
 import com.scut.flyingchess.entity.ChessBoard;
 import com.scut.flyingchess.Global;
-import com.scut.flyingchess.manager.DataManager;
 import com.scut.flyingchess.manager.LanGameManager;
 import com.scut.flyingchess.manager.SoundManager;
 import com.scut.flyingchess.activity.BaseActivity;
@@ -205,7 +200,7 @@ public class LanGamingActivity extends BaseActivity {
     }
 
     public void exit() {
-        Global.gameManager.gameOver();
+        Global.lanGameManager.gameOver();
 
         startActivity(new Intent(getApplicationContext(), ChooseModeActivity.class));
         if (Global.dataManager.getHostId().equals(Global.dataManager.getMyId())) {
@@ -227,22 +222,20 @@ public class LanGamingActivity extends BaseActivity {
         plane.animate().translationY(y * dx);
     }
 
-    class MyHandler extends Handler {
+    private class MyHandler extends Handler {
         LanGamingActivity parent;
 
-        public MyHandler(LanGamingActivity parent) {
+        MyHandler(LanGamingActivity parent) {
             this.parent = parent;
         }
 
         @Override
         public void handleMessage(Message msg) {//事件回调
             switch (msg.what) {
-                case 1://飞机
-                {
+                case 1:{//飞机
                     int color = msg.getData().getInt("color");
                     int whichPlane = msg.getData().getInt("whichPlane");
                     int pos = msg.getData().getInt("pos");
-
                     switch(color){
                         case 0:
                             message.setText("红色飞机移动中" );
@@ -258,27 +251,27 @@ public class LanGamingActivity extends BaseActivity {
                             break;
                     }
                     parent.animMoveTo(parent.plane[color][whichPlane], Global.chessBoard.map[color][pos][0], Global.chessBoard.map[color][pos][1]);
+                    break;
                 }
-                break;
                 case 2: {//骰子
-
                     int currentDice = msg.getData().getInt("dice");
                     message.setText("骰子数是:" + currentDice);
+                    Global.soundManager.playSound(currentDice+100);
                     parent.throwDiceButton.setBackground(Global.d[msg.getData().getInt("dice") - 1]);
                     break;
                 }
-                case 3://显示消息
+                case 3: {//显示消息
                     Toast.makeText(parent.getApplicationContext(), msg.getData().getString("msg"), Toast.LENGTH_SHORT).show();
                     break;
-                case 4: // crash
-                {
+                }
+                case 4:  {// crash
                     int color = msg.getData().getInt("color");
                     int whichPlane = msg.getData().getInt("whichPlane");
-                    parent.animMoveTo(parent.plane[color][whichPlane], Global.chessBoard.mapStart[color][whichPlane][0], Global.chessBoard.mapStart[color][whichPlane][1]);
+                    parent.animMoveTo(parent.plane[color][whichPlane], ChessBoard.mapStart[color][whichPlane][0], ChessBoard.mapStart[color][whichPlane][1]);
+                    break;
                 }
-                break;
-                case 5://finished
-                {
+                case 5:  {//finished
+
                     Intent intent2 = new Intent(parent.getApplicationContext(), GameEndActivity.class);
                     ArrayList<String> msgs = new ArrayList<>();
                     intent2.putStringArrayListExtra("msgs", msgs);
@@ -295,25 +288,23 @@ public class LanGamingActivity extends BaseActivity {
 
                     break;
                 }
-                case 6://turn to
-                {
+                case 6: {//turn to
                     for (int i = 0; i < 4; i++) {
                         parent.xt[i].setText(" ");
                     }
                     parent.xt[msg.getData().getInt("color")].setText(">");
-
                     switch(msg.getData().getInt("color")){
                         case 0:
-                            message.setText("红色飞机回合");
+                            message.setText("请红方掷骰子");
                             break;
                         case 1:
-                            message.setText("绿色飞机回合");
+                            message.setText("请绿方掷骰子");
                             break;
                         case 2:
-                            message.setText("蓝色飞机回合");
+                            message.setText("请蓝方掷骰子");
                             break;
                         case 3:
-                            message.setText("黄色飞机回合" );
+                            message.setText("请黄方掷骰子" );
                             break;
                     }
                     break;

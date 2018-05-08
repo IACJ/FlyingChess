@@ -49,6 +49,7 @@ public class LocalGameManager {//game process control
     }
 
     public void gameOver() {
+        Global.soundManager.stopMusic(SoundManager.GAME);
         gw.exit();
     }
 
@@ -111,18 +112,14 @@ public class LocalGameManager {//game process control
     }
 
     private void diceAnimate(int dice) {
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 6; i++) {
             Message msg = new Message();
             Bundle b = new Bundle();
             b.putInt("dice", Global.chessBoard.getDice().roll());
             msg.setData(b);
-            msg.what = 2;
+            msg.what = 7;
             board.handler.sendMessage(msg);
-            try {
-                Thread.sleep(200);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            Global.delay(150);
         }
         Message msg = new Message();
         Bundle b = new Bundle();
@@ -130,6 +127,7 @@ public class LocalGameManager {//game process control
         msg.setData(b);
         msg.what = 2;
         board.handler.sendMessage(msg);
+        Global.delay(600);
     }
 
     private void planeAnimate(int color, int pos) {
@@ -149,7 +147,7 @@ public class LocalGameManager {//game process control
     }
 
     private void planeCrash(int color, int crashPlane) {
-        Global.soundManager.playSound(SoundManager.FLYCRASH);
+        Global.soundManager.playSound(SoundManager.FLY_CRASH);
         Message msg = new Message();
         Bundle b = new Bundle();
         b.putInt("color", color);
@@ -165,57 +163,57 @@ public class LocalGameManager {//game process control
         int curPos = Global.chessBoard.getAirplane(color).lastPosition[whichPlane];
         if (curPos + dice == toPos || curPos == -1) {
             for (int pos = curPos + 1; pos <= toPos; pos++) { // 直接走
-                Global.soundManager.playSound(SoundManager.FLYSHORT);
+                Global.soundManager.playSound(SoundManager.FLY_SHORT);
                 planeAnimate(color, pos);
             }
             crash(color, toPos, whichPlane);
         } else if (curPos + dice + 4 == toPos) { // 走完之后小跳
             for (int pos = curPos + 1; pos <= curPos + dice; pos++) {
-                Global.soundManager.playSound(SoundManager.FLYSHORT);
+                Global.soundManager.playSound(SoundManager.FLY_SHORT);
                 planeAnimate(color, pos);
             }
             crash(color, curPos + dice, whichPlane);
-            Global.soundManager.playSound(SoundManager.FLYMID);
+            Global.soundManager.playSound(SoundManager.FLY_MID);
             planeAnimate(color, toPos);
             crash(color, toPos, whichPlane);
         } else if (toPos == 30) { // 走完之后小跳，然后飞
             for (int pos = curPos + 1; pos <= curPos + dice; pos++) {
-                Global.soundManager.playSound(SoundManager.FLYSHORT);
+                Global.soundManager.playSound(SoundManager.FLY_SHORT);
                 planeAnimate(color, pos);
             }
             crash(color, curPos + dice, whichPlane);
-            Global.soundManager.playSound(SoundManager.FLYMID);
+            Global.soundManager.playSound(SoundManager.FLY_MID);
             planeAnimate(color, 18);
             crash(color, 18, whichPlane);
-            Global.soundManager.playSound(SoundManager.FLYLONG);
+            Global.soundManager.playSound(SoundManager.FLY_LONG);
             planeAnimate(color, 30);
             crash(color, 30, whichPlane);
         } else if (toPos == 34) { // 走完之后飞，然后小跳
             for (int pos = curPos + 1; pos <= 18; pos++) {
-                Global.soundManager.playSound(SoundManager.FLYSHORT);
+                Global.soundManager.playSound(SoundManager.FLY_SHORT);
                 planeAnimate(color, pos);
             }
             crash(color, 18, whichPlane);
-            Global.soundManager.playSound(SoundManager.FLYLONG);
+            Global.soundManager.playSound(SoundManager.FLY_LONG);
             planeAnimate(color, 30);
             crash(color, 30, whichPlane);
-            Global.soundManager.playSound(SoundManager.FLYMID);
+            Global.soundManager.playSound(SoundManager.FLY_MID);
             planeAnimate(color, 34);
             crash(color, 34, whichPlane);
         } else if (Global.chessBoard.isOverflow()) { // 溢出回退
             for (int pos = curPos + 1; pos <= 56; pos++) {
-                Global.soundManager.playSound(SoundManager.FLYSHORT);
+                Global.soundManager.playSound(SoundManager.FLY_SHORT);
                 planeAnimate(color, pos);
             }
             for (int pos = 55; pos >= toPos; pos--) {
-                Global.soundManager.playSound(SoundManager.FLYSHORT);
+                Global.soundManager.playSound(SoundManager.FLY_SHORT);
                 planeAnimate(color, pos);
             }
             crash(color, toPos, whichPlane);
             Global.chessBoard.setOverflow(false);
         } else if (toPos == -2) { // 胜利
             for (int pos = curPos + 1; pos <= 55; pos++) {
-                Global.soundManager.playSound(SoundManager.FLYSHORT);
+                Global.soundManager.playSound(SoundManager.FLY_SHORT);
                 planeAnimate(color, pos);
             }
             Global.soundManager.playSound(SoundManager.ARRIVE);

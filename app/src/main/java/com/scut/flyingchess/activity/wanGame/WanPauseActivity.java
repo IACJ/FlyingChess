@@ -40,10 +40,10 @@ public class WanPauseActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 if (!Global.dataManager.isGiveUp()) {
-                    robot.setText("Cancel auto");
+                    robot.setText("取消托管");
                     Global.dataManager.giveUp(true);
                 } else {
-                    robot.setText("Auto");
+                    robot.setText("托管");
                     Global.dataManager.giveUp(false);
                 }
             }
@@ -62,19 +62,13 @@ public class WanPauseActivity extends BaseActivity {
                 Global.wanGameManager.gameOver();
                 Global.replayManager.stopReplay();
                 startActivity(new Intent(getApplicationContext(), WanHallActivity.class));
-                Global.dataManager.giveUp(false);
             }
         });
         if (Global.dataManager.isGiveUp()) {
-            robot.setText("Cancel auto");
+            robot.setText("取消托管");
         }
         resume.setTypeface(Global.getFont());
         robot.setTypeface(Global.getFont());
         exit.setTypeface(Global.getFont());
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
     }
 }

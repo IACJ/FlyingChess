@@ -11,6 +11,8 @@ import java.io.IOException;
 
 /**
  * Created by karthur on 2016/4/9.
+ *
+ * Edited by IACJ on 2018/5/7
  */
 public class DataManager {//数据存储类
     public static final int GM_LOCAL = 0, GM_LAN = 1, GM_WLAN = 3;//游戏模式
@@ -22,13 +24,14 @@ public class DataManager {//数据存储类
     private int gameMode;//游戏模式
     private String lastWinner;
     private boolean giveUp;
+    private String LanName;
 
     Data data;
 
     public DataManager() {//加载本地数据
         autoLogin = false;
         giveUp = false;
-        File file = new File(Environment.getExternalStorageDirectory().getPath() + "/FlashMinds.com/FlyingChess/data.dat");
+        File file = new File(Environment.getExternalStorageDirectory().getPath() + "/scut.com/FlyingChess/data.dat");
         if (file.exists()) {
             try {
                 FileInputStream fis = new FileInputStream(file);
@@ -41,7 +44,7 @@ public class DataManager {//数据存储类
                 e.printStackTrace();
             }
         } else {
-            File file2 = new File(Environment.getExternalStorageDirectory().getPath() + "/FlashMinds.com/FlyingChess");
+            File file2 = new File(Environment.getExternalStorageDirectory().getPath() + "/scut.com/FlyingChess");
             file2.mkdirs();
             try {
                 file.createNewFile();
@@ -170,9 +173,17 @@ public class DataManager {//数据存储类
         this.hostId = hostId;
     }
 
+    public String getLanName() {
+        return LanName;
+    }
+
+    public void setLanName(String lanName) {
+        LanName = lanName;
+    }
+
     //////////////////////////////////
     public void saveData() {
-        File file = new File(Environment.getExternalStorageDirectory().getPath() + "/ksymphony.com/FlyingChess/data.dat");
+        File file = new File(Environment.getExternalStorageDirectory().getPath() + "/scut.com/FlyingChess/data.dat");
         if (file.exists()) {
             try {
                 FileOutputStream fos = new FileOutputStream(file);

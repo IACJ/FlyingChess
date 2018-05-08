@@ -4,6 +4,7 @@ import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
 import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
 import com.scut.flyingchess.Global;
 
@@ -15,6 +16,7 @@ import java.util.Map;
 /**
  * 背景音乐控制类
  * Created by BingF on 2016/4/26.
+ * Edited by IACJ on 2018/5/7
  */
 public class SoundManager {
 
@@ -23,19 +25,28 @@ public class SoundManager {
     public static final int BACKGROUND = 2;
     public static final int BUTTON = 3;
     public static final int DICE = 4;
-    public static final int FLYCRASH = 5;
-    public static final int FLYLONG = 6;
-    public static final int FLYSHORT = 7;
-    public static final int FLYMID = 8;
-    public static final int FLYOUT = 9;
+    public static final int FLY_CRASH = 5;
+    public static final int FLY_LONG = 6;
+    public static final int FLY_SHORT = 7;
+    public static final int FLY_MID = 8;
+    public static final int FLY_OUT = 9;
     public static final int WIN = 10;
     public static final int LOSE = 11;
     public static final int GAME = 12;
+
+    private static final int DICE_1 = 101;
+    private static final int DICE_2 = 102;
+    private static final int DICE_3 = 103;
+    private static final int DICE_4 = 104;
+    private static final int DICE_5 = 105;
+    private static final int DICE_6 = 106;
 
     private MediaPlayer mediaPlayer, bk, game;
     private AssetManager assetManager;
     private LinkedList<MediaPlayer> mediaPlayers;
     private Map<Integer, String> soundMap;
+
+    private static final String TAG = "SoundManager";
 
     public SoundManager(AppCompatActivity activity) {
         bk = new MediaPlayer();
@@ -51,13 +62,20 @@ public class SoundManager {
         soundMap.put(BACKGROUND, "music/backgroundmusic.mp3");
         soundMap.put(BUTTON, "music/button.ogg");
         soundMap.put(DICE, "music/dice.ogg");
-        soundMap.put(FLYCRASH, "music/flycrash.ogg");
-        soundMap.put(FLYLONG, "music/flylong.ogg");
-        soundMap.put(FLYSHORT, "music/flyshort.ogg");
-        soundMap.put(FLYMID, "music/flymid.ogg");
+        soundMap.put(FLY_CRASH, "music/flycrash.ogg");
+        soundMap.put(FLY_LONG, "music/flylong.ogg");
+        soundMap.put(FLY_SHORT, "music/flyshort.ogg");
+        soundMap.put(FLY_MID, "music/flymid.ogg");
         soundMap.put(WIN, "music/win.ogg");
         soundMap.put(LOSE, "music/lose.ogg");
         soundMap.put(GAME, "music/gamemusic.mp3");
+
+        soundMap.put(DICE_1,"music/DICE_1.wav");
+        soundMap.put(DICE_2,"music/DICE_2.wav");
+        soundMap.put(DICE_3,"music/DICE_3.wav");
+        soundMap.put(DICE_4,"music/DICE_4.wav");
+        soundMap.put(DICE_5,"music/DICE_5.wav");
+        soundMap.put(DICE_6,"music/DICE_6.wav");
     }
 
     public void playSound(int type) {
@@ -80,7 +98,7 @@ public class SoundManager {
 
     public void playMusic(int type) {
         switch (type) {
-            case BACKGROUND:
+            case BACKGROUND: {
                 if (!bk.isPlaying()) {
                     try {
                         bk.reset();
@@ -97,7 +115,8 @@ public class SoundManager {
                     game.stop();
                 }
                 break;
-            case GAME:
+            }
+            case GAME:{
                 if (!game.isPlaying()) {
                     try {
                         game.reset();
@@ -114,6 +133,10 @@ public class SoundManager {
                     bk.stop();
                 }
                 break;
+            }
+            default: {
+                Log.e(TAG, "playMusic: 未识别的音乐类型" );
+            }
         }
     }
 
@@ -131,6 +154,13 @@ public class SoundManager {
             game.start();
         } else if (type == BACKGROUND && !bk.isPlaying()) {
             bk.start();
+        }
+    }
+    public void stopMusic(int type) {
+        if (type == GAME ) {
+            game.stop();
+        } else if (type == BACKGROUND && !bk.isPlaying()) {
+            bk.stop();
         }
     }
 }

@@ -137,25 +137,71 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         layout="@layout/content_board_player_list"
-        android:layout_toEndOf="@+id/map"
-        android:layout_below="@+id/pause"
         android:layout_marginLeft="10sp"
-        android:layout_marginTop="10sp"
         android:layout_marginRight="10sp"
-        android:layout_toRightOf="@+id/map"
-        android:layout_above="@+id/dice" />
-
+        android:layout_above="@+id/dice"
+        android:layout_alignEnd="@+id/dice"
+        android:layout_toRightOf="@+id/map"/>
+<android.support.v7.widget.LinearLayoutCompat
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layout_below="@+id/include"
+    android:layout_toRightOf="@+id/map"
+    android:layout_toLeftOf="@id/dice"
+    android:background="@drawable/replay_background"
+    android:layout_marginLeft="10sp">
     <TextView
         android:id="@+id/message"
         android:layout_width="match_parent"
-        android:layout_height="70sp"
+        android:layout_height="wrap_content"
         android:textAlignment="center"
-        android:textSize="25sp"
+        android:textSize="17sp"
         android:fontFamily="sans-serif"
         android:text="骰子数是"
         android:layout_toLeftOf="@id/dice"
         android:layout_toRightOf="@+id/map"
+        android:background="@drawable/popup_radius"
         android:layout_alignParentBottom="true"/>
+    <android.support.v7.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <Button
+            android:id="@+id/normal_speed"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="normal"
+            android:textColor="#ffffff"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_margin="7sp"
+            android:background="@drawable/replay_button"
+            android:layout_weight="0.33"/>
+        <Button
+            android:id="@+id/Speed_1.5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="1.5 speed"
+            android:textColor="#ffffff"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_margin="7sp"
+            android:background="@drawable/replay_button"
+            android:layout_weight="0.33"/>
+        <Button
+            android:id="@+id/Speed_2.0"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="2.0 speed"
+            android:textColor="#ffffff"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_margin="7sp"
+            android:background="@drawable/replay_button"
+            android:layout_weight="0.33"/>
+    </android.support.v7.widget.LinearLayoutCompat>
+</android.support.v7.widget.LinearLayoutCompat>
+
 
     <Button
         android:id="@+id/dice"

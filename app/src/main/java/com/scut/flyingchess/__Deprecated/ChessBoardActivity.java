@@ -193,7 +193,7 @@ public class ChessBoardActivity extends BaseActivity {
         if (Global.dataManager.getGameMode() == DataManager.GM_WLAN) {
             Global.socketManager.send(DataPack.R_GAME_EXIT, Global.dataManager.getMyId(), Global.dataManager.getRoomId());
         }
-        Global.gameManager.gameOver();
+//        Global.gameManager.gameOver();
         if (Global.dataManager.getGameMode() != DataManager.GM_LOCAL) {
             startActivity(new Intent(getApplicationContext(), GameInfoActivity.class));
             if (Global.dataManager.getGameMode() == DataManager.GM_LAN) {
@@ -303,7 +303,7 @@ public class ChessBoardActivity extends BaseActivity {
                         intent2.putStringArrayListExtra("msgs", msgs);
                         parent.startActivity(intent2);
                         Global.dataManager.giveUp(false);
-                        Global.gameManager.gameOver();
+//                        Global.gameManager.gameOver();
                         Global.soundManager.playMusic(SoundManager.BACKGROUND);
                         Global.replayManager.closeRecord();
                         Global.replayManager.stopReplay();
