@@ -9,11 +9,13 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,6 +51,7 @@ public class LocalGamingActivity extends BaseActivity {
     float dx;
     int n;
 
+    private static final String TAG = "LocalGamingActivity";
 
 
 
@@ -106,15 +109,21 @@ public class LocalGamingActivity extends BaseActivity {
 
         handler = new LocalGamingHandler(this);
 
-        // 绘制棋盘
+        // 适配屏幕
         DisplayMetrics dm = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);
         boardWidth = dm.heightPixels;
-//        n = 19;
-//        dx = boardWidth / n + 0.8f;
-
         n = 36;
-        dx = boardWidth / n;
+        dx = (float) boardWidth / n;
+        Log.v(TAG, "onCreate: 屏幕适配 dx ="+dx);
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) plane[i][j].getLayoutParams();
+                params.height=(int) (2*dx);
+                params.width=(int) (2*dx);
+                plane[i][j].setLayoutParams(params);
+            }
+        }
         map.setImageBitmap(Global.getBitmap(R.raw.map_min));
 
         manager = (SensorManager) getSystemService(SENSOR_SERVICE);

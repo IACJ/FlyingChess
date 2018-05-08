@@ -9,11 +9,14 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,6 +52,8 @@ public class LanGamingActivity extends BaseActivity {
 
     SensorManager manager;
     ShakeListener listener;
+
+    private static final String TAG = "LanGamingActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,13 +109,21 @@ public class LanGamingActivity extends BaseActivity {
 
         message = (TextView) findViewById(R.id.message);
 
-        //set data
+        // 适配屏幕
         DisplayMetrics dm = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);
         boardWidth = dm.heightPixels;
-
         n = 36;
-        dx = boardWidth / n;
+        dx = (float) boardWidth / n;
+        Log.v(TAG, "onCreate: 屏幕适配 dx ="+dx);
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) plane[i][j].getLayoutParams();
+                params.height=(int) (2*dx);
+                params.width=(int) (2*dx);
+                plane[i][j].setLayoutParams(params);
+            }
+        }
 
 
         //trigger
