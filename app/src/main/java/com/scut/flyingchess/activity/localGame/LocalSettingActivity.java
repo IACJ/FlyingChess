@@ -1,4 +1,4 @@
-package com.scut.flyingchess.activity.replay;
+package com.scut.flyingchess.activity.localGame;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,21 +11,30 @@ import com.scut.flyingchess.activity.ChooseModeActivity;
 import com.scut.flyingchess.Global;
 import com.scut.flyingchess.activity.BaseActivity;
 
-public class ReplayPauseActivity extends BaseActivity {
+/**
+ * Created by IACJ on 2018/4/9.
+ */
+public class LocalSettingActivity extends BaseActivity {
     Button resume, robot, exit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        //ui setting
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pause);
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);//Activity切换动画
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        //init
+
+        // 查找view
         resume = (Button) findViewById(R.id.resume);
         robot = (Button) findViewById(R.id.robot);
         exit = (Button) findViewById(R.id.exit);
-        //trigger
+
+        // 设置字体
+        resume.setTypeface(Global.getFont());
+        robot.setTypeface(Global.getFont());
+        exit.setTypeface(Global.getFont());
+
+        // 按钮事件
         resume.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -36,30 +45,28 @@ public class ReplayPauseActivity extends BaseActivity {
         robot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!Global.dataManager.isGiveUp()) {
-                    robot.setText("取消托管");
-                    Global.dataManager.giveUp(true);
-                } else {
-                    robot.setText("托管");
-                    Global.dataManager.giveUp(false);
-                }
+            if (!Global.dataManager.isGiveUp()) {
+                robot.setText("取消托管");
+                Global.dataManager.giveUp(true);
+            } else {
+                robot.setText("托管");
+                Global.dataManager.giveUp(false);
+            }
             }
         });
 
         exit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Global.replayManager.stopReplay();
-                Global.replayGameManager.gameOver();
-                startActivity(new Intent(getApplicationContext(), ChooseModeActivity.class));
+            Global.localGameManager.gameOver();
+            Global.replayManager.closeRecord();
+            Global.replayManager.clearRecord();
+            startActivity(new Intent(getApplicationContext(), ChooseModeActivity.class));
+            Global.dataManager.giveUp(false);
             }
         });
         if (Global.dataManager.isGiveUp()) {
             robot.setText("取消托管");
         }
-        robot.setVisibility(View.INVISIBLE);
-        resume.setTypeface(Global.getFont());
-        robot.setTypeface(Global.getFont());
-        exit.setTypeface(Global.getFont());
     }
 }

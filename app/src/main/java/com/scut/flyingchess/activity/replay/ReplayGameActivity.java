@@ -123,7 +123,7 @@ public class ReplayGameActivity extends BaseActivity {
         pauseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), ReplayPauseActivity.class));
+                startActivity(new Intent(getApplicationContext(), ReplaySettingActivity.class));
             }
         });
 

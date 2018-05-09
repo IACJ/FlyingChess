@@ -364,7 +364,6 @@ public class WanRoomActivity extends BaseActivity implements Target {
                 });
             }
         } else if (dataPack.getCommand() == DataPack.E_GAME_START) {
-            Global.replayManager.startRecord();
             Intent intent = new Intent(getApplicationContext(), WanGamingActivity.class);
             startActivity(intent);
         }

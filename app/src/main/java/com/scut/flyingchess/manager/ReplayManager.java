@@ -2,6 +2,7 @@ package com.scut.flyingchess.manager;
 
 
 import android.os.Environment;
+import android.util.Log;
 
 import com.scut.flyingchess.entity.Role;
 import com.google.gson.Gson;
@@ -20,12 +21,15 @@ import java.util.Date;
  * Edited by IACJ on 2018/4/9
  */
 public class ReplayManager {
-    public static final String PATH = Environment.getExternalStorageDirectory().getPath() + "/FlashMinds.com/FlyingChess/replay/";
+    public static final String PATH = Environment.getExternalStorageDirectory().getPath() + "/scut.com/FlyingChess/replay/";
     public boolean isReplay;
     File file;
     BufferedWriter writer;
     BufferedReader reader;
     Gson gson;
+    String tempFileFullName;
+
+    private static final String TAG = "ReplayManager";
 
     public ReplayManager() {
         isReplay = false;
@@ -52,6 +56,7 @@ public class ReplayManager {
             if (!dir.exists())
                 dir.mkdirs();
             openFile(PATH + fileName);
+            tempFileFullName = PATH + fileName;
             try {
                 writer = new BufferedWriter(new FileWriter(file));
             } catch (Exception e) {
@@ -224,6 +229,26 @@ public class ReplayManager {
             e.printStackTrace();
         } finally {
             isReplay = false;
+        }
+    }
+    public void saveRecord() {
+        if (isReplay == false) {
+            try {
+                writer.flush();
+                writer.close();
+
+                File newFile = new File(tempFileFullName+".record");
+
+                boolean flag = file.renameTo(newFile);
+                if (flag) {
+                    Log.v(TAG, "saveRecord: \"File renamed successfully\"");
+                } else {
+                    Log.e(TAG, "saveRecord: 重命名失败！" );
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 

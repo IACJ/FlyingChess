@@ -47,7 +47,7 @@
             android:name="com.scut.flyingchess.activity.localGame.LocalGamingActivity"
             android:screenOrientation="landscape" />
         <activity
-            android:name="com.scut.flyingchess.activity.localGame.LocalPauseActivity"
+            android:name="com.scut.flyingchess.activity.localGame.LocalSettingActivity"
             android:screenOrientation="landscape"
             android:theme="@style/Theme.AppCompat.Light.Dialog.Alert"/>
 
@@ -55,7 +55,7 @@
             android:name="com.scut.flyingchess.activity.replay.ReplayGameActivity"
             android:screenOrientation="landscape" />
         <activity
-            android:name="com.scut.flyingchess.activity.replay.ReplayPauseActivity"
+            android:name="com.scut.flyingchess.activity.replay.ReplaySettingActivity"
             android:screenOrientation="landscape"
             android:theme="@style/Theme.AppCompat.Light.Dialog.Alert"/>
 
@@ -70,7 +70,7 @@
             android:name="com.scut.flyingchess.activity.lanGame.LanGamingActivity"
             android:screenOrientation="landscape" />
         <activity
-            android:name="com.scut.flyingchess.activity.lanGame.LanPauseActivity"
+            android:name="com.scut.flyingchess.activity.lanGame.LanSettingActivity"
             android:screenOrientation="landscape"
             android:theme="@style/Theme.AppCompat.Light.Dialog.Alert"/>
 
@@ -95,11 +95,11 @@
         <activity android:name=".activity.wanGame.WanHallActivity"
             android:screenOrientation="landscape"
             android:launchMode="singleTask"/>
-        <activity android:name=".activity.wanGame.WanPauseActivity"
+        <activity android:name=".activity.wanGame.WanSettingActivity"
             android:theme="@style/Theme.AppCompat.Light.Dialog.Alert"
             android:screenOrientation="landscape"/>
         <activity android:name=".activity.wanGame.WanRoomActivity"
-            android:screenOrientation="landscape"></activity>
+            android:screenOrientation="landscape"/>
     </application>
 
 </manifest>

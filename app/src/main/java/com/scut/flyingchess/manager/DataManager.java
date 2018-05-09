@@ -39,6 +39,7 @@ public class DataManager {//数据存储类
                 fis.read(bytes);
                 Gson gson = new Gson();
                 data = gson.fromJson(new String(bytes, "utf-8"), Data.class);
+                data.score = 0;
                 fis.close();
             } catch (IOException e) {
                 e.printStackTrace();

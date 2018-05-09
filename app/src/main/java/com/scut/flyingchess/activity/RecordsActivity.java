@@ -91,7 +91,9 @@ public class RecordsActivity extends BaseActivity {
         if (dir.exists()) {
             File[] files = dir.listFiles();
             for (File file : files) {
-                records.add(0,file.getName());
+                if (file.getName().endsWith(".record")){
+                    records.add(0,file.getName());
+                }
             }
         }
 

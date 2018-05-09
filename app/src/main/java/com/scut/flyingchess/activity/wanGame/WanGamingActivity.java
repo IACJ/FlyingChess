@@ -8,7 +8,6 @@ import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -127,7 +126,7 @@ public class WanGamingActivity extends BaseActivity {
         pauseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), WanPauseActivity.class));
+                startActivity(new Intent(getApplicationContext(), WanSettingActivity.class));
             }
         });
         throwDiceButton.setOnClickListener(new View.OnClickListener() {//throw dice
@@ -158,7 +157,7 @@ public class WanGamingActivity extends BaseActivity {
             }
         }
 
-
+        Global.replayManager.startRecord();
         Global.replayManager.savePlayerNum(Global.playersData.size());
         for (String key : Global.playersData.keySet()) {
             Global.replayManager.saveRoleKey(key);
@@ -330,7 +329,7 @@ public class WanGamingActivity extends BaseActivity {
                         Global.dataManager.giveUp(false);
                         Global.wanGameManager.gameOver();
                         Global.soundManager.playMusic(SoundManager.BACKGROUND);
-                        Global.replayManager.closeRecord();
+                        Global.replayManager.saveRecord();
                         Global.replayManager.stopReplay();
                     } else {
                         Toast.makeText(parent, "Replay finished!", Toast.LENGTH_SHORT).show();

@@ -354,7 +354,6 @@ public class LanRoomActivity extends BaseActivity implements Target {
                 });
             }
         } else if (dataPack.getCommand() == DataPack.E_GAME_START) {
-            Global.replayManager.startRecord();
             startActivity( new Intent(LanRoomActivity.this, LanGamingActivity.class));
         }
     }

@@ -15,7 +15,6 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -130,7 +129,7 @@ public class LanGamingActivity extends BaseActivity {
         pauseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), LanPauseActivity.class));
+                startActivity(new Intent(getApplicationContext(), LanSettingActivity.class));
             }
         });
         throwDiceButton.setOnClickListener(new View.OnClickListener() {//throw dice
@@ -161,7 +160,7 @@ public class LanGamingActivity extends BaseActivity {
             }
         }
 
-
+        Global.replayManager.startRecord();
         Global.replayManager.savePlayerNum(Global.playersData.size());
         for (String key : Global.playersData.keySet()) {
             Global.replayManager.saveRoleKey(key);
@@ -285,18 +284,19 @@ public class LanGamingActivity extends BaseActivity {
                 }
                 case 5:  {//finished
 
+
+
+                    Intent intent = new Intent(parent.getApplicationContext(), LanHallActivity.class);
+                    parent.startActivity(intent);
+
                     Intent intent2 = new Intent(parent.getApplicationContext(), GameEndActivity.class);
                     ArrayList<String> msgs = new ArrayList<>();
                     intent2.putStringArrayListExtra("msgs", msgs);
                     parent.startActivity(intent2);
 
-                    Intent intent = new Intent(parent.getApplicationContext(), ChooseModeActivity.class);
-                    parent.startActivity(intent);
-
-                    Global.dataManager.giveUp(false);
                     Global.lanGameManager.gameOver();
                     Global.soundManager.playMusic(SoundManager.BACKGROUND);
-                    Global.replayManager.closeRecord();
+                    Global.replayManager.saveRecord();
                     Global.replayManager.stopReplay();
 
                     break;

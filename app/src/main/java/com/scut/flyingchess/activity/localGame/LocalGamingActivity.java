@@ -136,7 +136,7 @@ public class LocalGamingActivity extends BaseActivity {
         pauseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), LocalPauseActivity.class));
+                startActivity(new Intent(getApplicationContext(), LocalSettingActivity.class));
             }
         });
         throwDiceButton.setOnClickListener(new View.OnClickListener() {//throw dice
@@ -159,7 +159,7 @@ public class LocalGamingActivity extends BaseActivity {
             }
         }
 
-
+        Global.replayManager.startRecord();
         Global.replayManager.savePlayerNum(Global.playersData.size());
         for (String key : Global.playersData.keySet()) {
             Global.replayManager.saveRoleKey(key);
@@ -298,14 +298,12 @@ public class LocalGamingActivity extends BaseActivity {
                 case 5:  { //finished
                     Intent intent = new Intent(parent.getApplicationContext(), LocalRoomActivity.class);
 
-                    if (Global.dataManager.getLastWinner().compareTo(Global.dataManager.getMyId()) == 0) {//更新分数
-                        Global.dataManager.setScore(Global.dataManager.getScore() + 10);
+                    if (Global.dataManager.getLastWinner().compareTo(Global.dataManager.getMyId()) == 0) {
                         Global.soundManager.playSound(SoundManager.WIN);
                     } else {
-                        Global.dataManager.setScore(Global.dataManager.getScore() - 5);
                         Global.soundManager.playSound(SoundManager.LOSE);
                     }
-                    Global.dataManager.saveData();
+
 
                     ArrayList<String> msgs = new ArrayList<>();
                     msgs.add(Global.dataManager.getMyId());
@@ -320,8 +318,8 @@ public class LocalGamingActivity extends BaseActivity {
                     parent.startActivity(intent2);
                     Global.localGameManager.gameOver();
 
-                    Global.dataManager.giveUp(false);
-                    Global.replayManager.closeRecord();
+
+                    Global.replayManager.saveRecord();
                     break;
                 }
                 case 6: {//turn to

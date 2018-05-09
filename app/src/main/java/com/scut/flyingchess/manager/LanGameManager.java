@@ -30,6 +30,7 @@ public class LanGameManager implements Target {//game process control
     }
 
     public void startGame(LanGamingActivity board) {//call by activity when game start
+
         Global.chessBoard.init();
         this.board = board;
         finished = false;
