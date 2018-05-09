@@ -196,7 +196,7 @@ public class LocalGamingActivity extends BaseActivity {
     }
 
     public void animMoveTo(Button plane, int x, int y) {
-        plane.animate().setDuration(100);
+        plane.animate().setDuration(200);
         plane.animate().translationX(x * dx);
         plane.animate().translationY(y * dx);
     }

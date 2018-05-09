@@ -133,6 +133,8 @@ public class WanHallActivity extends BaseActivity implements Target {
     public void onStart() {
         super.onStart();
         Global.soundManager.resumeMusic(SoundManager.BACKGROUND);
+
+        Global.soundManager.playMusic(SoundManager.BACKGROUND);
     }
 
     @Override

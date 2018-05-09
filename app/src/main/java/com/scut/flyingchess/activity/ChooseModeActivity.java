@@ -47,6 +47,7 @@ public class ChooseModeActivity extends BaseActivity implements Target {
     SharedPreferences pref;
     SharedPreferences.Editor editor;
     View popupWindow;
+    PopupWindow popWindow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,7 +86,7 @@ public class ChooseModeActivity extends BaseActivity implements Target {
                 Global.soundManager.playSound(SoundManager.BUTTON);
                 //设置弹窗
                 popupWindow = LayoutInflater.from(getBaseContext()).inflate(R.layout.popwindow,null);
-                PopupWindow popWindow = new PopupWindow(popupWindow,900,500);
+                popWindow = new PopupWindow(popupWindow,900,500);
                 popWindow.setFocusable(true);
                 popWindow.setOutsideTouchable(false);
                 //设置弹窗位于lan button上方
@@ -106,6 +107,7 @@ public class ChooseModeActivity extends BaseActivity implements Target {
                                 Global.dataManager.setLanName(text);
                                 startActivity( new Intent(getApplicationContext(), LanHallActivity.class));
                                 ChooseModeActivity.this.popupWindow.setVisibility(View.INVISIBLE);
+                                ChooseModeActivity.this.popWindow.dismiss();
                             }
                         }
                     }

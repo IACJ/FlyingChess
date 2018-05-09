@@ -13,13 +13,11 @@ import com.scut.flyingchess.entity.Role;
 public class ReplayGameManager  {//game process control
     private ReplayGameWorker gw;//thread
     private ReplayGameActivity board;
-    private boolean finished;
     private int dice, whichPlane;
 
     public void startGame(ReplayGameActivity board) {//call by activity when game start
         Global.chessBoard.init();
         this.board = board;
-        finished = false;
         gw = new ReplayGameWorker();
         new Thread(gw).start();
     }
@@ -43,6 +41,7 @@ public class ReplayGameManager  {//game process control
             msg.setData(b);
             msg.what = 6;
             board.handler.sendMessage(msg);
+            Global.delay( (int)(200 / Global.dataManager.getReplaySpeed()) );
 
             whichPlane = -1;
 
@@ -51,7 +50,7 @@ public class ReplayGameManager  {//game process control
             role.setDice(dice);
             Global.soundManager.playSound(SoundManager.DICE);
             diceAnimate(dice);
-            Global.delay(200);
+
 
             boolean canFly = false;
             if (role.canIMove()) {
@@ -66,7 +65,7 @@ public class ReplayGameManager  {//game process control
                 flyNow(color, whichPlane);
                 amIWin(role.id, color);
             }
-            Global.delay(200);
+            Global.delay( (int)(200 / Global.dataManager.getReplaySpeed()));
         }
     }
 
@@ -77,8 +76,6 @@ public class ReplayGameManager  {//game process control
                 win = false;
             }
         }
-        System.out.println(id+" id");
-        System.out.println(Global.dataManager.getMyId()+" Global.dataManager.getMyId()");
         if (win) {
             if (Integer.valueOf(id) < 0) {
                 String[] s = {"Red", "Green", "Blue", "Yellow"};
@@ -104,7 +101,7 @@ public class ReplayGameManager  {//game process control
             msg.setData(b);
             msg.what = 7;
             board.handler.sendMessage(msg);
-            Global.delay(150);
+            Global.delay( (int)(150 / Global.dataManager.getReplaySpeed()));
         }
         Message msg = new Message();
         Bundle b = new Bundle();
@@ -112,7 +109,7 @@ public class ReplayGameManager  {//game process control
         msg.setData(b);
         msg.what = 2;
         board.handler.sendMessage(msg);
-        Global.delay(600);
+        Global.delay( (int)(1000 / Global.dataManager.getReplaySpeed()));
     }
 
     private void planeAnimate(int color, int pos) {
@@ -124,11 +121,7 @@ public class ReplayGameManager  {//game process control
         msg2.setData(b2);
         msg2.what = 1;
         board.handler.sendMessage(msg2);
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        Global.delay( (int)(300 / Global.dataManager.getReplaySpeed()));
     }
 
     private void planeCrash(int color, int crashPlane) {

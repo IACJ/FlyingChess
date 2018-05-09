@@ -4,6 +4,7 @@ package com.scut.flyingchess.localServer.TCPServer;
 import android.os.Build;
 import android.util.Log;
 
+import com.scut.flyingchess.Global;
 import com.scut.flyingchess.localServer.LocalServer;
 import com.scut.flyingchess.localServer.TCPServer.GameObjects.Room;
 
@@ -37,7 +38,7 @@ public class TCPServer {
                 serverSocket.setSoTimeout(0);
             }
 
-            this.selfRoom = new Room(new Build().MODEL, this);
+            this.selfRoom = new Room(Global.dataManager.getLanName(), this);
             this.onRoomChanged(selfRoom);
 
 
@@ -51,6 +52,7 @@ public class TCPServer {
                             socketExecutor.submit(socketRunnable);
                         } catch (Exception e) {
                             e.printStackTrace();
+                            Log.d(TAG, "run: 意料中的异常--强行断开 TCP Server Socket.");
                         }
                     }
                 }

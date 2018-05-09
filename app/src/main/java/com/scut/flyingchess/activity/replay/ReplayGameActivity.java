@@ -55,7 +55,6 @@ public class ReplayGameActivity extends BaseActivity {
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);//Activity切换动画
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         Global.activityManager.add(this);
-        Global.soundManager.playMusic(SoundManager.GAME);
 
         // 查找View
         pauseButton = (Button) findViewById(R.id.pause);
@@ -131,9 +130,7 @@ public class ReplayGameActivity extends BaseActivity {
         normalReplay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Global.diceAnimateSleepTime  = 100;
-                Global.planeAnimateSleepTime = 500;
-                Global.delayTime = 200;
+                Global.dataManager.setReplaySpeed(1.0);
                 Toast.makeText(ReplayGameActivity.this,"正常倍速回放中",Toast.LENGTH_SHORT).show();
             }
         });
@@ -141,9 +138,7 @@ public class ReplayGameActivity extends BaseActivity {
         speed15.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Global.diceAnimateSleepTime  = 75;
-                Global.planeAnimateSleepTime = 375;
-                Global.delayTime = 150;
+                Global.dataManager.setReplaySpeed(1.5);
                 Toast.makeText(ReplayGameActivity.this,"1.5倍速回放中",Toast.LENGTH_SHORT).show();
             }
         });
@@ -151,9 +146,7 @@ public class ReplayGameActivity extends BaseActivity {
         speed20.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Global.diceAnimateSleepTime  = 50;
-                Global.planeAnimateSleepTime = 250;
-                Global.delayTime = 100;
+                Global.dataManager.setReplaySpeed(2.0);
                 Toast.makeText(ReplayGameActivity.this,"2倍速回放中",Toast.LENGTH_SHORT).show();
             }
         });
@@ -188,14 +181,16 @@ public class ReplayGameActivity extends BaseActivity {
         }
         throwDiceButton.setBackground(Global.d[0]);
 
+        Global.dataManager.setReplaySpeed(1.0);
         Global.replayGameManager = new ReplayGameManager();
         Global.replayGameManager.startGame(this);
+
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        Global.soundManager.resumeMusic(SoundManager.GAME);
+        Global.soundManager.playMusic(SoundManager.GAME);
     }
 
     @Override
@@ -226,7 +221,7 @@ public class ReplayGameActivity extends BaseActivity {
     }
 
     public void animMoveTo(Button plane, int x, int y) {
-        plane.animate().setDuration(100);
+        plane.animate().setDuration( (int)(200 / Global.dataManager.getReplaySpeed()));
         plane.animate().translationX(x * dx);
         plane.animate().translationY(y * dx);
     }

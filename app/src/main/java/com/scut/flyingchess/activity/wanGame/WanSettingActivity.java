@@ -54,13 +54,11 @@ public class WanSettingActivity extends BaseActivity {
             public void onClick(View v) {
 
                 Global.socketManager.send(DataPack.R_GAME_EXIT, Global.dataManager.getMyId(), Global.dataManager.getRoomId());
-
+                Global.wanGameManager.gameOver();
                 if (Global.replayManager.isReplay == false) {
                     Global.replayManager.closeRecord();
                     Global.replayManager.clearRecord();
                 }
-                Global.wanGameManager.gameOver();
-                Global.replayManager.stopReplay();
                 startActivity(new Intent(getApplicationContext(), WanHallActivity.class));
             }
         });

@@ -27,6 +27,7 @@ public class LanGameManager implements Target {//game process control
         Global.socketManager.registerActivity(DataPack.E_GAME_PROCEED_DICE, this);
         Global.socketManager.registerActivity(DataPack.E_GAME_FINISHED, this);
         Global.socketManager.registerActivity(DataPack.E_GAME_PLAYER_DISCONNECTED, this);
+
     }
 
     public void startGame(LanGamingActivity board) {//call by activity when game start
@@ -59,6 +60,7 @@ public class LanGameManager implements Target {//game process control
             msg.setData(b);
             msg.what = 6;
             board.handler.sendMessage(msg);
+            Global.delay( 200);
 
             whichPlane = -1;
 
@@ -139,6 +141,7 @@ public class LanGameManager implements Target {//game process control
             Message msg = new Message();
             msg.what = 5;
             board.handler.sendMessage(msg);
+
         }
     }
 
@@ -158,7 +161,7 @@ public class LanGameManager implements Target {//game process control
         msg.setData(b);
         msg.what = 2;
         board.handler.sendMessage(msg);
-        Global.delay(600);
+        Global.delay(800);
     }
 
     private void planeAnimate(int color, int pos) {
@@ -170,11 +173,7 @@ public class LanGameManager implements Target {//game process control
         msg2.setData(b2);
         msg2.what = 1;
         board.handler.sendMessage(msg2);
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        Global.delay( 300);
     }
 
     private void planeCrash(int color, int crashPlane) {

@@ -44,12 +44,19 @@ public class SocketTracker implements Runnable {
             /**
              *  when someone disconnected
              */
-            parent.getSelfRoom().removePlayer(selfPlayer);
+            Log.d(TAG, "run: 有人逃跑");
+
             try {
+                if ( parent.getSelfRoom() != null){
+                    parent.getSelfRoom().removePlayer(selfPlayer);
+                }
+
                 selfPlayer.getSocket().close();
+                Log.d(TAG, "run: 关闭了服务器端一个Socket");
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            Log.d(TAG, "逃跑已处理");
         }
     }
 
@@ -198,6 +205,9 @@ public class SocketTracker implements Runnable {
                     dataPack.setDate(new Date());
 
                     // simply forward the datapack to the users in the same room
+                    if (room==null){
+                        Log.e(TAG, "processDataPack: 房间已经不存在" );
+                    }
                     room.broadcastToOthers(selfPlayer, dataPack);
                     return;
                 }

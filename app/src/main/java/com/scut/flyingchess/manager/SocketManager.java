@@ -145,7 +145,9 @@ public class SocketManager  {
         if (targets.containsKey(dataPack.getCommand())) {
             targets.get(dataPack.getCommand()).processDataPack(dataPack);
             Log.v(TAG, "processDataPack: 处理:"+dataPack);
-        }else{
+        }else if (dataPack.getCommand() == DataPack.TERMINATE) {
+            Log.d(TAG, "processDataPack: 服务端请求断开Socket连接");
+        } else{
             Log.e(TAG, "processDataPack: 数据包未被处理"+dataPack);
         }
     }
@@ -181,7 +183,7 @@ public class SocketManager  {
                     Log.v(TAG, "接收："+dataPack);
                     Global.socketManager.processDataPack(dataPack);
                 } catch (EOFException e){
-                    Log.e(TAG, "run: Socket被强制断开");
+                    Log.d(TAG, "run: Socket被强制断开");
                     connected = false;
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -246,7 +248,7 @@ public class SocketManager  {
                     e.printStackTrace();
                 }
             }else{
-                Log.e(TAG, "send: 已知位置未知错误");
+                Log.d(TAG, "send:由于连接断开，数据包没有被发送。");
             }
             return connected;
         }

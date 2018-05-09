@@ -71,6 +71,7 @@ public class LocalGameManager {//game process control
         msg.setData(b);
         msg.what = 6;
         board.handler.sendMessage(msg);
+        Global.delay( 200);
 
         dice = role.roll();
 
@@ -87,6 +88,7 @@ public class LocalGameManager {//game process control
         } else if (role.type == Role.ME) {
             toast("本回合不能移动~");
         }
+        Global.delay( 200);
     }
 
     private void amIWin(String id, int color) {
@@ -127,7 +129,7 @@ public class LocalGameManager {//game process control
         msg.setData(b);
         msg.what = 2;
         board.handler.sendMessage(msg);
-        Global.delay(600);
+        Global.delay(800);
     }
 
     private void planeAnimate(int color, int pos) {
@@ -139,11 +141,7 @@ public class LocalGameManager {//game process control
         msg2.setData(b2);
         msg2.what = 1;
         board.handler.sendMessage(msg2);
-        try {
-            Thread.sleep(300);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        Global.delay( 300);
     }
 
     private void planeCrash(int color, int crashPlane) {

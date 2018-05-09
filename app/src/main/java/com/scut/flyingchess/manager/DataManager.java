@@ -25,6 +25,7 @@ public class DataManager {//数据存储类
     private String lastWinner;
     private boolean giveUp;
     private String LanName;
+    private double replaySpeed =1.0;
 
     Data data;
 
@@ -180,6 +181,14 @@ public class DataManager {//数据存储类
 
     public void setLanName(String lanName) {
         LanName = lanName;
+    }
+
+    public double getReplaySpeed() {
+        return replaySpeed;
+    }
+
+    public void setReplaySpeed(double replaySpeed) {
+        this.replaySpeed = replaySpeed;
     }
 
     //////////////////////////////////

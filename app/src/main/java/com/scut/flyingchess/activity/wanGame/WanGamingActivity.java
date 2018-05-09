@@ -178,6 +178,7 @@ public class WanGamingActivity extends BaseActivity {
         }
         throwDiceButton.setBackground(Global.d[0]);
 
+        Global.dataManager.giveUp(false);
         Global.wanGameManager = new WanGameManager();
         Global.wanGameManager.start(this);
     }
@@ -226,7 +227,7 @@ public class WanGamingActivity extends BaseActivity {
     }
 
     public void animMoveTo(Button plane, int x, int y) {
-        plane.animate().setDuration(100);
+        plane.animate().setDuration(200);
         plane.animate().translationX(x * dx);
         plane.animate().translationY(y * dx);
     }

@@ -61,7 +61,7 @@ public class WanGameManager implements Target {
             msg.setData(b);
             msg.what = 6;
             board.handler.sendMessage(msg);
-
+            Global.delay( 200);
             whichPlane = -1;
 
             if (Global.replayManager.isReplay) {
@@ -178,7 +178,7 @@ public class WanGameManager implements Target {
         msg.setData(b);
         msg.what = 2;
         board.handler.sendMessage(msg);
-        Global.delay(600);
+        Global.delay(800);
     }
 
     private void planeAnimate(int color, int pos) {
@@ -190,11 +190,7 @@ public class WanGameManager implements Target {
         msg2.setData(b2);
         msg2.what = 1;
         board.handler.sendMessage(msg2);
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        Global.delay( 300);
     }
 
     private void planeCrash(int color, int crashPlane) {

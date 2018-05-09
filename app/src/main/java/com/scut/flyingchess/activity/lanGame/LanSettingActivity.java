@@ -51,10 +51,11 @@ public class LanSettingActivity extends BaseActivity {
         exit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Global.lanGameManager.gameOver();
                 Global.replayManager.closeRecord();
                 Global.replayManager.clearRecord();
 
-                Global.lanGameManager.gameOver();
+
                 startActivity(new Intent(getApplicationContext(), ChooseModeActivity.class));
                 if (Global.dataManager.getHostId().equals(Global.dataManager.getMyId())) {
                     Global.localServer.stopHost();

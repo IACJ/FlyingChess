@@ -31,9 +31,9 @@ import java.util.HashMap;
  * Edited by IACJ on 2018/4/15
  */
 public class Global {
-    public static int diceAnimateSleepTime = 100;  //掷骰子延时时间
+    public static int diceAnimateSleepTime = 150;  //掷骰子延时时间
     public static int planeAnimateSleepTime = 500; //飞机飞行时间
-    public static int delayTime = 200; //延时时间
+    public static int delayMassageTime = 200; //延时时间
 
     public static ReplayGameManager replayGameManager;
     public static LocalGameManager localGameManager;
