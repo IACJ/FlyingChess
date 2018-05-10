@@ -364,12 +364,17 @@ public class WanGameManager implements Target {
         public void run() {
             run = true;
             int i = 0;
-            while (run) {//control round
-                i = (i % 4);//轮询颜色
-                Global.wanGameManager.turnTo(i);
-                if (WanGameManager.this.dice != 6){
-                    i++;
+            try{
+                while (run) {//control round
+                    i = (i % 4);//轮询颜色
+                    Global.wanGameManager.turnTo(i);
+                    if (WanGameManager.this.dice != 6){
+                        i++;
+                    }
                 }
+            }catch (Exception e){
+                e.printStackTrace();
+                Log.e("GameWorker", "退出游戏时发生异常 " );
             }
         }
 

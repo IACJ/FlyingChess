@@ -2,6 +2,7 @@ package com.scut.flyingchess.manager;
 
 import android.os.Bundle;
 import android.os.Message;
+import android.util.Log;
 
 import com.scut.flyingchess.activity.replay.ReplayGameActivity;
 import com.scut.flyingchess.Global;
@@ -255,17 +256,25 @@ public class ReplayGameManager  {//game process control
             run = true;
         }
 
+
         @Override
         public void run() {
             run = true;
             int i = 0;
-            while (run) {//control round
-                i = (i % 4);//轮询颜色
-                Global.replayGameManager.turnTo(i);
-                if (ReplayGameManager.this.dice != 6){
-                    i++;
+
+            try{
+                while (run) {//control round
+                    i = (i % 4);//轮询颜色
+                    Global.replayGameManager.turnTo(i);
+                    if (ReplayGameManager.this.dice != 6){
+                        i++;
+                    }
                 }
+            }catch (Exception e){
+                e.printStackTrace();
+                Log.e("GameWorker", "退出游戏时发生异常 " );
             }
+
         }
         public void exit() {
             run = false;
